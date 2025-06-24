@@ -9,6 +9,6 @@
 	<Header />
 </div>
 
-<div class="mt-[42px]">
+<div class="pt-[42px] min-h-screen">
 	{@render children()}
 </div>

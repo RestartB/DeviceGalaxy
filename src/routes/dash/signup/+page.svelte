@@ -20,12 +20,18 @@
 	let enhance = $derived(form.enhance);
 </script>
 
-<form method="POST" action="?/signIn" use:enhance>
+<form method="POST" action="?/signUp" use:enhance>
+	<label for="name">Name</label>
+	<input name="name" bind:value={$formData.fullname} />
+
 	<label for="email">Email</label>
 	<input name="email" type="email" bind:value={$formData.email} />
 
 	<label for="password">Password</label>
-	<input name="password" type="password" bind:value={$formData.password} />
+	<input name="password" bind:value={$formData.password} />
+
+	<label for="confirm">Confirm Password</label>
+	<input name="confirm" bind:value={$formData.passwordConfirm} />
 
 	<button disabled={$submitting} class="w-full">
 		{$submitting ? 'Submitting...' : 'Submit'}
