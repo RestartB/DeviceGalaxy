@@ -42,6 +42,7 @@
 	},
 	"dependencies": {
 		"@libsql/client": "^0.14.0",
+		"better-auth": "^1.2.10",
 		"drizzle-orm": "^0.40.0"
 	}
 }
