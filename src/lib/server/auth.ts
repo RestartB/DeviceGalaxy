@@ -7,7 +7,7 @@ import {
 	BETTER_AUTH_SECRET,
 } from '$env/static/private';
 
-import { db } from '$lib/server/db/index';
+import { db } from './db';
 
 export const auth = betterAuth({
 	secret: BETTER_AUTH_SECRET,
