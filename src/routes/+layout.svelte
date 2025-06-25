@@ -1,14 +1,13 @@
 <script lang="ts">
 	import '../app.css';
-	import Header from '$lib/components/Header.svelte';
+	import Sidebar from '$lib/components/Sidebar.svelte';
 
 	let { children } = $props();
 </script>
 
-<div class="absolute w-full h-fit top-0 left-0 z-50">
-	<Header />
-</div>
-
-<div class="pt-[42px] min-h-screen">
-	{@render children()}
+<div class="flex h-screen max-h-screen w-full">
+	<Sidebar />
+	<div class="box-border h-full max-h-full flex-1 overflow-y-auto p-4">
+		{@render children()}
+	</div>
 </div>

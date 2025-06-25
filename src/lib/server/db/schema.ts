@@ -31,7 +31,8 @@ export const user = sqliteTable('user', {
 		.notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' })
 		.$defaultFn(() => /* @__PURE__ */ new Date())
-		.notNull()
+		.notNull(),
+	twoFactorEnabled: integer('two_factor_enabled', { mode: 'boolean' })
 });
 
 export const session = sqliteTable('session', {
@@ -76,4 +77,13 @@ export const verification = sqliteTable('verification', {
 	updatedAt: integer('updated_at', { mode: 'timestamp' }).$defaultFn(
 		() => /* @__PURE__ */ new Date()
 	)
+});
+
+export const twoFactor = sqliteTable('two_factor', {
+	id: text('id').primaryKey(),
+	secret: text('secret').notNull(),
+	backupCodes: text('backup_codes').notNull(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' })
 });
