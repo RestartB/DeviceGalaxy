@@ -27,22 +27,14 @@
 		class="flex h-fit w-fit flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-400 bg-zinc-200 p-4"
 		use:enhance
 	>
-		<h1 class="text-center text-2xl font-bold">2FA Setup</h1>
-		<p>
-			To help keep your account secure, please setup two factor authentication. You will not be able
-			to continue until this is done.
-		</p>
-
-		<p>Please scan the QR code below with your authenticator app, then enter a 2FA code from the app to verify.</p>
-
+		<h1 class="text-center text-2xl font-bold">Enter 2FA Code</h1>
 		<div class="flex flex-col gap-2">
-			<label for="totp" class="font-semibold">TOTP Code</label>
+			<label for="totp" class="font-semibold">2FA Code</label>
 			<input
 				class="rounded-full border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
 				id="totp"
-				placeholder="123456"
 				required
-				bind:value={$formData.totp}
+				bind:value={$formData.code}
 			/>
 		</div>
 
@@ -50,7 +42,7 @@
 			disabled={$submitting}
 			class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
 		>
-			{$submitting ? 'Verifying...' : 'Verify Code'}
+			{$submitting ? 'Logging in...' : 'Log in'}
 		</button>
 		{#if $errors?._errors}
 			<div class="mt-3 rounded-md text-red-700">

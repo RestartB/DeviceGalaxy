@@ -25,7 +25,7 @@ export const actions: Actions = {
 		try {
 			await auth.api.verifyTOTP({
 				body: {
-					code: form.data.totp
+					code: form.data.code
 				}
 			});
 		} catch (error) {

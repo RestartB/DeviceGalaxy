@@ -1,6 +1,12 @@
 <script lang="ts">
     import { authClient } from '$lib/client';
-    const authSession = authClient.useSession();
+    import { onNavigate } from '$app/navigation';
+
+    let authSession = authClient.useSession();
+    
+    onNavigate(() => {
+        authSession = authClient.useSession();
+    });
 </script>
 
 <header
@@ -19,9 +25,9 @@
     <div class="mt-auto">
         {#if $authSession.data}
             <p>{$authSession.data.user.name}</p>
-            <button class="mt-2" onclick={() => authClient.signOut()}>Sign Out</button>
+            <button class="mt-2" on:click={() => authClient.signOut()}>Sign Out</button>
         {:else}
-        <p>Not signed in</p>
+            <p>Not signed in</p>
         {/if}
     </div>
 </header>

@@ -28,12 +28,12 @@ export const actions: Actions = {
 					email: form.data.email,
 					password: form.data.password,
 					name: form.data.fullname,
-					callbackURL: '/auth/verified'
+					callbackURL: '/auth/setup-2fa'
 				}
 			});
 		} catch (error) {
 			if (error instanceof APIError) {
-				return setError(form, error.message || 'Signin failed');
+				return setError(form, error.message || 'Sign up failed');
 			}
 			console.log('Unexpected error during sign in', error);
 			return setError(form, 'Unexpected error');
