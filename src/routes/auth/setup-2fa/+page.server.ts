@@ -2,7 +2,6 @@ import { superValidate, setError } from 'sveltekit-superforms';
 import { passwordFormSchema, totpFormSchema } from './schema';
 import type { Actions } from '@sveltejs/kit';
 import { fail, redirect } from '@sveltejs/kit';
-import { APIError } from 'better-auth/api';
 import { auth } from '$lib/server/auth';
 import { zod } from 'sveltekit-superforms/adapters';
 
@@ -23,7 +22,7 @@ export const actions: Actions = {
 		}
 
 		try {
-			const data = await auth.api.enableTwoFactor({
+			const { totpURI, backupCodes } = await auth.api.enableTwoFactor({
 				headers: event.request.headers,
 				body: {
 					password: form.data.password
@@ -32,13 +31,10 @@ export const actions: Actions = {
 
 			return {
 				form,
-				totpURI: data.totpURI,
-				backupCodes: data.backupCodes
-			}
+				totpURI: totpURI,
+				backupCodes: backupCodes
+			};
 		} catch (error) {
-			if (error instanceof APIError) {
-				return setError(form, error.message || 'Enabling 2FA failed');
-			}
 			console.log('Unexpected error while enabling 2FA', error);
 			return setError(form, 'Unexpected error');
 		}
@@ -59,13 +55,11 @@ export const actions: Actions = {
 					code: form.data.totp
 				}
 			});
+
+			return redirect(302, '/');
 		} catch (error) {
-			if (error instanceof APIError) {
-				return setError(form, error.message || 'TOTP verification failed');
-			}
 			console.log('Unexpected error during TOTP verification', error);
 			return setError(form, 'Unexpected error');
 		}
-		return redirect(302, '/');
 	}
 };

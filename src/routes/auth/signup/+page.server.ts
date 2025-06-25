@@ -2,7 +2,6 @@ import { superValidate, setError } from 'sveltekit-superforms';
 import { formSchema } from './schema';
 import type { Actions } from '@sveltejs/kit';
 import { fail, redirect } from '@sveltejs/kit';
-import { APIError } from 'better-auth/api';
 import { auth } from '$lib/server/auth';
 import { zod } from 'sveltekit-superforms/adapters';
 
@@ -27,17 +26,14 @@ export const actions: Actions = {
 				body: {
 					email: form.data.email,
 					password: form.data.password,
-					name: form.data.fullname,
-					callbackURL: '/auth/setup-2fa'
+					name: form.data.fullname
 				}
 			});
+
+			return redirect(302, '/');
 		} catch (error) {
-			if (error instanceof APIError) {
-				return setError(form, error.message || 'Sign up failed');
-			}
 			console.log('Unexpected error during sign in', error);
 			return setError(form, 'Unexpected error');
 		}
-		return redirect(302, '/');
 	}
 };

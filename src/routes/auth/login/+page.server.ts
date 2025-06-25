@@ -27,15 +27,10 @@ export const actions: Actions = {
 			response = await auth.api.signInEmail({
 				body: {
 					email: form.data.email,
-					password: form.data.password,
+					password: form.data.password
 				},
 				asResponse: true
 			});
-
-			if (!response.ok) {
-				const errorData = await response.json();
-				return setError(form, errorData.message || 'Sign in failed');
-			}
 		} catch (error) {
 			console.log('Unexpected error during sign in', error);
 			return setError(form, 'Unexpected error');
@@ -47,7 +42,7 @@ export const actions: Actions = {
 		if (data.twoFactorRedirect) {
 			return redirect(302, '/auth/verify-2fa');
 		}
-		
+
 		return redirect(302, '/');
 	}
 };
