@@ -11,7 +11,7 @@ export const userDevices = sqliteTable('devices', {
 	os: text('os', { length: 255 }).default(''),
 	brand: text('brand', { length: 255 }).default(''),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-	updatedAt: integer('updated_at', { mode: 'timestamp' }),
+	updatedAt: integer('updated_at', { mode: 'timestamp' })
 });
 
 export const tags = sqliteTable('tags', {
@@ -21,7 +21,7 @@ export const tags = sqliteTable('tags', {
 	tagColour: text('tag_color', { length: 7 }).default('#FFFFFF'),
 	tagTextColour: text('tag_text_color', { length: 7 }).default('#000000'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-	updatedAt: integer('updated_at', { mode: 'timestamp' }),
+	updatedAt: integer('updated_at', { mode: 'timestamp' })
 });
 
 export const user = sqliteTable('user', {

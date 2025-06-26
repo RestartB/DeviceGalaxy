@@ -34,27 +34,30 @@
 </script>
 
 <div class="box-border flex h-full min-h-fit w-full items-center justify-center text-center">
-	<div class="absolute w-full h-full top-0 left-0 -z-10 after:absolute after:w-full after:h-full after:pointer-events-none after:content-[''] after:backdrop-blur-lg after:backdrop-brightness-120 after:top-0 after:left-0" style="background-image: url('https://cdn.stocksnap.io/img-thumbs/960w/building-abstract_QDCJ1JA4QV.jpg')"></div>
+	<div
+		class="absolute top-0 left-0 -z-10 h-full w-full after:pointer-events-none after:absolute after:top-0 after:left-0 after:h-full after:w-full after:backdrop-blur-lg after:backdrop-brightness-120 after:content-['']"
+		style="background-image: url('https://cdn.stocksnap.io/img-thumbs/960w/building-abstract_QDCJ1JA4QV.jpg')"
+	></div>
 	<form
-		class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-4 border-zinc-700 bg-zinc-100/80 backdrop-blur-lg p-4"
+		class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-4 border-zinc-700 bg-zinc-100/80 p-4 backdrop-blur-lg"
 		onsubmit={handleSignIn}
 	>
-		<h1 class="text-2xl font-bold flex items-center justify-center gap-2"><LogIn /> Sign in</h1>
+		<h1 class="flex items-center justify-center gap-2 text-2xl font-bold"><LogIn /> Sign in</h1>
 		<p><strong>Welcome back!</strong> Please enter your credentials.</p>
-		<div class="flex flex-col gap-2 w-full">
-			<label for="email" class="font-semibold w-full text-start">Email</label>
+		<div class="flex w-full flex-col gap-2">
+			<label for="email" class="w-full text-start font-semibold">Email</label>
 			<input
-				class="rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 w-full text-start"
+				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start"
 				id="email"
 				type="email"
 				bind:value={email}
 			/>
 		</div>
 
-		<div class="flex flex-col gap-2 w-full">
-			<label for="password" class="font-semibold w-full text-start">Password</label>
+		<div class="flex w-full flex-col gap-2">
+			<label for="password" class="w-full text-start font-semibold">Password</label>
 			<input
-				class="rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 w-full text-start"
+				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start"
 				id="password"
 				type="password"
 				bind:value={password}
@@ -67,7 +70,7 @@
 
 		<button
 			disabled={submitting}
-			class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 flex items-center justify-center gap-2 font-bold cursor-pointer hover:bg-zinc-300 transition-colors"
+			class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-colors hover:bg-zinc-300"
 		>
 			{#if submitting}
 				<LoaderCircle class="animate-spin" />

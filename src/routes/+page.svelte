@@ -20,7 +20,5 @@
 			<h1 class="text-lg font-semibold">Welcome back, {data.user.name}!</h1>
 		</div>
 	</div>
-	<div class="flex w-full flex-wrap gap-2">
-
-	</div>
+	<div class="flex w-full flex-wrap gap-2"></div>
 {/if}
