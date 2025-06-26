@@ -1,113 +1,146 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { passwordFormSchema, totpFormSchema, type PasswordFormSchema, type TotpFormSchema } from './schema';
-	import type { PageData } from './$types';
+	import { goto } from '$app/navigation';
+	import { authClient } from '$lib/client';
+	import qrcode, { QRCode } from '@castlenine/svelte-qrcode';
 
-	import QRCode from '@castlenine/svelte-qrcode';
+	let password = $state('');
+	let totpInput = $state('');
 
-	let { data }: { data: PageData } = $props();
-	let totpURI = $state<string | null>(null);
+	let submitting = $state(false);
+	let generatedTOTP = $state(false);
+	let error = $state('');
 
-	const passwordForm = superForm(data.passwordForm, {
-        validators: zodClient(passwordFormSchema),
-        dataType: 'json',
-        onResult: ({ result }) => {
-            if (result.type === 'success' && result.data?.totpURI) {
-                totpURI = result.data.totpURI;
-            }
-        }
-    });
+	let totpURI = $state('');
+	let backupCodes = $state<string[]>([]);
 
-	const { form: passwordFormData, errors: passwordErrors, message: passwordMessage, submitting: passwordSubmitting, enhance: passwordEnhance } = passwordForm;
+	async function generateTOTP(event: Event) {
+		event.preventDefault();
+		submitting = true;
+		error = '';
 
-	const totpForm = superForm(data.totpForm, {
-        validators: zodClient(totpFormSchema),
-        dataType: 'json'
-    });
+		try {
+			const { data, error: signUpError } = await authClient.twoFactor.enable({
+				password
+			});
 
-	const { form: totpFormData, errors: totpErrors, message: totpMessage, submitting: totpSubmitting, enhance: totpEnhance } = totpForm;
+			if (signUpError) {
+				error = signUpError.message || 'Failed to verify password.';
+				return;
+			}
+
+			totpURI = data.totpURI;
+			backupCodes = data.backupCodes;
+			generatedTOTP = true;
+		} catch (err) {
+			error = 'An unexpected error occurred. Please try again.';
+		} finally {
+			submitting = false;
+		}
+	}
+
+	async function verifyTOTPCode(event: Event) {
+		event.preventDefault();
+		submitting = true;
+		error = '';
+
+		try {
+			const { data, error: signUpError } = await authClient.twoFactor.verifyTotp({
+				code: totpInput
+			});
+
+			if (signUpError) {
+				error = signUpError.message || 'Failed to enable 2FA.';
+				return;
+			}
+
+			goto('/');
+		} catch (err) {
+			error = 'An unexpected error occurred. Please try again.';
+		} finally {
+			submitting = false;
+		}
+	}
 </script>
 
-<div class="box-border flex h-full min-h-fit w-full items-center justify-center p-2">
-	{#if totpURI}
+<div class="box-border flex h-full min-h-fit w-full items-center justify-center p-2 text-center">
+	{#if generatedTOTP}
 		<form
-			method="POST"
-			action="?/verifyTOTP"
-			class="flex h-fit w-fit flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-400 bg-zinc-200 p-4"
-			use:totpEnhance
+			class="flex h-fit w-fit max-w-xl flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-400 bg-zinc-200 p-4"
+			onsubmit={verifyTOTPCode}
 		>
-			<h1 class="text-center text-2xl font-bold">2FA Setup</h1>
-			<p>
-				To help keep your account secure, please setup two factor authentication. You will not be able
-				to continue until this is done.
-			</p>
-
-			<p>Please scan the QR code below with your authenticator app, then enter a 2FA code from the app to verify.</p>
+			<h1 class="text-2xl font-bold">Set up 2FA</h1>
+			<p>Your password has been verified. Please follow these steps to set up 2FA:</p>
+			<ol class="list-inside list-decimal text-left">
+				<li>
+					Download an authenticator app (Authy, MS Authenticator, etc) or use a password manager
+					that supports 2FA (1Password, Bitwarden, etc)
+				</li>
+				<li>Scan the QR code displayed, or copy the URL below</li>
+				<li>Enter a verification code in the box below</li>
+			</ol>
 
 			<QRCode data={totpURI} />
 
-			<p>
-				Alternatively, you can manually enter the secret key into your authenticator app:
-				<strong>{totpURI}</strong>
-			</p>
+			<h3 class="text-xl font-semibold">QR not working?</h3>
+			<p>Copy this URL into your authenticator app:</p>
+			<p class="max-w-full font-mono text-sm break-words">{totpURI}</p>
 
 			<div class="flex flex-col gap-2">
-				<label for="totp" class="font-semibold">TOTP Code</label>
+				<label for="totp" class="font-semibold">Verify Code</label>
 				<input
 					class="rounded-full border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
 					id="totp"
-					placeholder="123456"
-					required
-					bind:value={$totpFormData.totp}
+					type="text"
+					inputmode="numeric"
+					pattern="[0-9]*"
+					maxlength="6"
+					bind:value={totpInput}
 				/>
 			</div>
 
 			<button
-				disabled={$totpSubmitting}
+				disabled={submitting}
 				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
 			>
-				{$totpSubmitting ? 'Verifying...' : 'Verify Code'}
+				{submitting ? 'Verifying...' : 'Verify'}
 			</button>
-			{#if $totpErrors?._errors}
-				<div class="mt-3 rounded-md text-red-700">
-					{$totpErrors?._errors}
+			{#if error !== ''}
+				<div class="text-red-700">
+					{error}
 				</div>
 			{/if}
 		</form>
 	{:else}
-        <form
-            method="POST"
-            action="?/confirmPassword"
-            class="flex h-fit w-fit flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-400 bg-zinc-200 p-4"
-            use:passwordEnhance
-        >
-            <h1 class="text-center text-2xl font-bold">Confirm Password</h1>
-            <p>Please confirm your password to continue with 2FA setup.</p>
+		<form
+			class="flex h-fit w-fit flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-400 bg-zinc-200 p-4"
+			onsubmit={generateTOTP}
+		>
+			<h1 class="text-2xl font-bold">Set up 2FA</h1>
+			<p>
+				To help keep your account secure, we require that you enable 2FA. To get started, please
+				verify your password.
+			</p>
+			<div class="flex flex-col gap-2">
+				<label for="password" class="font-semibold">Verify Password</label>
+				<input
+					class="rounded-full border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
+					id="password"
+					type="password"
+					bind:value={password}
+				/>
+			</div>
 
-            <div class="flex flex-col gap-2">
-                <label for="password" class="font-semibold">Password</label>
-                <input
-                    type="password"
-                    class="rounded-full border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
-                    id="password"
-                    placeholder="Enter your password"
-                    required
-                    bind:value={$passwordFormData.password}
-                />
-            </div>
-
-            <button
-                disabled={$passwordSubmitting}
-                class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
-            >
-                {$passwordSubmitting ? 'Confirming...' : 'Confirm Password'}
-            </button>
-            {#if $passwordErrors?._errors}
-                <div class="mt-3 rounded-md text-red-700">
-                    {$passwordErrors?._errors}
-                </div>
-            {/if}
-        </form>
+			<button
+				disabled={submitting}
+				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
+			>
+				{submitting ? 'Verifying...' : 'Verify'}
+			</button>
+			{#if error !== ''}
+				<div class="text-red-700">
+					{error}
+				</div>
+			{/if}
+		</form>
 	{/if}
 </div>

@@ -1,9 +1,16 @@
 import { createAuthClient } from 'better-auth/svelte';
-import { passkeyClient, twoFactorClient } from 'better-auth/client/plugins';
+import { twoFactorClient } from 'better-auth/client/plugins';
+import { goto } from '$app/navigation';
 
 export const authClient = createAuthClient({
 	baseURL: 'http://localhost:5173', // the base url of your auth server
-	plugins: [passkeyClient(), twoFactorClient()]
+	plugins: [
+		twoFactorClient({
+			onTwoFactorRedirect() {
+				goto('/auth/verify-2fa');
+			}
+		})
+	]
 });
 
-export type Session = typeof authClient.$Infer.Session
+export type Session = typeof authClient.$Infer.Session;

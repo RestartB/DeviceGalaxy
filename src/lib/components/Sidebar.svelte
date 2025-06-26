@@ -1,18 +1,15 @@
 <script lang="ts">
-    import { authClient } from '$lib/client';
-    import { onNavigate } from '$app/navigation';
+	import { authClient } from '$lib/client';
+	import type { PageProps } from '../../routes/$types';
 
-    let authSession = authClient.useSession();
-    
-    onNavigate(() => {
-        authSession = authClient.useSession();
-    });
+	// Get session from props
+	const { data }: PageProps = $props();
 </script>
 
 <header
 	class="box-border flex h-full w-fit flex-col items-center gap-4 border-r-4 border-zinc-300 bg-zinc-200 p-4"
 >
-	<h1 class="font-bold">myDevices</h1>
+	<h1 class="text-3xl font-bold">myDevices</h1>
 	<nav>
 		<ul class="flex flex-col gap-4">
 			<li><a href="/">Home</a></li>
@@ -22,12 +19,12 @@
 		</ul>
 	</nav>
 
-    <div class="mt-auto">
-        {#if $authSession.data}
-            <p>{$authSession.data.user.name}</p>
-            <button class="mt-2" on:click={() => authClient.signOut()}>Sign Out</button>
-        {:else}
-            <p>Not signed in</p>
-        {/if}
-    </div>
+	<div class="mt-auto">
+		{#if data.user}
+			<p>{data.user.name}</p>
+			<button class="mt-2" onclick={() => authClient.signOut()}>Sign Out</button>
+		{:else}
+			<p>Not signed in</p>
+		{/if}
+	</div>
 </header>

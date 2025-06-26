@@ -1,52 +1,65 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { formSchema, type FormSchema } from './schema';
-	import type { PageData } from './$types';
+	import { goto } from '$app/navigation';
+	import { authClient } from '$lib/client';
 
-	let { data }: { data: PageData } = $props();
-	let form = $derived(
-		superForm(data.form, {
-			validators: zodClient(formSchema),
-			dataType: 'json'
-		})
-	);
+	let totpInput = $state('');
 
-	let formData = $derived(form.form);
-	let errors = $derived(form.errors);
-	let message = $derived(form.message);
-	let submitting = $derived(form.submitting);
+	let submitting = $state(false);
+	let error = $state('');
 
-	let enhance = $derived(form.enhance);
+	async function handleSubmit(event: Event) {
+		event.preventDefault();
+		submitting = true;
+		error = '';
+
+		try {
+			const { data, error: signInError } = await authClient.twoFactor.verifyTotp({
+				code: totpInput
+			});
+
+			if (signInError) {
+				error = signInError.message || 'Failed to verify 2FA code.';
+				return;
+			}
+
+			await goto('/');
+		} catch (err) {
+			error = 'An unexpected error occurred. Please try again.';
+		} finally {
+			submitting = false;
+		}
+	}
 </script>
 
-<div class="box-border flex h-full min-h-fit w-full items-center justify-center p-2">
+<div class="box-border flex h-full min-h-fit w-full items-center justify-center p-2 text-center">
 	<form
-		method="POST"
-		action="?/verifyTOTP"
 		class="flex h-fit w-fit flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-400 bg-zinc-200 p-4"
-		use:enhance
+		onsubmit={handleSubmit}
 	>
-		<h1 class="text-center text-2xl font-bold">Enter 2FA Code</h1>
+		<h1 class="text-2xl font-bold">Two Factor Authentication</h1>
+		<p>Please enter a 2FA code from your authenticator app.</p>
 		<div class="flex flex-col gap-2">
-			<label for="totp" class="font-semibold">2FA Code</label>
+			<label for="totp" class="font-semibold">Code</label>
 			<input
 				class="rounded-full border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
 				id="totp"
-				required
-				bind:value={$formData.code}
+				type="text"
+				inputmode="numeric"
+				pattern="[0-9]*"
+				maxlength="6"
+				bind:value={totpInput}
 			/>
 		</div>
 
 		<button
-			disabled={$submitting}
+			disabled={submitting}
 			class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
 		>
-			{$submitting ? 'Logging in...' : 'Log in'}
+			{submitting ? 'Verifying...' : 'Verify'}
 		</button>
-		{#if $errors?._errors}
-			<div class="mt-3 rounded-md text-red-700">
-				{$errors?._errors}
+		{#if error !== ''}
+			<div class="text-red-700">
+				{error}
 			</div>
 		{/if}
 	</form>
