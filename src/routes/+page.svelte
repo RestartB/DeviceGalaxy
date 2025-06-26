@@ -18,18 +18,9 @@
 		/>
 		<div>
 			<h1 class="text-lg font-semibold">Welcome back, {data.user.name}!</h1>
-			<p>Where to today?</p>
 		</div>
 	</div>
 	<div class="flex w-full flex-wrap gap-2">
-		<DeviceCard name="Macbook Air" description="macbook blue" brand="Apple" background="https://www.thestreet.com/.image/t_share/MjA0Nzg2NDQ1MDQ5NzM0MTcz/4-13-inch15-inch-m3-macbook-air-hands-onfirst-look-thestreet.jpg" />
-		<DeviceCard name="Macbook Air" description="macbook blue" brand="Apple" background="https://www.thestreet.com/.image/t_share/MjA0Nzg2NDQ1MDQ5NzM0MTcz/4-13-inch15-inch-m3-macbook-air-hands-onfirst-look-thestreet.jpg" />
-		<DeviceCard name="Macbook Air" description="macbook blue" brand="Apple" background="https://www.thestreet.com/.image/t_share/MjA0Nzg2NDQ1MDQ5NzM0MTcz/4-13-inch15-inch-m3-macbook-air-hands-onfirst-look-thestreet.jpg" />
-		<DeviceCard name="Macbook Air" description="macbook blue" brand="Apple" background="https://www.thestreet.com/.image/t_share/MjA0Nzg2NDQ1MDQ5NzM0MTcz/4-13-inch15-inch-m3-macbook-air-hands-onfirst-look-thestreet.jpg" />
-		<DeviceCard name="Macbook Air" description="macbook blue" brand="Apple" background="https://www.thestreet.com/.image/t_share/MjA0Nzg2NDQ1MDQ5NzM0MTcz/4-13-inch15-inch-m3-macbook-air-hands-onfirst-look-thestreet.jpg" />
-		<DeviceCard name="Macbook Air" description="macbook blue" brand="Apple" background="https://www.thestreet.com/.image/t_share/MjA0Nzg2NDQ1MDQ5NzM0MTcz/4-13-inch15-inch-m3-macbook-air-hands-onfirst-look-thestreet.jpg" />
+
 	</div>
-{:else}
-	<h1>Authentication Required</h1>
-	<p>Please log in to access your account.</p>
 {/if}

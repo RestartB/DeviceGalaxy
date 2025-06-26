@@ -2,20 +2,26 @@ import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
 
 export const userDevices = sqliteTable('devices', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
-	userId: integer('user_id').notNull(),
-	deivceName: text('name', { length: 255 }).notNull(),
-	description: text('description', { length: 255 }).notNull().default(''),
-	createdAt: integer('created_at').notNull().default(0),
-	updatedAt: integer('updated_at').notNull().default(0),
-	deviceTypeID: integer('device_type_id').notNull()
+	userId: text('user_id').notNull(),
+	deviceName: text('name', { length: 255 }).notNull(),
+	description: text('description').default(''),
+	cpu: text('cpu', { length: 255 }).default(''),
+	memory: text('memory', { length: 255 }).default(''),
+	storage: text('storage', { length: 255 }).default(''),
+	os: text('os', { length: 255 }).default(''),
+	brand: text('brand', { length: 255 }).default(''),
+	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp' }),
 });
 
-export const deviceTypes = sqliteTable('device_types', {
+export const tags = sqliteTable('tags', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
-	userId: integer('user_id').notNull(),
-	name: text('name', { length: 255 }).notNull(),
-	description: text('description', { length: 255 }).notNull().default(''),
-	iconURL: text('icon_url').notNull().default('')
+	userId: text('user_id').notNull(),
+	tagName: text('tag_name', { length: 255 }).notNull(),
+	tagColour: text('tag_color', { length: 7 }).default('#FFFFFF'),
+	tagTextColour: text('tag_text_color', { length: 7 }).default('#000000'),
+	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp' }),
 });
 
 export const user = sqliteTable('user', {

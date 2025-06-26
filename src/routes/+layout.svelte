@@ -5,7 +5,7 @@
 	let { data, children } = $props();
 </script>
 
-<div class="flex h-screen max-h-screen w-full">
+<div class="flex h-screen max-h-screen w-full font-family font-lg">
 	<Sidebar data={data} />
 	<div class="box-border h-full max-h-full flex-1 overflow-y-auto p-4">
 		{@render children()}

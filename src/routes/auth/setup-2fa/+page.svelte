@@ -63,32 +63,27 @@
 </script>
 
 <div class="box-border flex h-full min-h-fit w-full items-center justify-center p-2 text-center">
+	<div class="absolute w-full h-full top-0 left-0 -z-10 after:absolute after:w-full after:h-full after:pointer-events-none after:content-[''] after:backdrop-blur-lg after:backdrop-brightness-120 after:top-0 after:left-0" style="background-image: url('https://cdn.stocksnap.io/img-thumbs/960w/building-abstract_QDCJ1JA4QV.jpg')"></div>
 	{#if generatedTOTP}
 		<form
-			class="flex h-fit w-fit max-w-xl flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-400 bg-zinc-200 p-4"
+			class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100/80 backdrop-blur-lg p-4"
 			onsubmit={verifyTOTPCode}
 		>
 			<h1 class="text-2xl font-bold">Set up 2FA</h1>
-			<p>Your password has been verified. Please follow these steps to set up 2FA:</p>
-			<ol class="list-inside list-decimal text-left">
-				<li>
-					Download an authenticator app (Authy, MS Authenticator, etc) or use a password manager
-					that supports 2FA (1Password, Bitwarden, etc)
-				</li>
-				<li>Scan the QR code displayed, or copy the URL below</li>
-				<li>Enter a verification code in the box below</li>
-			</ol>
+			<p>Your password has been verified. Please scan the QR code or manually enter the URL below into your authenticator app.</p>
 
-			<QRCode data={totpURI} />
+			<div class="border-2 border-zinc-500 overflow-hidden rounded-lg">
+				<QRCode data={totpURI} />
+			</div>
 
 			<h3 class="text-xl font-semibold">QR not working?</h3>
 			<p>Copy this URL into your authenticator app:</p>
 			<p class="max-w-full font-mono text-sm break-words">{totpURI}</p>
 
 			<div class="flex flex-col gap-2">
-				<label for="totp" class="font-semibold">Verify Code</label>
+				<label for="totp" class="font-semibold">Enter 2FA Code</label>
 				<input
-					class="rounded-full border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
+					class="rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4"
 					id="totp"
 					type="text"
 					inputmode="numeric"
@@ -100,7 +95,7 @@
 
 			<button
 				disabled={submitting}
-				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
+				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4"
 			>
 				{submitting ? 'Verifying...' : 'Verify'}
 			</button>
@@ -112,7 +107,7 @@
 		</form>
 	{:else}
 		<form
-			class="flex h-fit w-fit flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-400 bg-zinc-200 p-4"
+			class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100/80 backdrop-blur-lg p-4"
 			onsubmit={generateTOTP}
 		>
 			<h1 class="text-2xl font-bold">Set up 2FA</h1>
@@ -120,10 +115,10 @@
 				To help keep your account secure, we require that you enable 2FA. To get started, please
 				verify your password.
 			</p>
-			<div class="flex flex-col gap-2">
-				<label for="password" class="font-semibold">Verify Password</label>
+			<div class="flex flex-col gap-2 w-full">
+				<label for="password" class="font-semibold w-full text-start">Verify Password</label>
 				<input
-					class="rounded-full border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
+					class="rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 w-full text-start"
 					id="password"
 					type="password"
 					bind:value={password}
@@ -132,7 +127,7 @@
 
 			<button
 				disabled={submitting}
-				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
+				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 hover:bg-zinc-300 transition-colors"
 			>
 				{submitting ? 'Verifying...' : 'Verify'}
 			</button>
