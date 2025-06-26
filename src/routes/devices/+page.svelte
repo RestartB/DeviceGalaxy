@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import DeviceCard from '$lib/components/DeviceCard.svelte';
 
 	import { superForm } from 'sveltekit-superforms';
@@ -22,6 +23,7 @@
 	let maxPages = $derived(Math.ceil(totalDevices / 20));
 
 	let createPopupOpen = $state(false);
+	let formPage = $state(0);
 
 	async function fetchDevices() {
 		if (loading) return;
@@ -49,76 +51,129 @@
 
 {#if data.user}
 	{#if createPopupOpen}
-		<div class="fixed inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-lg">
-			<div class="w-full max-w-2xl rounded-lg border-4 border-zinc-400 bg-zinc-100 p-4 shadow-lg">
-				<h2 class="mb-4 text-xl font-bold">Create Device</h2>
-				<form method="POST" class="flex flex-col gap-2" use:enhance>
-					<label for="deviceName">Device Name</label>
-					<input
-						type="text"
-						id="deviceName"
-						name="deviceName"
-						class="w-full rounded-lg border p-2"
-						bind:value={$form.deviceName}
-						required
-					/>
+		<div
+			class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+			transition:fade={{ duration: 100 }}
+		>
+			<div class="flex w-full max-w-lg flex-col overflow-hidden rounded-xl bg-white shadow-2xl">
+				<div class="flex items-center justify-between border-b p-4">
+					<h2 class="text-xl font-bold">Create New Device</h2>
+					<button
+						onclick={() => (createPopupOpen = false)}
+						class="text-gray-400 hover:text-gray-600">&times;</button
+					>
+				</div>
 
-					<label for="description">Description</label>
-					<textarea
-						id="description"
-						name="description"
-						class="w-full rounded-lg border p-2"
-						bind:value={$form.description}
-					></textarea>
-
-					<label for="brand">Brand</label>
-					<input
-						type="text"
-						id="brand"
-						name="brand"
-						class="w-full rounded-lg border p-2"
-						bind:value={$form.brand}
-					/>
-
-					<label for="cpu">CPU</label>
-					<input
-						type="text"
-						id="cpu"
-						name="cpu"
-						class="w-full rounded-lg border p-2"
-						bind:value={$form.cpu}
-					/>
-
-					<label for="memory">Memory</label>
-					<input
-						type="text"
-						id="memory"
-						name="memory"
-						class="w-full rounded-lg border p-2"
-						bind:value={$form.memory}
-					/>
-
-					<label for="storage">Storage</label>
-					<input
-						type="text"
-						id="storage"
-						name="storage"
-						class="w-full rounded-lg border p-2"
-						bind:value={$form.storage}
-					/>
-
-					<div class="flex justify-between gap-2">
-						<button type="submit" class="flex-1 rounded bg-blue-500 px-4 py-2 text-white"
-							>Create</button
+				<form method="POST" class="flex flex-col" use:enhance>
+					<div class="relative h-110 overflow-hidden">
+						<div
+							class="absolute inset-0 flex flex-col gap-4 overflow-y-auto p-6 transition-transform duration-300"
+							style:transform="translateX({(0 - formPage) * 100}%)"
 						>
+							<h3 class="text-xl font-semibold">Basic Information</h3>
+							<label for="deviceName" class="text-sm font-medium">Device Name</label>
+							<input
+								type="text"
+								id="deviceName"
+								name="deviceName"
+								class="w-full rounded-lg border p-2"
+								bind:value={$form.deviceName}
+								required
+							/>
+							<label for="description" class="text-sm font-medium">Description</label>
+							<textarea
+								id="description"
+								name="description"
+								class="h-24 w-full rounded-lg border p-2"
+								bind:value={$form.description}
+							></textarea>
+						</div>
+
+						<div
+							class="absolute inset-0 flex flex-col gap-4 overflow-y-auto p-6 transition-transform duration-300"
+							style:transform="translateX({(1 - formPage) * 100}%)"
+						>
+							<h3 class="text-xl font-semibold">Specifications</h3>
+							<label for="brand" class="text-sm font-medium">Brand</label>
+							<input
+								type="text"
+								id="brand"
+								name="brand"
+								class="w-full rounded-lg border p-2"
+								bind:value={$form.brand}
+							/>
+							<label for="cpu" class="text-sm font-medium">CPU</label>
+							<input
+								type="text"
+								id="cpu"
+								name="cpu"
+								class="w-full rounded-lg border p-2"
+								bind:value={$form.cpu}
+							/>
+							<label for="memory" class="text-sm font-medium">Memory</label>
+							<input
+								type="text"
+								id="memory"
+								name="memory"
+								class="w-full rounded-lg border p-2"
+								bind:value={$form.memory}
+							/>
+							<label for="storage" class="text-sm font-medium">Storage</label>
+							<input
+								type="text"
+								id="storage"
+								name="storage"
+								class="w-full rounded-lg border p-2"
+								bind:value={$form.storage}
+							/>
+						</div>
+
+						<div
+							class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
+							style:transform="translateX({(2 - formPage) * 100}%)"
+						>
+							<h3 class="text-xl font-semibold">Confirm Details</h3>
+							<div class="space-y-2 rounded-lg bg-gray-50 p-4 text-sm">
+								<p><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
+								<p><strong>Description:</strong> {$form.description || 'N/A'}</p>
+								<p><strong>Brand:</strong> {$form.brand || 'N/A'}</p>
+								<p><strong>CPU:</strong> {$form.cpu || 'N/A'}</p>
+								<p><strong>Memory:</strong> {$form.memory || 'N/A'}</p>
+								<p><strong>Storage:</strong> {$form.storage || 'N/A'}</p>
+							</div>
+							<p class="mt-auto text-base text-gray-500">
+								Once you're happy with the details, click below to save
+							</p>
+						</div>
+					</div>
+
+					<div class="flex items-center justify-between gap-4 border-t bg-gray-50 p-4">
 						<button
 							type="button"
-							class="flex-1 rounded border px-4 py-2"
-							onclick={() => (createPopupOpen = false)}>Cancel</button
+							class="rounded-md border bg-white px-4 py-2"
+							onclick={() => (formPage = Math.max(formPage - 1, 0))}
+							style:visibility={formPage > 0 ? 'visible' : 'hidden'}>Previous</button
 						>
+
+						{#if formPage < 2}
+							<button
+								type="button"
+								class="rounded-md bg-blue-600 px-4 py-2 text-white"
+								onclick={() => (formPage = Math.min(formPage + 1, 2))}>Next</button
+							>
+						{/if}
+
+						{#if formPage === 2}
+							<button
+								type="submit"
+								class="flex-1 rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600"
+								>Create Device</button
+							>
+						{/if}
 					</div>
 					{#if $errors?._errors}
-						<div class="mt-3 rounded-md text-red-700">
+						<div class="border-t bg-red-50 p-4 text-sm text-red-700">
+							<strong>Error:</strong>
 							{$errors?._errors}
 						</div>
 					{/if}
