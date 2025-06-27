@@ -1,21 +1,11 @@
-import { superValidate } from 'sveltekit-superforms';
+import { superValidate, message } from 'sveltekit-superforms';
+import { error } from '@sveltejs/kit';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { z } from 'zod/v4';
-import { message } from 'sveltekit-superforms';
-import { fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { userDevices } from '$lib/server/db/schema';
 import { auth } from '$lib/server/auth';
+import { schema } from './schema';
 
-const schema = z.object({
-	deviceName: z.string(),
-	description: z.string().optional(),
-	cpu: z.string().optional(),
-	memory: z.string().optional(),
-	storage: z.string().optional(),
-	os: z.string().optional(),
-	brand: z.string().optional()
-});
 
 export const load = async () => {
 	const form = await superValidate(zod4(schema));
@@ -24,19 +14,20 @@ export const load = async () => {
 
 export const actions = {
 	default: async ({ request }) => {
-		const form = await superValidate(request, zod4(schema));
 		// Check if the user is authenticated
 		const session = await auth.api.getSession({
 			headers: request.headers
 		});
 
-		if (!form.valid) {
-			return fail(400, { form });
+		if (!session || !session.user) {
+			return error(401, 'Unauthorized');
 		}
 
-		if (!session || !session.user) {
-			return fail(401, { form });
-		}
+		const form = await superValidate(request, zod4(schema));
+
+		if (!form.valid) {
+            return error(400, "Invalid form");
+        }
 
 		try {
 			// Insert the device with the authenticated user's ID
@@ -53,9 +44,9 @@ export const actions = {
 			});
 
 			return message(form, 'Device added successfully!');
-		} catch (error) {
-			console.error('Error adding device:', error);
-			return fail(500, { form });
+		} catch (err) {
+			console.error('Error adding device:', err);
+			return error(500, "Error adding device");
 		}
 	}
 };

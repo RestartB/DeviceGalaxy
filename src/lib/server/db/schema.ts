@@ -4,7 +4,7 @@ export const userDevices = sqliteTable('devices', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	userId: text('user_id').notNull(),
 	deviceName: text('name', { length: 255 }).notNull(),
-	description: text('description').default(''),
+	description: text('description', { length: 1024 }).default(''),
 	cpu: text('cpu', { length: 255 }).default(''),
 	memory: text('memory', { length: 255 }).default(''),
 	storage: text('storage', { length: 255 }).default(''),

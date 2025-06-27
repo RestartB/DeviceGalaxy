@@ -47,6 +47,7 @@
 		"@libsql/client": "^0.14.0",
 		"@lucide/svelte": "^0.523.0",
 		"better-auth": "^1.2.10",
-		"drizzle-orm": "^0.40.0"
+		"drizzle-orm": "^0.40.0",
+		"svelte-sonner": "^1.0.5"
 	}
 }
