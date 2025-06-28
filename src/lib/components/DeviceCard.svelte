@@ -6,7 +6,9 @@
 <div
 	class="max-w-sm min-w-64 flex-1 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md"
 >
-	<img src={background} alt={name} class="h-48 w-full object-cover" />
+	{#if background}
+		<img src={background} alt={name} class="h-48 w-full object-cover" />
+	{/if}
 	<div class="flex w-full flex-col gap-2 p-4">
 		<div>
 			<p class="text-sm text-zinc-600">{brand}</p>

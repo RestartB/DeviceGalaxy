@@ -7,15 +7,21 @@
 	import { schema } from './schema';
 
 	import type { InferSelectModel } from 'drizzle-orm';
-	import type { userDevices } from '$lib/server/db/schema';
+	import type { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
+	import Fuse from 'fuse.js';
+
 	import DeviceCard from '$lib/components/DeviceCard.svelte';
 	import FilterPill from '$lib/components/FilterPill.svelte';
 
 	type Device = InferSelectModel<typeof userDevices>;
+	type CPU = InferSelectModel<typeof cpus>;
+	type Memory = InferSelectModel<typeof memory>;
+	type Storage = InferSelectModel<typeof storage>;
+	type OS = InferSelectModel<typeof os>;
+	type Brand = InferSelectModel<typeof brands>;
 
-	// Props
 	const { data } = $props();
 	const { form, errors, message, enhance, validateForm } = superForm(data.form, {
 		validators: zod4Client(schema),
@@ -29,22 +35,56 @@
 	});
 
 	let devices = $state<Device[]>([]);
+
 	let totalDevices = $state(0);
 	let loadingDevices = $state(false);
 	let errorLoadingDevices = $state(false);
 
-	let brands = $state<String[]>([]);
-	let cpus = $state<String[]>([]);
-	let memory = $state<String[]>([]);
-	let storage = $state<String[]>([]);
-	let loadingFilters = $state(false);
-	let errorLoadingFilters = $state(false);
+	let attributeLists = $state({
+		cpus: [] as CPU[],
+		memory: [] as Memory[],
+		storage: [] as Storage[],
+		os: [] as OS[],
+		brands: [] as Brand[]
+	});
+
+	let cpuFuzzy = $state<Fuse<CPU> | null>(null);
+	let memoryFuzzy = $state<Fuse<Memory> | null>(null);
+	let storageFuzzy = $state<Fuse<Storage> | null>(null);
+	let osFuzzy = $state<Fuse<OS> | null>(null);
+	let brandFuzzy = $state<Fuse<Brand> | null>(null);
+
+	let loadingAttributes = $state(false);
+	let errorLoadingAttributes = $state(false);
+
+	let activeFilters = $state({
+		brand: [] as number[],
+		cpu: [] as number[],
+		memory: [] as number[],
+		storage: [] as number[],
+		os: [] as number[]
+	});
+	let selectedFilters = $state({
+		brand: [] as number[],
+		cpu: [] as number[],
+		memory: [] as number[],
+		storage: [] as number[],
+		os: [] as number[]
+	});
+	let showApplyFilters = $state(false);
+	let applyingFilters = $state(false);
 
 	let page = $state(1);
-	let maxPages = $derived(Math.ceil(totalDevices / 4));
+	let maxPages = $derived(Math.ceil(totalDevices / 10));
 
 	let createPopupOpen = $state(false);
 	let formPage = $state(0);
+
+	let brandFocus = $state(false);
+	let cpuFocus = $state(false);
+	let memoryFocus = $state(false);
+	let storageFocus = $state(false);
+	let osFocus = $state(false);
 
 	type FormErrors = typeof $errors;
 
@@ -56,38 +96,25 @@
 			($errors._errors && $errors._errors.length > 0)
 	);
 
-	async function getFilters() {
-		if (loadingFilters) return;
-		if (errorLoadingFilters) return;
-
-		loadingFilters = true;
-		try {
-			const response = await fetch(`/api/devices/get_filters`);
-			const data = await response.json();
-
-			console.log('Filters fetched:', data);
-
-			brands = data.brands.map((brand: any) => brand.brand);
-			cpus = data.cpus.map((cpu: any) => cpu.cpu);
-			memory = data.memory.map((mem: any) => mem.memory);
-			storage = data.storage.map((stor: any) => stor.storage);
-		} catch (error) {
-			console.error('Error fetching devices:', error);
-			errorLoadingFilters = true;
-		} finally {
-			loadingFilters = false;
-		}
-	}
-
 	async function fetchDevices() {
 		if (loadingDevices) return;
 		if (errorLoadingDevices) return;
 
 		loadingDevices = true;
 		try {
-			console.log(`Fetching devices for page ${page}...`);
-			console.log(`Request URL: /api/devices/get_devices?offset=${(page - 1) * 4}&limit=4`);
-			const response = await fetch(`/api/devices/get_devices?offset=${(page - 1) * 4}&limit=4`);
+			let url = `/api/devices/get_devices?offset=${(page - 1) * 10}&limit=10`;
+
+			if (applyingFilters) {
+				if (activeFilters.cpu.length > 0) url += `&cpu=${activeFilters.cpu.join(',')}`;
+				if (activeFilters.memory.length > 0) url += `&memory=${activeFilters.memory.join(',')}`;
+				if (activeFilters.storage.length > 0) url += `&storage=${activeFilters.storage.join(',')}`;
+				if (activeFilters.os.length > 0) url += `&os=${activeFilters.os.join(',')}`;
+				if (activeFilters.brand.length > 0) url += `&brand=${activeFilters.brand.join(',')}`;
+			}
+
+			console.log(url);
+
+			const response = await fetch(url);
 			const data = await response.json();
 
 			devices = data.devices as Device[];
@@ -97,6 +124,29 @@
 			errorLoadingDevices = true;
 		} finally {
 			loadingDevices = false;
+			applyingFilters = false;
+		}
+	}
+
+	async function getAttributes() {
+		if (loadingAttributes) return;
+		if (errorLoadingAttributes) return;
+
+		loadingAttributes = true;
+		try {
+			const response = await fetch('/api/devices/get_attributes');
+			const data = await response.json();
+
+			attributeLists.cpus = data.cpus as CPU[];
+			attributeLists.memory = data.memory as Memory[];
+			attributeLists.storage = data.storage as Storage[];
+			attributeLists.os = data.os as OS[];
+			attributeLists.brands = data.brands as Brand[];
+		} catch (error) {
+			console.error('Error fetching attributes:', error);
+			errorLoadingAttributes = true;
+		} finally {
+			loadingAttributes = false;
 		}
 	}
 
@@ -120,7 +170,7 @@
 
 	onMount(async () => {
 		await fetchDevices();
-		await getFilters();
+		await getAttributes();
 	});
 
 	$effect(() => {
@@ -135,12 +185,70 @@
 			if ($message === 'Device added successfully!') {
 				toast.success($message);
 				fetchDevices();
-				getFilters();
+				getAttributes();
 				createPopupOpen = false;
 			} else {
 				toast.warning($message);
 			}
 		}
+	});
+
+	$effect(() => {
+		if (attributeLists.cpus.length > 0) {
+			cpuFuzzy = new Fuse(attributeLists.cpus, {
+				keys: ['displayName'],
+				includeScore: true,
+				threshold: 0.3
+			});
+		}
+		if (attributeLists.memory.length > 0) {
+			memoryFuzzy = new Fuse(attributeLists.memory, {
+				keys: ['displayName'],
+				includeScore: true,
+				threshold: 0.3
+			});
+		}
+		if (attributeLists.storage.length > 0) {
+			storageFuzzy = new Fuse(attributeLists.storage, {
+				keys: ['displayName'],
+				includeScore: true,
+				threshold: 0.3
+			});
+		}
+		if (attributeLists.os.length > 0) {
+			osFuzzy = new Fuse(attributeLists.os, {
+				keys: ['displayName'],
+				includeScore: true,
+				threshold: 0.3
+			});
+		}
+		if (attributeLists.brands.length > 0) {
+			brandFuzzy = new Fuse(attributeLists.brands, {
+				keys: ['displayName'],
+				includeScore: true,
+				threshold: 0.3
+			});
+		}
+	});
+
+	$effect(() => {
+		const hasNewFilters = Object.keys(selectedFilters).some((key) => {
+			const selectedKey = key as keyof typeof selectedFilters;
+			return (
+				JSON.stringify(selectedFilters[selectedKey].sort()) !==
+				JSON.stringify(activeFilters[selectedKey].sort())
+			);
+		});
+
+		const hasSelectedFilters = Object.keys(selectedFilters).some(
+			(key) => selectedFilters[key as keyof typeof selectedFilters].length > 0
+		);
+
+		const hasActiveFilters = Object.keys(activeFilters).some(
+			(key) => activeFilters[key as keyof typeof activeFilters].length > 0
+		);
+
+		showApplyFilters = hasNewFilters && (hasSelectedFilters || hasActiveFilters);
 	});
 </script>
 
@@ -190,42 +298,156 @@
 							style:transform="translateX({(1 - formPage) * 100}%)"
 						>
 							<h3 class="text-xl font-semibold">Specifications</h3>
+
 							<label for="brand" class="text-sm font-medium">Brand</label>
-							<input
-								type="text"
-								id="brand"
-								name="brand"
-								class="w-full rounded-lg border p-2"
-								bind:value={$form.brand}
-							/>
+							<div class="relative">
+								<input
+									type="text"
+									id="brand"
+									name="brand"
+									class="w-full rounded-lg border p-2"
+									bind:value={$form.brand}
+									onfocusin={() => (brandFocus = true)}
+									onfocusout={() => (brandFocus = false)}
+								/>
+								{#if brandFuzzy && $form.brand && brandFocus}
+									<ul
+										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
+									>
+										{#each brandFuzzy.search($form.brand) as result}
+											<!-- svelte-ignore a11y_click_events_have_key_events -->
+											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+											<li
+												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
+												onclick={() => ($form.brand = result.item.displayName)}
+											>
+												{result.item.displayName}
+											</li>
+										{/each}
+									</ul>
+								{/if}
+							</div>
 							{#if $errors.brand}<span class="text-red-600">{$errors.brand}</span>{/if}
+
 							<label for="cpu" class="text-sm font-medium">CPU</label>
-							<input
-								type="text"
-								id="cpu"
-								name="cpu"
-								class="w-full rounded-lg border p-2"
-								bind:value={$form.cpu}
-							/>
+							<div class="relative">
+								<input
+									type="text"
+									id="cpu"
+									name="cpu"
+									class="w-full rounded-lg border p-2"
+									bind:value={$form.cpu}
+									onfocusin={() => (cpuFocus = true)}
+									onfocusout={() => (cpuFocus = false)}
+								/>
+								{#if cpuFuzzy && $form.cpu && cpuFocus}
+									<ul
+										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
+									>
+										{#each cpuFuzzy.search($form.cpu) as result}
+											<!-- svelte-ignore a11y_click_events_have_key_events -->
+											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+											<li
+												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
+												onclick={() => ($form.cpu = result.item.displayName)}
+											>
+												{result.item.displayName}
+											</li>
+										{/each}
+									</ul>
+								{/if}
+							</div>
 							{#if $errors.cpu}<span class="text-red-600">{$errors.cpu}</span>{/if}
+
 							<label for="memory" class="text-sm font-medium">Memory</label>
-							<input
-								type="text"
-								id="memory"
-								name="memory"
-								class="w-full rounded-lg border p-2"
-								bind:value={$form.memory}
-							/>
+							<div class="relative">
+								<input
+									type="text"
+									id="memory"
+									name="memory"
+									class="w-full rounded-lg border p-2"
+									bind:value={$form.memory}
+									onfocusin={() => (memoryFocus = true)}
+									onfocusout={() => (memoryFocus = false)}
+								/>
+								{#if memoryFuzzy && $form.memory && memoryFocus}
+									<ul
+										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
+									>
+										{#each memoryFuzzy.search($form.memory) as result}
+											<!-- svelte-ignore a11y_click_events_have_key_events -->
+											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+											<li
+												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
+												onclick={() => ($form.memory = result.item.displayName)}
+											>
+												{result.item.displayName}
+											</li>
+										{/each}
+									</ul>
+								{/if}
+							</div>
 							{#if $errors.memory}<span class="text-red-600">{$errors.memory}</span>{/if}
+
 							<label for="storage" class="text-sm font-medium">Storage</label>
-							<input
-								type="text"
-								id="storage"
-								name="storage"
-								class="w-full rounded-lg border p-2"
-								bind:value={$form.storage}
-							/>
+							<div class="relative">
+								<input
+									type="text"
+									id="storage"
+									name="storage"
+									class="w-full rounded-lg border p-2"
+									bind:value={$form.storage}
+									onfocusin={() => (storageFocus = true)}
+									onfocusout={() => (storageFocus = false)}
+								/>
+								{#if storageFuzzy && $form.storage && storageFocus}
+									<ul
+										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
+									>
+										{#each storageFuzzy.search($form.storage) as result}
+											<!-- svelte-ignore a11y_click_events_have_key_events -->
+											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+											<li
+												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
+												onclick={() => ($form.storage = result.item.displayName)}
+											>
+												{result.item.displayName}
+											</li>
+										{/each}
+									</ul>
+								{/if}
+							</div>
 							{#if $errors.storage}<span class="text-red-600">{$errors.storage}</span>{/if}
+
+							<label for="os" class="text-sm font-medium">Operating System</label>
+							<div class="relative">
+								<input
+									type="text"
+									id="os"
+									name="os"
+									class="w-full rounded-lg border p-2"
+									bind:value={$form.os}
+									onfocusin={() => (osFocus = true)}
+									onfocusout={() => (osFocus = false)}
+								/>
+								{#if osFuzzy && $form.os && osFocus}
+									<ul
+										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
+									>
+										{#each osFuzzy.search($form.os) as result}
+											<!-- svelte-ignore a11y_click_events_have_key_events -->
+											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+											<li
+												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
+												onclick={() => ($form.os = result.item.displayName)}
+											>
+												{result.item.displayName}
+											</li>
+										{/each}
+									</ul>
+								{/if}
+							</div>
+							{#if $errors.os}<span class="text-red-600">{$errors.os}</span>{/if}
 						</div>
 
 						<div
@@ -315,10 +537,46 @@
 			onclick={() => (createPopupOpen = true)}>Create Device</button
 		>
 		<div class="flex flex-wrap gap-2">
-			<FilterPill name="Brand" options={brands} />
-			<FilterPill name="CPU" options={cpus} />
-			<FilterPill name="Memory" options={memory} />
-			<FilterPill name="Storage" options={storage} />
+			<FilterPill
+				name="Brand"
+				options={attributeLists.brands}
+				bind:selectedItems={selectedFilters.brand}
+			/>
+			<FilterPill
+				name="CPU"
+				options={attributeLists.cpus}
+				bind:selectedItems={selectedFilters.cpu}
+			/>
+			<FilterPill
+				name="Memory"
+				options={attributeLists.memory}
+				bind:selectedItems={selectedFilters.memory}
+			/>
+			<FilterPill
+				name="Storage"
+				options={attributeLists.storage}
+				bind:selectedItems={selectedFilters.storage}
+			/>
+			<FilterPill name="OS" options={attributeLists.os} bind:selectedItems={selectedFilters.os} />
+			{#if showApplyFilters}
+				<button
+					class="rounded bg-green-500 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40"
+					disabled={applyingFilters}
+					onclick={() => {
+						applyingFilters = true;
+						showApplyFilters = false;
+						// Deep copy the selected filters
+						activeFilters = {
+							brand: [...selectedFilters.brand],
+							cpu: [...selectedFilters.cpu],
+							memory: [...selectedFilters.memory],
+							storage: [...selectedFilters.storage],
+							os: [...selectedFilters.os]
+						};
+						fetchDevices();
+					}}>Apply Filters</button
+				>
+			{/if}
 		</div>
 		{#if loadingDevices}
 			<p>Loading devices...</p>
@@ -335,7 +593,7 @@
 						cpu={device.cpu}
 						memory={device.memory}
 						storage={device.storage}
-						background={'https://www.thestreet.com/.image/t_share/MjA0Nzg2NDQ1MDQ5NzM0MTcz/4-13-inch15-inch-m3-macbook-air-hands-onfirst-look-thestreet.jpg'}
+						background={null}
 					/>
 				{/each}
 			</div>

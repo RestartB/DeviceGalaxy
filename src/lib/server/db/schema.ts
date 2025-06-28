@@ -2,26 +2,75 @@ import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
 
 export const userDevices = sqliteTable('devices', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
-	userId: text('user_id').notNull(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
 	deviceName: text('name', { length: 255 }).notNull(),
 	description: text('description', { length: 1024 }).default(''),
-	cpu: text('cpu', { length: 255 }).default(''),
-	memory: text('memory', { length: 255 }).default(''),
-	storage: text('storage', { length: 255 }).default(''),
-	os: text('os', { length: 255 }).default(''),
-	brand: text('brand', { length: 255 }).default(''),
+	cpu: integer('cpu'),
+	memory: integer('memory'),
+	storage: integer('storage'),
+	os: integer('os'),
+	brand: integer('brand'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' })
 });
 
 export const tags = sqliteTable('tags', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
-	userId: text('user_id').notNull(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
 	tagName: text('tag_name', { length: 255 }).notNull(),
 	tagColour: text('tag_color', { length: 7 }).default('#FFFFFF'),
 	tagTextColour: text('tag_text_color', { length: 7 }).default('#000000'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' })
+});
+
+export const cpus = sqliteTable('cpus', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	userID: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	value: text('name', { length: 255 }).notNull().unique(),
+	displayName: text('display_name', { length: 255 }).notNull(),
+});
+
+export const memory = sqliteTable('memory', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	userID: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	value: text('name', { length: 255 }).notNull().unique(),
+	displayName: text('display_name', { length: 255 }).notNull(),
+});
+
+export const storage = sqliteTable('storage', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	userID: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	value: text('name', { length: 255 }).notNull().unique(),
+	displayName: text('display_name', { length: 255 }).notNull(),
+});
+
+export const os = sqliteTable('os', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	userID: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	value: text('name', { length: 255 }).notNull().unique(),
+	displayName: text('display_name', { length: 255 }).notNull(),
+});
+
+export const brands = sqliteTable('brands', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	value: text('name', { length: 255 }).notNull().unique(),
+	displayName: text('display_name', { length: 255 }).notNull(),
 });
 
 export const user = sqliteTable('user', {
