@@ -10,10 +10,10 @@
 	import type { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
-	import Fuse from 'fuse.js';
 
 	import DeviceCard from '$lib/components/DeviceCard.svelte';
 	import FilterPill from '$lib/components/FilterPill.svelte';
+	import Field from '$lib/components/add_device/Field.svelte';
 
 	type Device = InferSelectModel<typeof userDevices>;
 	type CPU = InferSelectModel<typeof cpus>;
@@ -48,12 +48,6 @@
 		brands: [] as Brand[]
 	});
 
-	let cpuFuzzy = $state<Fuse<CPU> | null>(null);
-	let memoryFuzzy = $state<Fuse<Memory> | null>(null);
-	let storageFuzzy = $state<Fuse<Storage> | null>(null);
-	let osFuzzy = $state<Fuse<OS> | null>(null);
-	let brandFuzzy = $state<Fuse<Brand> | null>(null);
-
 	let loadingAttributes = $state(false);
 	let errorLoadingAttributes = $state(false);
 
@@ -80,12 +74,6 @@
 	let createPopupOpen = $state(false);
 	let formPage = $state(0);
 
-	let brandFocus = $state(false);
-	let cpuFocus = $state(false);
-	let memoryFocus = $state(false);
-	let storageFocus = $state(false);
-	let osFocus = $state(false);
-
 	type FormErrors = typeof $errors;
 
 	let hasErrors = $derived(
@@ -111,8 +99,6 @@
 				if (activeFilters.os.length > 0) url += `&os=${activeFilters.os.join(',')}`;
 				if (activeFilters.brand.length > 0) url += `&brand=${activeFilters.brand.join(',')}`;
 			}
-
-			console.log(url);
 
 			const response = await fetch(url);
 			const data = await response.json();
@@ -194,44 +180,6 @@
 	});
 
 	$effect(() => {
-		if (attributeLists.cpus.length > 0) {
-			cpuFuzzy = new Fuse(attributeLists.cpus, {
-				keys: ['displayName'],
-				includeScore: true,
-				threshold: 0.3
-			});
-		}
-		if (attributeLists.memory.length > 0) {
-			memoryFuzzy = new Fuse(attributeLists.memory, {
-				keys: ['displayName'],
-				includeScore: true,
-				threshold: 0.3
-			});
-		}
-		if (attributeLists.storage.length > 0) {
-			storageFuzzy = new Fuse(attributeLists.storage, {
-				keys: ['displayName'],
-				includeScore: true,
-				threshold: 0.3
-			});
-		}
-		if (attributeLists.os.length > 0) {
-			osFuzzy = new Fuse(attributeLists.os, {
-				keys: ['displayName'],
-				includeScore: true,
-				threshold: 0.3
-			});
-		}
-		if (attributeLists.brands.length > 0) {
-			brandFuzzy = new Fuse(attributeLists.brands, {
-				keys: ['displayName'],
-				includeScore: true,
-				threshold: 0.3
-			});
-		}
-	});
-
-	$effect(() => {
 		const hasNewFilters = Object.keys(selectedFilters).some((key) => {
 			const selectedKey = key as keyof typeof selectedFilters;
 			return (
@@ -299,155 +247,36 @@
 						>
 							<h3 class="text-xl font-semibold">Specifications</h3>
 
-							<label for="brand" class="text-sm font-medium">Brand</label>
-							<div class="relative">
-								<input
-									type="text"
-									id="brand"
-									name="brand"
-									class="w-full rounded-lg border p-2"
-									bind:value={$form.brand}
-									onfocusin={() => (brandFocus = true)}
-									onfocusout={() => (brandFocus = false)}
-								/>
-								{#if brandFuzzy && $form.brand && brandFocus}
-									<ul
-										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
-									>
-										{#each brandFuzzy.search($form.brand) as result}
-											<!-- svelte-ignore a11y_click_events_have_key_events -->
-											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-											<li
-												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
-												onclick={() => ($form.brand = result.item.displayName)}
-											>
-												{result.item.displayName}
-											</li>
-										{/each}
-									</ul>
-								{/if}
-							</div>
-							{#if $errors.brand}<span class="text-red-600">{$errors.brand}</span>{/if}
-
-							<label for="cpu" class="text-sm font-medium">CPU</label>
-							<div class="relative">
-								<input
-									type="text"
-									id="cpu"
-									name="cpu"
-									class="w-full rounded-lg border p-2"
-									bind:value={$form.cpu}
-									onfocusin={() => (cpuFocus = true)}
-									onfocusout={() => (cpuFocus = false)}
-								/>
-								{#if cpuFuzzy && $form.cpu && cpuFocus}
-									<ul
-										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
-									>
-										{#each cpuFuzzy.search($form.cpu) as result}
-											<!-- svelte-ignore a11y_click_events_have_key_events -->
-											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-											<li
-												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
-												onclick={() => ($form.cpu = result.item.displayName)}
-											>
-												{result.item.displayName}
-											</li>
-										{/each}
-									</ul>
-								{/if}
-							</div>
-							{#if $errors.cpu}<span class="text-red-600">{$errors.cpu}</span>{/if}
-
-							<label for="memory" class="text-sm font-medium">Memory</label>
-							<div class="relative">
-								<input
-									type="text"
-									id="memory"
-									name="memory"
-									class="w-full rounded-lg border p-2"
-									bind:value={$form.memory}
-									onfocusin={() => (memoryFocus = true)}
-									onfocusout={() => (memoryFocus = false)}
-								/>
-								{#if memoryFuzzy && $form.memory && memoryFocus}
-									<ul
-										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
-									>
-										{#each memoryFuzzy.search($form.memory) as result}
-											<!-- svelte-ignore a11y_click_events_have_key_events -->
-											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-											<li
-												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
-												onclick={() => ($form.memory = result.item.displayName)}
-											>
-												{result.item.displayName}
-											</li>
-										{/each}
-									</ul>
-								{/if}
-							</div>
-							{#if $errors.memory}<span class="text-red-600">{$errors.memory}</span>{/if}
-
-							<label for="storage" class="text-sm font-medium">Storage</label>
-							<div class="relative">
-								<input
-									type="text"
-									id="storage"
-									name="storage"
-									class="w-full rounded-lg border p-2"
-									bind:value={$form.storage}
-									onfocusin={() => (storageFocus = true)}
-									onfocusout={() => (storageFocus = false)}
-								/>
-								{#if storageFuzzy && $form.storage && storageFocus}
-									<ul
-										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
-									>
-										{#each storageFuzzy.search($form.storage) as result}
-											<!-- svelte-ignore a11y_click_events_have_key_events -->
-											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-											<li
-												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
-												onclick={() => ($form.storage = result.item.displayName)}
-											>
-												{result.item.displayName}
-											</li>
-										{/each}
-									</ul>
-								{/if}
-							</div>
-							{#if $errors.storage}<span class="text-red-600">{$errors.storage}</span>{/if}
-
-							<label for="os" class="text-sm font-medium">Operating System</label>
-							<div class="relative">
-								<input
-									type="text"
-									id="os"
-									name="os"
-									class="w-full rounded-lg border p-2"
-									bind:value={$form.os}
-									onfocusin={() => (osFocus = true)}
-									onfocusout={() => (osFocus = false)}
-								/>
-								{#if osFuzzy && $form.os && osFocus}
-									<ul
-										class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
-									>
-										{#each osFuzzy.search($form.os) as result}
-											<!-- svelte-ignore a11y_click_events_have_key_events -->
-											<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-											<li
-												class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
-												onclick={() => ($form.os = result.item.displayName)}
-											>
-												{result.item.displayName}
-											</li>
-										{/each}
-									</ul>
-								{/if}
-							</div>
-							{#if $errors.os}<span class="text-red-600">{$errors.os}</span>{/if}
+							<Field
+								name="Brand"
+								errors={$errors.brand}
+								attributes={attributeLists.brands}
+								bind:value={$form.brand}
+							/>
+							<Field
+								name="CPU"
+								errors={$errors.cpu}
+								attributes={attributeLists.cpus}
+								bind:value={$form.cpu}
+							/>
+							<Field
+								name="Memory"
+								errors={$errors.memory}
+								attributes={attributeLists.memory}
+								bind:value={$form.memory}
+							/>
+							<Field
+								name="Storage"
+								errors={$errors.storage}
+								attributes={attributeLists.storage}
+								bind:value={$form.storage}
+							/>
+							<Field
+								name="OS"
+								errors={$errors.os}
+								attributes={attributeLists.os}
+								bind:value={$form.os} 
+							/>
 						</div>
 
 						<div
@@ -574,6 +403,7 @@
 							os: [...selectedFilters.os]
 						};
 						fetchDevices();
+						getAttributes();
 					}}>Apply Filters</button
 				>
 			{/if}

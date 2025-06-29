@@ -15,7 +15,7 @@
 		<ul class="flex w-full flex-col gap-4">
 			<li class="w-full"><a href="/" class="w-full">Home</a></li>
 			<li class="w-full"><a href="/devices" class="w-full">Devices</a></li>
-			<li class="w-full"><a href="/software" class="w-full">Software</a></li>
+			<li class="w-full"><a href="/software" class="w-full">Specifications</a></li>
 			<li class="w-full"><a href="/shared" class="w-full">Shared</a></li>
 		</ul>
 	</nav>

@@ -1,38 +1,72 @@
 <script lang="ts">
-    let { 
-		fuzzyResults, 
-		errors, 
-		value = $bindable() 
-	}: { 
-		fuzzyResults: any; 
-		errors: any; 
-		value: string
+	import { fade } from 'svelte/transition';
+	import Fuse from 'fuse.js';
+	import type { FuseResult } from 'fuse.js';
+
+	import type { InferSelectModel } from 'drizzle-orm';
+	import type { cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+
+	type CPU = InferSelectModel<typeof cpus>;
+	type Memory = InferSelectModel<typeof memory>;
+	type Storage = InferSelectModel<typeof storage>;
+	type OS = InferSelectModel<typeof os>;
+	type Brand = InferSelectModel<typeof brands>;
+
+	let {
+		errors,
+		name,
+		attributes,
+		value = $bindable()
+	}: {
+		errors: any;
+		name: string;
+		attributes: Array<CPU | Memory | Storage | OS | Brand>;
+		value: string | undefined;
 	} = $props();
-    
-    let focus = $state(false);
+
+	let focus = $state(false);
+	let fuzzy = new Fuse(attributes, {
+		keys: ['displayName'],
+		includeScore: true,
+		threshold: 0.3
+	});
+	let fuzzyResults: FuseResult<CPU | Memory | Storage | OS | Brand>[] = $state([]);
+
+	$effect(() => {
+		if (value) {
+			console.log('Searching for:', value);
+			fuzzyResults = fuzzy.search(value);
+		}
+	});
 </script>
 
-<label for="memory" class="text-sm font-medium">Memory</label>
+<label for={name.toLowerCase()} class="text-sm font-medium">{name}</label>
 <div class="relative">
 	<input
 		type="text"
-		id="memory"
-		name="memory"
+		id={name.toLowerCase()}
+		name={name.toLowerCase()}
 		class="w-full rounded-lg border p-2"
 		bind:value
 		onfocusin={() => (focus = true)}
 		onfocusout={() => (focus = false)}
 	/>
-	{#if fuzzyResults && value && focus}
+	{#if fuzzyResults && fuzzyResults.length > 0 && value && focus}
+		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<ul
 			class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
+			onmousedown={(event) => event.preventDefault()}
+			transition:fade={{ duration: 100 }}
 		>
-			{#each fuzzyResults.search(value) as result}
+			{#each fuzzyResults as result}
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 				<li
 					class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
-					onclick={() => (value = result.item.displayName)}
+					onclick={() => {
+						value = result.item.displayName;
+						focus = false;
+					}}
 				>
 					{result.item.displayName}
 				</li>
@@ -40,4 +74,4 @@
 		</ul>
 	{/if}
 </div>
-{#if $errors.memory}<span class="text-red-600">{$errors.memory}</span>{/if}
+{#if errors}<span class="text-red-600">{errors}</span>{/if}
