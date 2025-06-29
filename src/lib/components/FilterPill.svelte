@@ -28,11 +28,9 @@
 		if (selectedItems.includes(id)) {
 			selectedItems = selectedItems.filter((item) => item !== id);
 			(event.currentTarget as HTMLButtonElement).classList.replace('bg-green-200', 'bg-zinc-200');
-			console.log(`Deselected item with ID: ${id}`);
 		} else {
 			selectedItems.push(id);
 			(event.currentTarget as HTMLButtonElement).classList.replace('bg-zinc-200', 'bg-green-200');
-			console.log(`Selected item with ID: ${id}`);
 		}
 	}
 

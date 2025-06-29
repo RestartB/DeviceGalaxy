@@ -34,7 +34,6 @@
 
 	$effect(() => {
 		if (value) {
-			console.log('Searching for:', value);
 			fuzzyResults = fuzzy.search(value);
 		}
 	});

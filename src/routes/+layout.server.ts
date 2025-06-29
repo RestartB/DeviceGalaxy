@@ -9,14 +9,12 @@ export const load: LayoutServerLoad = async (event) => {
 
 	if (session === null) {
 		if (!event.url.pathname.startsWith('/auth/')) {
-			console.log('No session found, redirecting to login');
 			return redirect(302, '/auth/login');
 		}
 		return { user: null, session: null };
 	}
 
 	if (!session.user.twoFactorEnabled && !event.url.pathname.startsWith('/auth/setup-2fa')) {
-		console.log('Two-factor authentication not enabled');
 		return redirect(302, '/auth/setup-2fa');
 	}
 

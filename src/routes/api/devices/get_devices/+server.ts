@@ -26,8 +26,6 @@ export async function GET(event) {
 		brand: event.url.searchParams.get('brand')?.split(',').map(id => parseInt(id)).filter(id => !isNaN(id))
     };
 
-	console.log('Selected Filters:', selectedFilters);
-
 	let orderBy;
 
 	if (sortType === 'dateAsc') {

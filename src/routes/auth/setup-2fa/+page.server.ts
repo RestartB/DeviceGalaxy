@@ -8,7 +8,6 @@ export const load: PageServerLoad = async (event) => {
 	});
 
 	if (session === null) {
-		console.log('No session found, redirecting to login');
 		return redirect(302, '/auth/login');
 	}
 

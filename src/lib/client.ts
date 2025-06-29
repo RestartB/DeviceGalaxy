@@ -7,7 +7,6 @@ export const authClient = createAuthClient({
 	plugins: [
 		twoFactorClient({
 			onTwoFactorRedirect() {
-				console.log('Redirecting to 2FA verification');
 				goto('/auth/verify-2fa');
 			}
 		})

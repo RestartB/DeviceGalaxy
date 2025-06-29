@@ -6,7 +6,6 @@ export const load: PageServerLoad = async (event) => {
 	const twoFactorCookie = event.request.headers.get('cookie')?.includes('better-auth.two_factor');
 
 	if (!twoFactorCookie) {
-		console.log('No 2FA cookie found, redirecting to login');
 		return redirect(302, '/auth/login');
 	}
 };
