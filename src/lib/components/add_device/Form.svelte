@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tick } from 'svelte';
+	import { tick, onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	import { superForm } from 'sveltekit-superforms';
@@ -89,6 +89,14 @@
 		if (formPage === 2) {
 			asyncValidateForm();
 		}
+	});
+
+	onMount(() => {
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape') {
+				createPopupOpen = false;
+			}
+		});
 	});
 </script>
 

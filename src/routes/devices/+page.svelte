@@ -190,7 +190,7 @@
 				<Plus size="20" />
 			</button>
 			<button
-				class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 dark:bg-zinc-800"
+				class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 				onclick={refreshDevices}
 			>
 				<RefreshCw size="20" />
@@ -214,10 +214,16 @@
 				}}
 			/>
 			<button
-				class="z-20 flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+				class="z-20 flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 				onclick={() => (filtersVisible = !filtersVisible)}
 			>
 				<p>{filtersVisible ? 'Hide' : 'Show'} Filters</p>
+				<div
+					class="transition-transform duration-300 ease-in-out"
+					class:rotate-180={filtersVisible}
+				>
+					<MoveRight size="20" />
+				</div>
 			</button>
 			{#if filtersVisible}
 				<FilterPill

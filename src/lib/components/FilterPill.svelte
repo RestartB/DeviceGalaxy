@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import { Cpu, MemoryStick, HardDrive, Cog, Funnel } from '@lucide/svelte';
+	import { fly } from 'svelte/transition';
 
 	let selected = $state<number[]>([]);
 	let dropdownOpen = $state(false);
@@ -43,9 +44,9 @@
 	});
 </script>
 
-<div class="relative">
+<div class="relative" transition:fly={{ x: -20, duration: 300 }}>
 	<button
-		class="z-20 flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+		class="z-20 flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 		onclick={() => (dropdownOpen = !dropdownOpen)}
 	>
 		{#if name === 'CPU'}
@@ -64,7 +65,7 @@
 
 	{#if dropdownOpen}
 		<div
-			class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+			class="fixed inset-0 z-50 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 			transition:fade={{ duration: 100 }}
 		>
 			<div
@@ -73,7 +74,7 @@
 				aria-hidden="true"
 			></div>
 			<div
-				class="z-[1000] flex w-full max-w-lg flex-col overflow-hidden rounded-xl bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+				class="z-[1000] flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 			>
 				<div class="flex w-full items-center justify-center gap-2 border-b p-4">
 					<h1 class="text-xl font-bold text-nowrap">Select Filters</h1>
