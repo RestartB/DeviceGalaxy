@@ -1,9 +1,18 @@
 <script lang="ts">
-	import { Cpu, MemoryStick, HardDrive, Cog } from '@lucide/svelte';
+	import { Cpu, MemoryStick, HardDrive, Cog, MoveLeft } from '@lucide/svelte';
 
 	const { data } = $props();
 	const device = data.device;
 </script>
+
+<div class="fixed top-16 left-4 z-50">
+	<button
+		onclick={() => history.back()}
+		class="cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 shadow-md transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
+	>
+		<MoveLeft size="20" />
+	</button>
+</div>
 
 {#if device.imageURLs && device.imageURLs.length > 0}
 	<img
@@ -13,10 +22,10 @@
 	/>
 {/if}
 
-<div class="flex flex-col gap-4 p-4">
+<div class="z-10 flex flex-col gap-4 p-4">
 	<div>
 		{#if device.brand}
-			<p class="text-sm text-zinc-500">{device.brand}</p>
+			<p class="text-sm text-zinc-500 dark:text-zinc-400">{device.brand}</p>
 		{/if}
 		<h1 class="text-4xl font-bold">{device.deviceName}</h1>
 		<p>{device.description || 'No description.'}</p>
@@ -24,7 +33,7 @@
 
 	<div class="flex w-fit flex-wrap items-center justify-center gap-2">
 		{#if device.cpu}
-			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md">
+			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
 				<div class="flex items-center gap-2">
 					<Cpu />
 					<h2 class="text-xl font-bold">CPU</h2>
@@ -34,7 +43,7 @@
 		{/if}
 
 		{#if device.memory}
-			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md">
+			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
 				<div class="flex items-center gap-2">
 					<MemoryStick />
 					<h2 class="text-xl font-bold">Memory</h2>
@@ -44,7 +53,7 @@
 		{/if}
 
 		{#if device.storage}
-			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md">
+			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
 				<div class="flex items-center gap-2">
 					<HardDrive />
 					<h2 class="text-xl font-bold">Storage</h2>
@@ -54,7 +63,7 @@
 		{/if}
 
 		{#if device.os}
-			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md">
+			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
 				<div class="flex items-center gap-2">
 					<Cog />
 					<h2 class="text-xl font-bold">Operating System</h2>

@@ -12,6 +12,7 @@ export const userDevices = sqliteTable('devices', {
 	storage: integer('storage'),
 	os: integer('os'),
 	brand: integer('brand'),
+	tagIDs: text('tag_ids', { mode: 'json' }).$type<number[]>().$defaultFn(() => []),
     imageURLs: text('image_urls', { mode: 'json' }).$type<string[]>().$defaultFn(() => []),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' })

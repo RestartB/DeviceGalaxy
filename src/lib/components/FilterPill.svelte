@@ -45,7 +45,7 @@
 
 <div class="relative">
 	<button
-		class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2"
+		class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
 		onclick={() => (dropdownOpen = !dropdownOpen)}
 	>
 		{#if name === 'CPU'}
@@ -73,7 +73,7 @@
 				aria-hidden="true"
 			></div>
 			<div
-				class="z-[1000] flex w-full max-w-lg flex-col overflow-hidden rounded-xl bg-zinc-100 shadow-2xl"
+				class="z-[1000] flex w-full max-w-lg flex-col overflow-hidden rounded-xl bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 			>
 				<div class="flex w-full items-center justify-center gap-2 border-b p-4">
 					<h1 class="text-xl font-bold text-nowrap">Select Filters</h1>

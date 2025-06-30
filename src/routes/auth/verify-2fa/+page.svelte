@@ -37,7 +37,7 @@
 		style="background-image: url('https://cdn.stocksnap.io/img-thumbs/960w/building-abstract_QDCJ1JA4QV.jpg')"
 	></div>
 	<form
-		class="flex h-fit w-fit flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100/80 p-4 backdrop-blur-lg"
+		class="flex h-fit w-fit flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100 p-4 backdrop-blur-lg dark:bg-zinc-800/80"
 		onsubmit={handleSubmit}
 	>
 		<h1 class="text-2xl font-bold">Two Factor Authentication</h1>
@@ -45,7 +45,7 @@
 		<div class="flex flex-col gap-2">
 			<label for="totp" class="font-semibold">Code</label>
 			<input
-				class="rounded-full border-2 border-zinc-500 bg-zinc-300 p-2 px-4"
+				class="rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 dark:bg-zinc-700"
 				id="totp"
 				type="text"
 				inputmode="numeric"
@@ -57,7 +57,7 @@
 
 		<button
 			disabled={submitting}
-			class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300"
+			class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
 		>
 			{submitting ? 'Verifying...' : 'Verify'}
 		</button>

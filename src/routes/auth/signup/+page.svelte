@@ -44,7 +44,7 @@
 		style="background-image: url('https://cdn.stocksnap.io/img-thumbs/960w/building-abstract_QDCJ1JA4QV.jpg')"
 	></div>
 	<form
-		class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100/80 p-4 backdrop-blur-lg"
+		class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100 p-4 backdrop-blur-lg dark:bg-zinc-800/80"
 		onsubmit={handleSignUp}
 	>
 		<h1 class="flex items-center justify-center gap-2 text-2xl font-bold">
@@ -55,7 +55,7 @@
 		<div class="flex w-full flex-col gap-2">
 			<label for="name" class="w-full text-start font-semibold">Name</label>
 			<input
-				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start"
+				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
 				id="name"
 				type="text"
 				bind:value={fullname}
@@ -65,7 +65,7 @@
 		<div class="flex w-full flex-col gap-2">
 			<label for="email" class="w-full text-start font-semibold">Email</label>
 			<input
-				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start"
+				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
 				id="email"
 				type="email"
 				bind:value={email}
@@ -75,7 +75,7 @@
 		<div class="flex w-full flex-col gap-2">
 			<label for="password" class="w-full text-start font-semibold">Password</label>
 			<input
-				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start"
+				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
 				id="password"
 				type="password"
 				bind:value={password}
@@ -85,20 +85,20 @@
 		<div class="flex w-full flex-col gap-2">
 			<label for="confirm" class="w-full text-start font-semibold">Confirm Password</label>
 			<input
-				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start"
+				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
 				id="confirm"
 				type="password"
 				bind:value={passwordConfirm}
 			/>
 		</div>
 
-		<a href="/auth/login" class="text-blue-600 hover:underline">
+		<a href="/auth/login" class="text-blue-600 hover:underline dark:text-blue-400">
 			Already have an account? Log in
 		</a>
 
 		<button
 			disabled={submitting}
-			class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-colors hover:bg-zinc-300"
+			class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
 		>
 			{#if submitting}
 				<LoaderCircle class="animate-spin" />

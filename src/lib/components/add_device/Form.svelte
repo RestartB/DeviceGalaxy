@@ -97,7 +97,9 @@
 		class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
 		transition:fade={{ duration: 100 }}
 	>
-		<div class="flex w-full max-w-lg flex-col overflow-hidden rounded-xl bg-zinc-100 shadow-2xl">
+		<div
+			class="flex w-full max-w-lg flex-col overflow-hidden rounded-xl bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+		>
 			<div class="flex items-center justify-between border-b p-4">
 				<h2 class="text-xl font-bold">Create New Device</h2>
 				<button onclick={() => (createPopupOpen = false)} class="text-zinc-400 hover:text-zinc-600"

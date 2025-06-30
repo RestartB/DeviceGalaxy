@@ -190,7 +190,7 @@
 				<Plus size="20" />
 			</button>
 			<button
-				class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100"
+				class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 dark:bg-zinc-800"
 				onclick={refreshDevices}
 			>
 				<RefreshCw size="20" />
@@ -199,7 +199,7 @@
 				type="text"
 				id="search"
 				name="search"
-				class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2"
+				class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
 				bind:value={search}
 				placeholder="Search devices..."
 				onkeydown={(e) => {
@@ -214,7 +214,7 @@
 				}}
 			/>
 			<button
-				class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2"
+				class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
 				onclick={() => (filtersVisible = !filtersVisible)}
 			>
 				<p>{filtersVisible ? 'Hide' : 'Show'} Filters</p>
@@ -240,11 +240,16 @@
 					options={attributeLists.storage}
 					bind:selectedItems={selectedFilters.storage}
 				/>
-				<FilterPill name="OS" options={attributeLists.os} bind:selectedItems={selectedFilters.os} />
+				<!-- prettier-ignore -->
+				<FilterPill
+                    name="OS"
+                    options={attributeLists.os}
+                    bind:selectedItems={selectedFilters.os}
+                />
 			{/if}
 			{#if showApplyFilters}
 				<button
-					class="flex items-center justify-center gap-2 rounded-lg border-2 border-zinc-400 bg-green-500 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40"
+					class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-500 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40"
 					disabled={applyingFilters}
 					onclick={() => {
 						applyingFilters = true;
@@ -261,7 +266,7 @@
 					}}
 				>
 					<Check size="20" />
-					Apply Filters
+					Apply
 				</button>
 			{/if}
 		</div>
@@ -291,13 +296,13 @@
 				<div class="flex items-center justify-center gap-4">
 					<button
 						onclick={previousPage}
-						class="rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40"
+						class="rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
 						disabled={page <= 1}><MoveLeft size="20" /></button
 					>
 					<span>Page {page} of {maxPages}</span>
 					<button
 						onclick={nextPage}
-						class="rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40"
+						class="rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
 						disabled={page >= maxPages}><MoveRight size="20" /></button
 					>
 				</div>

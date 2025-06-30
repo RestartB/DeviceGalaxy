@@ -7,7 +7,7 @@
 	let { data, children } = $props();
 </script>
 
-<div class="font-family font-lg h-screen max-h-screen w-full">
+<div class="font-family font-lg h-screen max-h-screen w-full dark:text-white">
 	<Header {data} />
 	<div
 		class="box-border h-full max-h-full flex-1 overflow-y-auto p-4 pt-16"

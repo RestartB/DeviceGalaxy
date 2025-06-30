@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { authClient } from '$lib/client';
-	import qrcode, { QRCode } from '@castlenine/svelte-qrcode';
+	import { QRCode } from '@castlenine/svelte-qrcode';
 
 	let password = $state('');
 	let totpInput = $state('');
@@ -69,7 +69,7 @@
 	></div>
 	{#if generatedTOTP}
 		<form
-			class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100/80 p-4 backdrop-blur-lg"
+			class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100 p-4 backdrop-blur-lg dark:bg-zinc-800/80"
 			onsubmit={verifyTOTPCode}
 		>
 			<h1 class="text-2xl font-bold">Set up 2FA</h1>
@@ -89,7 +89,7 @@
 			<div class="flex flex-col gap-2">
 				<label for="totp" class="font-semibold">Enter 2FA Code</label>
 				<input
-					class="rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4"
+					class="rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 dark:bg-zinc-700"
 					id="totp"
 					type="text"
 					inputmode="numeric"
@@ -101,7 +101,7 @@
 
 			<button
 				disabled={submitting}
-				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4"
+				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
 			>
 				{submitting ? 'Verifying...' : 'Verify'}
 			</button>
@@ -113,7 +113,7 @@
 		</form>
 	{:else}
 		<form
-			class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100/80 p-4 backdrop-blur-lg"
+			class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100 p-4 backdrop-blur-lg dark:bg-zinc-800/80"
 			onsubmit={generateTOTP}
 		>
 			<h1 class="text-2xl font-bold">Set up 2FA</h1>
@@ -124,7 +124,7 @@
 			<div class="flex w-full flex-col gap-2">
 				<label for="password" class="w-full text-start font-semibold">Verify Password</label>
 				<input
-					class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start"
+					class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
 					id="password"
 					type="password"
 					bind:value={password}
@@ -133,7 +133,7 @@
 
 			<button
 				disabled={submitting}
-				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300"
+				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
 			>
 				{submitting ? 'Verifying...' : 'Verify'}
 			</button>
