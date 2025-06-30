@@ -48,11 +48,11 @@ export const load: PageServerLoad = async (event) => {
 
 	const processedDevice = {
 		...device[0],
-		cpu: cpuData[0].displayName || null,
-		memory: memoryData[0].displayName || null,
-		storage: storageData[0].displayName || null,
-		os: osData[0].displayName || null,
-		brand: brandData[0].displayName || null
+		cpu: cpuData[0]?.displayName ?? null,
+		memory: memoryData[0]?.displayName ?? null,
+		storage: storageData[0]?.displayName ?? null,
+		os: osData[0]?.displayName ?? null,
+		brand: brandData[0]?.displayName ?? null
 	};
 
 	return {
