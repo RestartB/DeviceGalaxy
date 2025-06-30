@@ -12,6 +12,7 @@ export const userDevices = sqliteTable('devices', {
 	storage: integer('storage'),
 	os: integer('os'),
 	brand: integer('brand'),
+    imageURLs: text('image_urls', { mode: 'json' }).$type<string[]>().$defaultFn(() => []),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' })
 });
@@ -34,7 +35,7 @@ export const cpus = sqliteTable('cpus', {
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
 	value: text('name', { length: 255 }).notNull().unique(),
-	displayName: text('display_name', { length: 255 }).notNull(),
+	displayName: text('display_name', { length: 255 }).notNull()
 });
 
 export const memory = sqliteTable('memory', {
@@ -43,7 +44,7 @@ export const memory = sqliteTable('memory', {
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
 	value: text('name', { length: 255 }).notNull().unique(),
-	displayName: text('display_name', { length: 255 }).notNull(),
+	displayName: text('display_name', { length: 255 }).notNull()
 });
 
 export const storage = sqliteTable('storage', {
@@ -52,7 +53,7 @@ export const storage = sqliteTable('storage', {
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
 	value: text('name', { length: 255 }).notNull().unique(),
-	displayName: text('display_name', { length: 255 }).notNull(),
+	displayName: text('display_name', { length: 255 }).notNull()
 });
 
 export const os = sqliteTable('os', {
@@ -61,7 +62,7 @@ export const os = sqliteTable('os', {
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
 	value: text('name', { length: 255 }).notNull().unique(),
-	displayName: text('display_name', { length: 255 }).notNull(),
+	displayName: text('display_name', { length: 255 }).notNull()
 });
 
 export const brands = sqliteTable('brands', {
@@ -70,7 +71,7 @@ export const brands = sqliteTable('brands', {
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
 	value: text('name', { length: 255 }).notNull().unique(),
-	displayName: text('display_name', { length: 255 }).notNull(),
+	displayName: text('display_name', { length: 255 }).notNull()
 });
 
 export const user = sqliteTable('user', {

@@ -5,6 +5,7 @@
 	import type { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
+	import { Plus, Check, MoveLeft, MoveRight, RefreshCw } from '@lucide/svelte';
 
 	import DeviceCard from '$lib/components/DeviceCard.svelte';
 	import FilterPill from '$lib/components/FilterPill.svelte';
@@ -53,11 +54,15 @@
 		storage: [] as number[],
 		os: [] as number[]
 	});
+	let filtersVisible = $state(false);
 	let showApplyFilters = $state(false);
 	let applyingFilters = $state(false);
 
 	let page = $state(1);
 	let maxPages = $derived(Math.ceil(totalDevices / 10));
+
+	let currentSearch = '';
+	let search = $state('');
 
 	async function fetchDevices() {
 		if (loadingDevices) return;
@@ -73,6 +78,10 @@
 				if (activeFilters.storage.length > 0) url += `&storage=${activeFilters.storage.join(',')}`;
 				if (activeFilters.os.length > 0) url += `&os=${activeFilters.os.join(',')}`;
 				if (activeFilters.brand.length > 0) url += `&brand=${activeFilters.brand.join(',')}`;
+			}
+
+			if (currentSearch && currentSearch !== '') {
+				url += `&search=${encodeURIComponent(currentSearch)}`;
 			}
 
 			const response = await fetch(url);
@@ -125,17 +134,20 @@
 		}
 	}
 
-	onMount(async () => {
-		await fetchDevices();
-		await getAttributes();
+	function refreshDevices() {
+		fetchDevices();
+		getAttributes();
+	}
+
+	onMount(() => {
+		refreshDevices();
 	});
 
 	$effect(() => {
 		if (message) {
 			if (message === 'Device added successfully!') {
 				toast.success(message as string);
-				fetchDevices();
-				getAttributes();
+				refreshDevices();
 				createPopupOpen = false;
 			} else if (typeof message === 'string' && message) {
 				toast.warning(message);
@@ -170,35 +182,69 @@
 
 	<div class="flex flex-col gap-2">
 		<h1 class="text-4xl font-bold">Devices</h1>
-		<button
-			class="w-fit rounded bg-blue-500 px-4 py-2 text-white"
-			onclick={() => (createPopupOpen = true)}>Create Device</button
-		>
 		<div class="flex flex-wrap gap-2">
-			<FilterPill
-				name="Brand"
-				options={attributeLists.brands}
-				bind:selectedItems={selectedFilters.brand}
+			<button
+				class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-400 bg-blue-500 text-white"
+				onclick={() => (createPopupOpen = true)}
+			>
+				<Plus size="20" />
+			</button>
+			<button
+				class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100"
+				onclick={refreshDevices}
+			>
+				<RefreshCw size="20" />
+			</button>
+			<input
+				type="text"
+				id="search"
+				name="search"
+				class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2"
+				bind:value={search}
+				placeholder="Search devices..."
+				onkeydown={(e) => {
+					if (e.key === 'Enter') {
+						if (search.trim().toLocaleLowerCase() !== currentSearch) {
+							currentSearch = search.trim().toLocaleLowerCase();
+							page = 1;
+							fetchDevices();
+						}
+						fetchDevices();
+					}
+				}}
 			/>
-			<FilterPill
-				name="CPU"
-				options={attributeLists.cpus}
-				bind:selectedItems={selectedFilters.cpu}
-			/>
-			<FilterPill
-				name="Memory"
-				options={attributeLists.memory}
-				bind:selectedItems={selectedFilters.memory}
-			/>
-			<FilterPill
-				name="Storage"
-				options={attributeLists.storage}
-				bind:selectedItems={selectedFilters.storage}
-			/>
-			<FilterPill name="OS" options={attributeLists.os} bind:selectedItems={selectedFilters.os} />
+			<button
+				class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2"
+				onclick={() => (filtersVisible = !filtersVisible)}
+			>
+				<p>{filtersVisible ? 'Hide' : 'Show'} Filters</p>
+			</button>
+			{#if filtersVisible}
+				<FilterPill
+					name="Brand"
+					options={attributeLists.brands}
+					bind:selectedItems={selectedFilters.brand}
+				/>
+				<FilterPill
+					name="CPU"
+					options={attributeLists.cpus}
+					bind:selectedItems={selectedFilters.cpu}
+				/>
+				<FilterPill
+					name="Memory"
+					options={attributeLists.memory}
+					bind:selectedItems={selectedFilters.memory}
+				/>
+				<FilterPill
+					name="Storage"
+					options={attributeLists.storage}
+					bind:selectedItems={selectedFilters.storage}
+				/>
+				<FilterPill name="OS" options={attributeLists.os} bind:selectedItems={selectedFilters.os} />
+			{/if}
 			{#if showApplyFilters}
 				<button
-					class="rounded bg-green-500 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40"
+					class="flex items-center justify-center gap-2 rounded-lg border-2 border-zinc-400 bg-green-500 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40"
 					disabled={applyingFilters}
 					onclick={() => {
 						applyingFilters = true;
@@ -212,8 +258,11 @@
 						};
 						fetchDevices();
 						getAttributes();
-					}}>Apply Filters</button
+					}}
 				>
+					<Check size="20" />
+					Apply Filters
+				</button>
 			{/if}
 		</div>
 		{#if loadingDevices}
@@ -225,22 +274,34 @@
 			<div class="flex w-full flex-wrap justify-center gap-2">
 				{#each devices as device}
 					<DeviceCard
+						id={device.id}
 						name={device.deviceName}
 						description={device.description}
 						brand={device.brand}
 						cpu={device.cpu}
 						memory={device.memory}
 						storage={device.storage}
-						background={null}
+						os={device.os}
+						background={device.imageURLs === null ? undefined : device.imageURLs[0]}
 					/>
 				{/each}
 			</div>
 
-			<div class="flex justify-center gap-4">
-				<button onclick={previousPage}>Previous</button>
-				<span>Page {page} of {maxPages}</span>
-				<button onclick={nextPage}>Next</button>
-			</div>
+			{#if maxPages > 1}
+				<div class="flex items-center justify-center gap-4">
+					<button
+						onclick={previousPage}
+						class="rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40"
+						disabled={page <= 1}><MoveLeft size="20" /></button
+					>
+					<span>Page {page} of {maxPages}</span>
+					<button
+						onclick={nextPage}
+						class="rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40"
+						disabled={page >= maxPages}><MoveRight size="20" /></button
+					>
+				</div>
+			{/if}
 		{/if}
 	</div>
 {/if}

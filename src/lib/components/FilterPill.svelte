@@ -7,15 +7,15 @@
 
 	let selected = $state<number[]>([]);
 	let dropdownOpen = $state(false);
-    
-    let { 
-		name, 
-		options, 
-		selectedItems = $bindable(selected) 
-	}: { 
-		name: string; 
-		options: Array<CPU | Memory | Storage | OS | Brand>; 
-		selectedItems?: number[] 
+
+	let {
+		name,
+		options,
+		selectedItems = $bindable(selected)
+	}: {
+		name: string;
+		options: Array<CPU | Memory | Storage | OS | Brand>;
+		selectedItems?: number[];
 	} = $props();
 
 	type CPU = InferSelectModel<typeof cpus>;
@@ -48,13 +48,13 @@
 		class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2"
 		onclick={() => (dropdownOpen = !dropdownOpen)}
 	>
-		{#if name === "CPU"}
+		{#if name === 'CPU'}
 			<Cpu />
-		{:else if name === "Memory"}
+		{:else if name === 'Memory'}
 			<MemoryStick />
-		{:else if name === "Storage"}
+		{:else if name === 'Storage'}
 			<HardDrive />
-		{:else if name === "OS"}
+		{:else if name === 'OS'}
 			<Cog />
 		{:else}
 			<Funnel />

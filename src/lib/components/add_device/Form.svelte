@@ -1,43 +1,45 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	import { superForm } from 'sveltekit-superforms';
-    import type { SuperValidated, Infer } from 'sveltekit-superforms';
+	import SuperDebug from 'sveltekit-superforms';
+	import type { SuperValidated, Infer } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { schema } from '../../../routes/devices/schema';
 
-    import type { InferSelectModel } from 'drizzle-orm';
-	import type { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+	import type { InferSelectModel } from 'drizzle-orm';
+	import type { cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
 	import Field from './Field.svelte';
 
-    type schemaType = typeof schema;
-    type CPU = InferSelectModel<typeof cpus>;
+	type schemaType = typeof schema;
+	type CPU = InferSelectModel<typeof cpus>;
 	type Memory = InferSelectModel<typeof memory>;
 	type Storage = InferSelectModel<typeof storage>;
 	type OS = InferSelectModel<typeof os>;
 	type Brand = InferSelectModel<typeof brands>;
 
-    export type AttributeLists = {
-        cpus: CPU[];
-        memory: Memory[];
-        storage: Storage[];
-        os: OS[];
-        brands: Brand[];
-    };
+	export type AttributeLists = {
+		cpus: CPU[];
+		memory: Memory[];
+		storage: Storage[];
+		os: OS[];
+		brands: Brand[];
+	};
 
 	let {
-        sourceForm,
-        attributeLists,
-        createPopupOpen = $bindable(),
-        message: parentMessage = $bindable()
-    }: {
-        sourceForm: SuperValidated<Infer<schemaType>>;
-        attributeLists: AttributeLists;
-        createPopupOpen: boolean;
-        message: any;
-    } = $props();
+		sourceForm,
+		attributeLists,
+		createPopupOpen = $bindable(),
+		message: parentMessage = $bindable()
+	}: {
+		sourceForm: SuperValidated<Infer<schemaType>>;
+		attributeLists: AttributeLists;
+		createPopupOpen: boolean;
+		message: any;
+	} = $props();
 
 	const { form, errors, message, enhance, validateForm } = superForm(sourceForm, {
 		validators: zod4Client(schema),
@@ -51,6 +53,9 @@
 	});
 
 	let formPage = $state(0);
+	let newImgURL = $state('');
+	let uploadAllowed = false;
+	let newImgURLEl: HTMLInputElement | undefined = $state();
 	type FormErrors = typeof $errors;
 
 	let hasErrors = $derived(
@@ -63,6 +68,15 @@
 
 	async function asyncValidateForm() {
 		await validateForm({ update: true });
+	}
+
+	async function addImageURL() {
+		if (!newImgURL) return;
+		if (!$form.imageURLs) $form.imageURLs = [];
+		$form.imageURLs = [...$form.imageURLs, newImgURL];
+
+		await tick();
+		setTimeout(() => (newImgURL = ''), 1);
 	}
 
 	$effect(() => {
@@ -159,6 +173,55 @@
 						class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
 						style:transform="translateX({(2 - formPage) * 100}%)"
 					>
+						{#if uploadAllowed}
+							<h3 class="text-xl font-semibold">Upload Images</h3>
+							<p>
+								You can upload images of your device here. The first image will also be used for the
+								thumbnail. Please ensure that your images comply with the Terms of Service. Max
+								size: 5MB.
+							</p>
+						{:else}
+							<h3 class="text-xl font-semibold">Add Images</h3>
+							<p>
+								Uploading images is disabled on this instance. Instead, you can provide image URLs.
+								The first image will be used for the thumbnail.
+							</p>
+
+							{#each $form.imageURLs as _, i}
+								<input
+									class="w-full rounded-lg border p-2"
+									type="text"
+									name="imageURLs"
+									bind:value={$form.imageURLs[i]}
+								/>
+								{#if $errors.imageURLs?.[i]}<span class="text-red-600">{$errors.imageURLs[i]}</span
+									>{/if}
+							{/each}
+
+							<input
+								class="w-full rounded-lg border p-2"
+								type="text"
+								placeholder="Enter image URL..."
+								bind:value={newImgURL}
+								bind:this={newImgURLEl}
+								onchange={() => addImageURL()}
+							/>
+
+							{#if newImgURL}
+								<input
+									class="w-full rounded-lg border p-2"
+									type="text"
+									placeholder="Enter image URL..."
+									onfocus={() => newImgURLEl?.focus()}
+								/>
+							{/if}
+						{/if}
+					</div>
+
+					<div
+						class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
+						style:transform="translateX({(3 - formPage) * 100}%)"
+					>
 						<h3 class="text-xl font-semibold">Confirm Details</h3>
 						<div class="rounded-lg bg-zinc-200 p-4 text-sm">
 							<p><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
@@ -167,6 +230,17 @@
 							<p><strong>CPU:</strong> {$form.cpu || 'N/A'}</p>
 							<p><strong>Memory:</strong> {$form.memory || 'N/A'}</p>
 							<p><strong>Storage:</strong> {$form.storage || 'N/A'}</p>
+							<p><strong>OS:</strong> {$form.os || 'N/A'}</p>
+							{#if $form.imageURLs && $form.imageURLs.length > 0}
+								<p><strong>Images:</strong></p>
+								<ul class="list-disc pl-5">
+									{#each $form.imageURLs as imageURL}
+										<li>{imageURL}</li>
+									{/each}
+								</ul>
+							{:else}
+								<p><strong>Images:</strong> None</p>
+							{/if}
 						</div>
 						{#if hasErrors}
 							<div class="rounded-lg bg-zinc-200 p-4 text-sm">
@@ -201,6 +275,9 @@
 								</ul>
 							</div>
 						{/if}
+						<div class="h-60">
+							<SuperDebug data={form} />
+						</div>
 						<p class="mt-auto text-base text-zinc-500">
 							Once you're happy with the details above, click below to create.
 						</p>
@@ -215,18 +292,18 @@
 						style:visibility={formPage > 0 ? 'visible' : 'hidden'}>Previous</button
 					>
 
-					{#if formPage < 2}
+					{#if formPage < 3}
 						<button
 							type="button"
 							class="rounded-md bg-blue-600 px-4 py-2 text-white"
-							onclick={() => (formPage = Math.min(formPage + 1, 2))}>Next</button
+							onclick={() => (formPage = Math.min(formPage + 1, 3))}>Next</button
 						>
 					{/if}
 
-					{#if formPage === 2}
+					{#if formPage === 3}
 						<button
 							type="submit"
-							class="flex-1 rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-green-500"
+							class="flex-1 rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
 							disabled={hasErrors}>Create Device</button
 						>
 					{/if}

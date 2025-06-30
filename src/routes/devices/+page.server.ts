@@ -11,7 +11,6 @@ import { db } from '$lib/server/db';
 import type { InferSelectModel } from 'drizzle-orm';
 import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
-
 export const load = async () => {
 	const form = await superValidate(zod4(schema));
 	return { form };
@@ -31,8 +30,8 @@ export const actions = {
 		const form = await superValidate(request, zod4(schema));
 
 		if (!form.valid) {
-            return error(400, "Invalid form");
-        }
+			return error(400, 'Invalid form');
+		}
 
 		try {
 			let newCPU: InferSelectModel<typeof cpus> | undefined;
@@ -51,15 +50,19 @@ export const actions = {
 
 					if (!existingCpu) {
 						// Insert into table, get the ID
-						newCPU = await tx.insert(cpus).values({
-							userID: session.user.id,
-							value: cpuValue,
-							displayName: form.data.cpu
-						}).returning().then(rows => rows[0]);
+						newCPU = await tx
+							.insert(cpus)
+							.values({
+								userID: session.user.id,
+								value: cpuValue,
+								displayName: form.data.cpu
+							})
+							.returning()
+							.then((rows) => rows[0]);
 					} else {
 						newCPU = existingCpu;
 					}
-				};
+				}
 
 				// Memory
 				if (form.data.memory) {
@@ -70,11 +73,15 @@ export const actions = {
 
 					if (!existingMemory) {
 						// Insert into table, get the ID
-						newMemory = await tx.insert(memory).values({
-							userID: session.user.id,
-							value: memoryValue,
-							displayName: form.data.memory
-						}).returning().then(rows => rows[0]);
+						newMemory = await tx
+							.insert(memory)
+							.values({
+								userID: session.user.id,
+								value: memoryValue,
+								displayName: form.data.memory
+							})
+							.returning()
+							.then((rows) => rows[0]);
 					} else {
 						newMemory = existingMemory;
 					}
@@ -89,11 +96,15 @@ export const actions = {
 
 					if (!existingStorage) {
 						// Insert into table, get the ID
-						newStorage = await tx.insert(storage).values({
-							userID: session.user.id,
-							value: storageValue,
-							displayName: form.data.storage
-						}).returning().then(rows => rows[0]);
+						newStorage = await tx
+							.insert(storage)
+							.values({
+								userID: session.user.id,
+								value: storageValue,
+								displayName: form.data.storage
+							})
+							.returning()
+							.then((rows) => rows[0]);
 					} else {
 						newStorage = existingStorage;
 					}
@@ -108,11 +119,15 @@ export const actions = {
 
 					if (!existingOS) {
 						// Insert into table, get the ID
-						newOS = await tx.insert(os).values({
-							userID: session.user.id,
-							value: osValue,
-							displayName: form.data.os
-						}).returning().then(rows => rows[0]);
+						newOS = await tx
+							.insert(os)
+							.values({
+								userID: session.user.id,
+								value: osValue,
+								displayName: form.data.os
+							})
+							.returning()
+							.then((rows) => rows[0]);
 					} else {
 						newOS = existingOS;
 					}
@@ -127,17 +142,20 @@ export const actions = {
 
 					if (!existingBrand) {
 						// Insert into table, get the ID
-						newBrand = await tx.insert(brands).values({
-							userId: session.user.id,
-							value: brandValue,
-							displayName: form.data.brand
-						}).returning().then(rows => rows[0]);
+						newBrand = await tx
+							.insert(brands)
+							.values({
+								userId: session.user.id,
+								value: brandValue,
+								displayName: form.data.brand
+							})
+							.returning()
+							.then((rows) => rows[0]);
 					} else {
 						newBrand = existingBrand;
 					}
 				}
 
-			
 				// Insert the device with the authenticated user's ID
 				await tx.insert(userDevices).values({
 					userId: session.user.id,
@@ -148,6 +166,7 @@ export const actions = {
 					storage: newStorage?.id,
 					os: newOS?.id,
 					brand: newBrand?.id,
+					imageURLs: form.data.imageURLs,
 					createdAt: new Date()
 				});
 			});
@@ -155,7 +174,7 @@ export const actions = {
 			return message(form, 'Device added successfully!');
 		} catch (err) {
 			console.error('Error adding device:', err);
-			return error(500, "Error adding device");
+			return error(500, 'Error adding device');
 		}
 	}
 };
