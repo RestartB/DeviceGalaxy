@@ -45,7 +45,7 @@
 
 <div class="relative">
 	<button
-		class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+		class="z-20 flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
 		onclick={() => (dropdownOpen = !dropdownOpen)}
 	>
 		{#if name === 'CPU'}
@@ -86,7 +86,9 @@
 								onclick={(event) => toggleItem(event, option.id)}
 								class="h-fit w-fit cursor-pointer rounded-lg border-2 border-zinc-500 px-4 py-2"
 								class:bg-green-200={selectedItems.includes(option.id)}
+								class:dark:bg-green-700={selectedItems.includes(option.id)}
 								class:bg-zinc-200={!selectedItems.includes(option.id)}
+								class:dark:bg-zinc-700={!selectedItems.includes(option.id)}
 							>
 								{option.displayName}
 							</button>

@@ -3,7 +3,6 @@
 	import { fade } from 'svelte/transition';
 
 	import { superForm } from 'sveltekit-superforms';
-	import SuperDebug from 'sveltekit-superforms';
 	import type { SuperValidated, Infer } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { schema } from '../../../routes/devices/schema';
@@ -12,6 +11,7 @@
 	import type { cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
+	import { X } from '@lucide/svelte';
 	import Field from './Field.svelte';
 
 	type schemaType = typeof schema;
@@ -94,16 +94,18 @@
 
 {#if createPopupOpen}
 	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+		class="fixed inset-0 z-50 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 		transition:fade={{ duration: 100 }}
 	>
 		<div
-			class="flex w-full max-w-lg flex-col overflow-hidden rounded-xl bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+			class="flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 		>
 			<div class="flex items-center justify-between border-b p-4">
 				<h2 class="text-xl font-bold">Create New Device</h2>
-				<button onclick={() => (createPopupOpen = false)} class="text-zinc-400 hover:text-zinc-600"
-					>&times;</button
+				<button
+					onclick={() => (createPopupOpen = false)}
+					class="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-400"
+					><X /></button
 				>
 			</div>
 
@@ -225,7 +227,7 @@
 						style:transform="translateX({(3 - formPage) * 100}%)"
 					>
 						<h3 class="text-xl font-semibold">Confirm Details</h3>
-						<div class="rounded-lg bg-zinc-200 p-4 text-sm">
+						<div class="rounded-lg bg-zinc-200 p-4 text-sm dark:bg-zinc-700">
 							<p><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
 							<p><strong>Description:</strong> {$form.description || 'N/A'}</p>
 							<p><strong>Brand:</strong> {$form.brand || 'N/A'}</p>
@@ -245,51 +247,48 @@
 							{/if}
 						</div>
 						{#if hasErrors}
-							<div class="rounded-lg bg-zinc-200 p-4 text-sm">
+							<div class="rounded-lg bg-zinc-200 p-4 text-sm dark:bg-zinc-700">
 								<h3 class="font-semibold">Errors</h3>
 								<ul class="list-disc pl-5">
 									{#if $errors.deviceName}
-										<li class="text-red-600">{$errors.deviceName}</li>
+										<li class="text-red-600 dark:text-red-400">{$errors.deviceName}</li>
 									{/if}
 									{#if $errors.description}
-										<li class="text-red-600">{$errors.description}</li>
+										<li class="text-red-600 dark:text-red-400">{$errors.description}</li>
 									{/if}
 									{#if $errors.brand}
-										<li class="text-red-600">{$errors.brand}</li>
+										<li class="text-red-600 dark:text-red-400">{$errors.brand}</li>
 									{/if}
 									{#if $errors.cpu}
-										<li class="text-red-600">{$errors.cpu}</li>
+										<li class="text-red-600 dark:text-red-400">{$errors.cpu}</li>
 									{/if}
 									{#if $errors.memory}
-										<li class="text-red-600">{$errors.memory}</li>
+										<li class="text-red-600 dark:text-red-400">{$errors.memory}</li>
 									{/if}
 									{#if $errors.storage}
-										<li class="text-red-600">{$errors.storage}</li>
+										<li class="text-red-600 dark:text-red-400">{$errors.storage}</li>
 									{/if}
 									{#if $errors.os}
-										<li class="text-red-600">{$errors.os}</li>
+										<li class="text-red-600 dark:text-red-400">{$errors.os}</li>
 									{/if}
 									{#if $errors._errors}
 										{#each $errors._errors as error}
-											<li class="text-red-600">{error}</li>
+											<li class="text-red-600 dark:text-red-400">{error}</li>
 										{/each}
 									{/if}
 								</ul>
 							</div>
 						{/if}
-						<div class="h-60">
-							<SuperDebug data={form} />
-						</div>
 						<p class="mt-auto text-base text-zinc-500">
 							Once you're happy with the details above, click below to create.
 						</p>
 					</div>
 				</div>
 
-				<div class="flex items-center justify-between gap-4 border-t bg-gray-50 p-4">
+				<div class="flex items-center justify-between gap-4 border-t p-4">
 					<button
 						type="button"
-						class="rounded-md border bg-white px-4 py-2"
+						class="cursor-pointer rounded-md border bg-zinc-50 px-4 py-2 dark:bg-zinc-950"
 						onclick={() => (formPage = Math.max(formPage - 1, 0))}
 						style:visibility={formPage > 0 ? 'visible' : 'hidden'}>Previous</button
 					>
@@ -297,7 +296,7 @@
 					{#if formPage < 3}
 						<button
 							type="button"
-							class="rounded-md bg-blue-600 px-4 py-2 text-white"
+							class="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-white"
 							onclick={() => (formPage = Math.min(formPage + 1, 3))}>Next</button
 						>
 					{/if}
@@ -305,7 +304,7 @@
 					{#if formPage === 3}
 						<button
 							type="submit"
-							class="flex-1 rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
+							class="flex-1 cursor-pointer rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
 							disabled={hasErrors}>Create Device</button
 						>
 					{/if}

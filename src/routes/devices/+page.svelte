@@ -184,13 +184,13 @@
 		<h1 class="text-4xl font-bold">Devices</h1>
 		<div class="flex flex-wrap gap-2">
 			<button
-				class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-400 bg-blue-500 text-white"
+				class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-blue-500 text-white"
 				onclick={() => (createPopupOpen = true)}
 			>
 				<Plus size="20" />
 			</button>
 			<button
-				class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 dark:bg-zinc-800"
+				class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 dark:bg-zinc-800"
 				onclick={refreshDevices}
 			>
 				<RefreshCw size="20" />
@@ -214,7 +214,7 @@
 				}}
 			/>
 			<button
-				class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+				class="z-20 flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
 				onclick={() => (filtersVisible = !filtersVisible)}
 			>
 				<p>{filtersVisible ? 'Hide' : 'Show'} Filters</p>
