@@ -178,7 +178,7 @@
 </script>
 
 {#if data.user}
-	<Form sourceForm={data.form} {attributeLists} bind:createPopupOpen bind:message />
+	<Form sourceForm={data.newDeviceForm} {attributeLists} bind:createPopupOpen bind:message />
 
 	<div class="flex flex-col gap-2">
 		<h1 class="text-4xl font-bold">Devices</h1>

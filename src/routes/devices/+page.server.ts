@@ -2,22 +2,24 @@ import { error } from '@sveltejs/kit';
 
 import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { schema } from './schema';
+import { newDeviceSchema } from '$lib/schema/newDevice';
+import { newTagSchema } from '$lib/schema/newTag';
 
 import { auth } from '$lib/server/auth';
 
 import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import type { InferSelectModel } from 'drizzle-orm';
-import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+import { tags, userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 export const load = async () => {
-	const form = await superValidate(zod4(schema));
-	return { form };
+	const newDeviceForm = await superValidate(zod4(newDeviceSchema));
+	const newTagForm = await superValidate(zod4(newTagSchema));
+	return { newDeviceForm, newTagForm };
 };
 
 export const actions = {
-	default: async ({ request }) => {
+	newDevice: async ({ request }) => {
 		// Check if the user is authenticated
 		const session = await auth.api.getSession({
 			headers: request.headers
@@ -27,7 +29,7 @@ export const actions = {
 			return error(401, 'Unauthorized');
 		}
 
-		const form = await superValidate(request, zod4(schema));
+		const form = await superValidate(request, zod4(newDeviceSchema));
 
 		if (!form.valid) {
 			return error(400, 'Invalid form');
@@ -175,6 +177,37 @@ export const actions = {
 		} catch (err) {
 			console.error('Error adding device:', err);
 			return error(500, 'Error adding device');
+		}
+	},
+	newTag: async ({ request }) => {
+		// Check if the user is authenticated
+		const session = await auth.api.getSession({
+			headers: request.headers
+		});
+
+		if (!session || !session.user) {
+			return error(401, 'Unauthorized');
+		}
+
+		const form = await superValidate(request, zod4(newTagSchema));
+
+		if (!form.valid) {
+			return error(400, 'Invalid form');
+		}
+
+		try {
+			await db.insert(tags).values({
+				userId: session.user.id,
+				tagName: form.data.tagName,
+				tagColour: form.data.colour || null,
+				tagTextColour: form.data.textColour || null,
+				createdAt: new Date()
+			});
+
+			return message(form, 'Tag created successfully!');
+		} catch (err) {
+			console.error('Error creating tag:', err);
+			return error(500, 'Error creating tag');
 		}
 	}
 };

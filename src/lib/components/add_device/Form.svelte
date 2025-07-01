@@ -5,7 +5,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import type { SuperValidated, Infer } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import { schema } from '../../../routes/devices/schema';
+	import { newDeviceSchema } from '$lib/schema/newDevice';
 
 	import type { InferSelectModel } from 'drizzle-orm';
 	import type { cpus, memory, storage, os, brands } from '$lib/server/db/schema';
@@ -14,7 +14,7 @@
 	import { X } from '@lucide/svelte';
 	import Field from './Field.svelte';
 
-	type schemaType = typeof schema;
+	type schemaType = typeof newDeviceSchema;
 	type CPU = InferSelectModel<typeof cpus>;
 	type Memory = InferSelectModel<typeof memory>;
 	type Storage = InferSelectModel<typeof storage>;
@@ -42,7 +42,7 @@
 	} = $props();
 
 	const { form, errors, message, enhance, validateForm } = superForm(sourceForm, {
-		validators: zod4Client(schema),
+		validators: zod4Client(newDeviceSchema),
 		customValidity: false,
 		validationMethod: 'auto',
 
@@ -117,7 +117,7 @@
 				>
 			</div>
 
-			<form method="POST" class="flex flex-col" use:enhance>
+			<form method="POST" class="flex flex-col" action="?/addDevice" use:enhance>
 				<div class="relative h-110 overflow-hidden">
 					<div
 						class="absolute inset-0 flex flex-col gap-4 overflow-y-auto p-6 transition-transform duration-300"
