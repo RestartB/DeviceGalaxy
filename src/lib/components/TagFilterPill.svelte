@@ -3,7 +3,7 @@
 	import type { tags } from '$lib/server/db/schema';
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
-	import { Tag } from '@lucide/svelte';
+	import { Tag, Plus } from '@lucide/svelte';
 	import { fly } from 'svelte/transition';
 
 	type Tags = InferSelectModel<typeof tags>;
@@ -12,11 +12,9 @@
 	let dropdownOpen = $state(false);
 
 	let {
-		name,
 		options,
 		selectedItems = $bindable(selected)
 	}: {
-		name: string;
 		options: Array<Tags>;
 		selectedItems?: number[];
 	} = $props();
@@ -63,24 +61,41 @@
 				class="z-[1000] flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 			>
 				<div class="flex w-full items-center justify-center gap-2 border-b p-4">
-					<h1 class="text-xl font-bold text-nowrap">Select Filters</h1>
+					<input
+						type="text"
+						placeholder="Search tags..."
+						class="w-full rounded-lg border-2 border-zinc-500 px-4 py-2 dark:bg-zinc-700 dark:text-white"
+					/>
+					<button
+						type="button"
+						class="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-green-500 text-white hover:bg-green-600"
+						onclick={() => (dropdownOpen = false)}
+					>
+						<Plus size="20" />
+					</button>
 				</div>
 				<ul class="flex w-full flex-wrap justify-start gap-2 overflow-y-auto p-6">
-					{#each options as option}
-						<li class="h-fit w-fit">
-							<button
-								type="button"
-								onclick={(event) => toggleItem(event, option.id)}
-								class="h-fit w-fit cursor-pointer rounded-lg border-2 border-zinc-500 px-4 py-2"
-								class:bg-green-200={selectedItems.includes(option.id)}
-								class:dark:bg-green-700={selectedItems.includes(option.id)}
-								class:bg-zinc-200={!selectedItems.includes(option.id)}
-								class:dark:bg-zinc-700={!selectedItems.includes(option.id)}
-							>
-								{option.tagName}
-							</button>
-						</li>
-					{/each}
+					{#if options.length === 0}
+						<p>No tags yet! Please create one to filter by tags</p>
+					{:else}
+						{#each options as option}
+							<li class="h-fit w-fit">
+								<button
+									type="button"
+									onclick={(event) => toggleItem(event, option.id)}
+									class="h-fit w-fit cursor-pointer rounded-lg border-2 border-zinc-500 px-4 py-2"
+									class:bg-green-200={selectedItems.includes(option.id)}
+									class:dark:bg-green-700={selectedItems.includes(option.id)}
+									class:bg-zinc-200={!selectedItems.includes(option.id)}
+									class:dark:bg-zinc-700={!selectedItems.includes(option.id)}
+									class:brightness-150={selectedItems.includes(option.id) && option.tagColour}
+									style="background-color: {option.tagColour ? option.tagColour : 'inherit'}"
+								>
+									{option.tagName}
+								</button>
+							</li>
+						{/each}
+					{/if}
 				</ul>
 			</div>
 		</div>

@@ -8,7 +8,7 @@
 	import { newDeviceSchema } from '$lib/schema/newDevice';
 
 	import type { InferSelectModel } from 'drizzle-orm';
-	import type { cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+	import type { cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
 	import { X } from '@lucide/svelte';
@@ -20,6 +20,7 @@
 	type Storage = InferSelectModel<typeof storage>;
 	type OS = InferSelectModel<typeof os>;
 	type Brand = InferSelectModel<typeof brands>;
+	type Tag = InferSelectModel<typeof tags>;
 
 	export type AttributeLists = {
 		cpus: CPU[];
@@ -27,6 +28,7 @@
 		storage: Storage[];
 		os: OS[];
 		brands: Brand[];
+		tags: Tag[];
 	};
 
 	let {

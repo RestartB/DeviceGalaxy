@@ -2,13 +2,14 @@
 	import { onMount } from 'svelte';
 
 	import type { InferSelectModel } from 'drizzle-orm';
-	import type { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+	import type { tags, userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
 	import { Plus, Check, MoveLeft, MoveRight, RefreshCw } from '@lucide/svelte';
 
 	import DeviceCard from '$lib/components/DeviceCard.svelte';
 	import FilterPill from '$lib/components/FilterPill.svelte';
+	import TagFilterPill from '$lib/components/TagFilterPill.svelte';
 	import Form from '$lib/components/add_device/Form.svelte';
 	import type { AttributeLists } from '$lib/components/add_device/Form.svelte';
 
@@ -18,6 +19,7 @@
 	type Storage = InferSelectModel<typeof storage>;
 	type OS = InferSelectModel<typeof os>;
 	type Brand = InferSelectModel<typeof brands>;
+	type Tag = InferSelectModel<typeof tags>;
 
 	const { data } = $props();
 
@@ -34,7 +36,8 @@
 		memory: [],
 		storage: [],
 		os: [],
-		brands: []
+		brands: [],
+		tags: []
 	});
 
 	let loadingAttributes = $state(false);
@@ -45,14 +48,16 @@
 		cpu: [] as number[],
 		memory: [] as number[],
 		storage: [] as number[],
-		os: [] as number[]
+		os: [] as number[],
+		tags: [] as number[]
 	});
 	let selectedFilters = $state({
 		brand: [] as number[],
 		cpu: [] as number[],
 		memory: [] as number[],
 		storage: [] as number[],
-		os: [] as number[]
+		os: [] as number[],
+		tags: [] as number[]
 	});
 	let filtersVisible = $state(false);
 	let showApplyFilters = $state(false);
@@ -78,6 +83,7 @@
 				if (activeFilters.storage.length > 0) url += `&storage=${activeFilters.storage.join(',')}`;
 				if (activeFilters.os.length > 0) url += `&os=${activeFilters.os.join(',')}`;
 				if (activeFilters.brand.length > 0) url += `&brand=${activeFilters.brand.join(',')}`;
+				if (activeFilters.tags.length > 0) url += `&tags=${activeFilters.tags.join(',')}`;
 			}
 
 			if (currentSearch && currentSearch !== '') {
@@ -112,6 +118,7 @@
 			attributeLists.storage = data.storage as Storage[];
 			attributeLists.os = data.os as OS[];
 			attributeLists.brands = data.brands as Brand[];
+			attributeLists.tags = data.tags as Tag[];
 		} catch (error) {
 			console.error('Error fetching attributes:', error);
 			errorLoadingAttributes = true;
@@ -123,31 +130,31 @@
 	function previousPage() {
 		if (page > 0) {
 			page -= 1;
-			fetchDevices();
+			refreshAll();
 		}
 	}
 
 	function nextPage() {
 		if (page < maxPages) {
 			page += 1;
-			fetchDevices();
+			refreshAll();
 		}
 	}
 
-	function refreshDevices() {
+	function refreshAll() {
 		fetchDevices();
 		getAttributes();
 	}
 
 	onMount(() => {
-		refreshDevices();
+		refreshAll();
 	});
 
 	$effect(() => {
 		if (message) {
 			if (message === 'Device added successfully!') {
 				toast.success(message as string);
-				refreshDevices();
+				refreshAll();
 				createPopupOpen = false;
 			} else if (typeof message === 'string' && message) {
 				toast.warning(message);
@@ -191,7 +198,7 @@
 			</button>
 			<button
 				class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
-				onclick={refreshDevices}
+				onclick={refreshAll}
 			>
 				<RefreshCw size="20" />
 			</button>
@@ -207,9 +214,8 @@
 						if (search.trim().toLocaleLowerCase() !== currentSearch) {
 							currentSearch = search.trim().toLocaleLowerCase();
 							page = 1;
-							fetchDevices();
+							refreshAll();
 						}
-						fetchDevices();
 					}
 				}}
 			/>
@@ -252,6 +258,11 @@
                     options={attributeLists.os}
                     bind:selectedItems={selectedFilters.os}
                 />
+				<!-- prettier-ignore -->
+				<TagFilterPill
+					options={attributeLists.tags}
+					bind:selectedItems={selectedFilters.tags}
+				/>
 			{/if}
 			{#if showApplyFilters}
 				<button
@@ -265,10 +276,10 @@
 							cpu: [...selectedFilters.cpu],
 							memory: [...selectedFilters.memory],
 							storage: [...selectedFilters.storage],
-							os: [...selectedFilters.os]
+							os: [...selectedFilters.os],
+							tags: [...selectedFilters.tags]
 						};
-						fetchDevices();
-						getAttributes();
+						refreshAll();
 					}}
 				>
 					<Check size="20" />
