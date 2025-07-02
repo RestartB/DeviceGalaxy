@@ -43,6 +43,11 @@
 	let loadingAttributes = $state(false);
 	let errorLoadingAttributes = $state(false);
 
+	let tagList: Tag[] = $state([]);
+
+	let loadingTags = $state(false);
+	let errorLoadingTags = $state(false);
+
 	let activeFilters = $state({
 		brand: [] as number[],
 		cpu: [] as number[],
@@ -127,6 +132,24 @@
 		}
 	}
 
+	async function getTags() {
+		if (loadingTags) return;
+		if (errorLoadingTags) return;
+
+		loadingTags = true;
+		try {
+			const response = await fetch('/api/devices/get_tags');
+			const data = await response.json();
+
+			tagList = data.tags as Tag[];
+		} catch (error) {
+			console.error('Error fetching tags:', error);
+			errorLoadingTags = true;
+		} finally {
+			loadingTags = false;
+		}
+	}
+
 	function previousPage() {
 		if (page > 0) {
 			page -= 1;
@@ -153,6 +176,10 @@
 	$effect(() => {
 		if (message) {
 			if (message === 'Device added successfully!') {
+				toast.success(message as string);
+				refreshAll();
+				createPopupOpen = false;
+			} else if (message === 'Tag added successfully!') {
 				toast.success(message as string);
 				refreshAll();
 				createPopupOpen = false;
@@ -260,7 +287,9 @@
                 />
 				<!-- prettier-ignore -->
 				<TagFilterPill
-					options={attributeLists.tags}
+					options={tagList}
+					sourceForm={data.newTagForm}
+					{message}
 					bind:selectedItems={selectedFilters.tags}
 				/>
 			{/if}

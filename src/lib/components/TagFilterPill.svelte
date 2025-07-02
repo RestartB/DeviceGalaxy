@@ -1,21 +1,31 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { fly, fade } from 'svelte/transition';
+
 	import type { InferSelectModel } from 'drizzle-orm';
 	import type { tags } from '$lib/server/db/schema';
-	import { fade } from 'svelte/transition';
-	import { onMount } from 'svelte';
+
+	import type { SuperValidated, Infer } from 'sveltekit-superforms';
+	import type { newTagSchema } from '$lib/schema/newTag';
+
 	import { Tag, Plus } from '@lucide/svelte';
-	import { fly } from 'svelte/transition';
+	import Form from '$lib/components/add_tag/Form.svelte';
 
 	type Tags = InferSelectModel<typeof tags>;
 
 	let selected = $state<number[]>([]);
 	let dropdownOpen = $state(false);
+	let createPopupOpen = $state(false);
 
 	let {
 		options,
+		sourceForm,
+		message = $bindable(),
 		selectedItems = $bindable(selected)
 	}: {
 		options: Array<Tags>;
+		sourceForm: SuperValidated<Infer<typeof newTagSchema>>;
+		message: any;
 		selectedItems?: number[];
 	} = $props();
 
@@ -38,6 +48,8 @@
 	});
 </script>
 
+<Form {sourceForm} bind:createPopupOpen bind:message />
+
 <div class="relative" transition:fly={{ x: -20, duration: 300 }}>
 	<button
 		class="z-20 flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
@@ -49,7 +61,7 @@
 
 	{#if dropdownOpen}
 		<div
-			class="fixed inset-0 z-50 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+			class="fixed inset-0 z-40 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 			transition:fade={{ duration: 100 }}
 		>
 			<div
@@ -69,7 +81,7 @@
 					<button
 						type="button"
 						class="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-green-500 text-white hover:bg-green-600"
-						onclick={() => (dropdownOpen = false)}
+						onclick={() => (createPopupOpen = true)}
 					>
 						<Plus size="20" />
 					</button>
@@ -89,7 +101,9 @@
 									class:bg-zinc-200={!selectedItems.includes(option.id)}
 									class:dark:bg-zinc-700={!selectedItems.includes(option.id)}
 									class:brightness-150={selectedItems.includes(option.id) && option.tagColour}
-									style="background-color: {option.tagColour ? option.tagColour : 'inherit'}"
+									style="background-color: {option.tagColour
+										? option.tagColour
+										: 'inherit'} !important"
 								>
 									{option.tagName}
 								</button>

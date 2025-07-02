@@ -14,7 +14,6 @@
 	import { X } from '@lucide/svelte';
 	import Field from './Field.svelte';
 
-	type schemaType = typeof newDeviceSchema;
 	type CPU = InferSelectModel<typeof cpus>;
 	type Memory = InferSelectModel<typeof memory>;
 	type Storage = InferSelectModel<typeof storage>;
@@ -37,7 +36,7 @@
 		createPopupOpen = $bindable(),
 		message: parentMessage = $bindable()
 	}: {
-		sourceForm: SuperValidated<Infer<schemaType>>;
+		sourceForm: SuperValidated<Infer<typeof newDeviceSchema>>;
 		attributeLists: AttributeLists;
 		createPopupOpen: boolean;
 		message: any;

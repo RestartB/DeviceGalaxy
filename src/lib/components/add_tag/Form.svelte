@@ -76,37 +76,43 @@
 			</div>
 
 			<form method="POST" class="flex flex-col" action="?/addTag" use:enhance>
-				<label for="tagName" class="text-sm font-medium">Tag Name</label>
-				<input
-					type="text"
-					id="tagName"
-					name="tagName"
-					class="w-full rounded-lg border p-2"
-					bind:value={$form.tagName}
-				/>
-				{#if $errors.tagName}<span class="text-red-600">{$errors.tagName}</span>{/if}
+				<div class="flex flex-col gap-4 p-6">
+					<label for="tagName" class="text-sm font-medium">Tag Name</label>
+					<input
+						type="text"
+						id="tagName"
+						name="tagName"
+						class="w-full rounded-lg border p-2"
+						bind:value={$form.tagName}
+					/>
+					{#if $errors.tagName}<span class="text-red-600">{$errors.tagName}</span>{/if}
 
-				<label for="tagColour" class="text-sm font-medium">Tag Colour</label>
-				<p class="text-sm text-zinc-400">Leave empty to use default colour.</p>
-				<input
-					id="tagColour"
-					name="tagColour"
-					type="color"
-					class="h-24 w-full rounded-lg border p-2"
-					bind:value={$form.colour}
-				/>
-				{#if $errors.colour}<span class="text-red-600">{$errors.colour}</span>{/if}
+					<div>
+						<label for="tagColour" class="text-sm font-medium">Tag Colour</label>
+						<p class="text-sm text-zinc-400">Leave empty to use default colour.</p>
+					</div>
+					<input
+						id="tagColour"
+						name="tagColour"
+						type="color"
+						class="h-24 w-full rounded-lg border p-2"
+						bind:value={$form.colour}
+					/>
+					{#if $errors.colour}<span class="text-red-600">{$errors.colour}</span>{/if}
 
-				<label for="tagTextColour" class="text-sm font-medium">Tag Text Colour</label>
-				<p class="text-sm text-zinc-400">Leave empty to use default colour.</p>
-				<input
-					id="tagTextColour"
-					name="tagTextColour"
-					type="color"
-					class="h-24 w-full rounded-lg border p-2"
-					bind:value={$form.textColour}
-				/>
-				{#if $errors.textColour}<span class="text-red-600">{$errors.textColour}</span>{/if}
+					<div>
+						<label for="tagTextColour" class="text-sm font-medium">Tag Text Colour</label>
+						<p class="text-sm text-zinc-400">Leave empty to use default colour.</p>
+					</div>
+					<input
+						id="tagTextColour"
+						name="tagTextColour"
+						type="color"
+						class="h-24 w-full rounded-lg border p-2"
+						bind:value={$form.textColour}
+					/>
+					{#if $errors.textColour}<span class="text-red-600">{$errors.textColour}</span>{/if}
+				</div>
 
 				<div class="border-t p-4">
 					<button
