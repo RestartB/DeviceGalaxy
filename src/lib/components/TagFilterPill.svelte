@@ -101,9 +101,7 @@
 									class:bg-zinc-200={!selectedItems.includes(option.id)}
 									class:dark:bg-zinc-700={!selectedItems.includes(option.id)}
 									class:brightness-150={selectedItems.includes(option.id) && option.tagColour}
-									style="background-color: {option.tagColour
-										? option.tagColour
-										: 'inherit'} !important"
+									style="{option.tagColour ? `background-color: ${option.tagColour}` : ''}"
 								>
 									{option.tagName}
 								</button>

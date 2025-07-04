@@ -138,7 +138,7 @@
 
 		loadingTags = true;
 		try {
-			const response = await fetch('/api/devices/get_tags');
+			const response = await fetch('/api/tags/get_tags');
 			const data = await response.json();
 
 			tagList = data.tags as Tag[];
@@ -148,6 +148,23 @@
 		} finally {
 			loadingTags = false;
 		}
+	}
+
+	function deleteDevice(id: number) {
+		fetch(`/api/devices/delete_device?id=${id}`, { method: 'DELETE' })
+			.then((response) => response.json())
+			.then((data) => {
+				if (data.success) {
+					toast.success('Device deleted successfully!');
+					refreshAll();
+				} else {
+					toast.error(data.message || 'Failed to delete device.');
+				}
+			})
+			.catch((error) => {
+				console.error('Error deleting device:', error);
+				toast.error('An error occurred while deleting the device.');
+			});
 	}
 
 	function previousPage() {
@@ -167,6 +184,7 @@
 	function refreshAll() {
 		fetchDevices();
 		getAttributes();
+		getTags();
 	}
 
 	onMount(() => {
@@ -334,6 +352,7 @@
 						storage={device.storage}
 						os={device.os}
 						background={device.imageURLs === null ? undefined : device.imageURLs[0]}
+						{deleteDevice}
 					/>
 				{/each}
 			</div>

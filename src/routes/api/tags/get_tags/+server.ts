@@ -18,7 +18,7 @@ export async function GET(event) {
 		const tagsResult = await db.select().from(tags).where(eq(tags.userId, session.user.id));
 
 		return json({
-			tagsResult,
+			tags: tagsResult,
 			total: tagsResult.length
 		});
 	} catch (error) {

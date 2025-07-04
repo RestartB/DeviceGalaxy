@@ -118,7 +118,7 @@
 				>
 			</div>
 
-			<form method="POST" class="flex flex-col" action="?/addDevice" use:enhance>
+			<form method="POST" class="flex flex-col" action="?/newDevice" use:enhance>
 				<div class="relative h-110 overflow-hidden">
 					<div
 						class="absolute inset-0 flex flex-col gap-4 overflow-y-auto p-6 transition-transform duration-300"

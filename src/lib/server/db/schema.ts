@@ -12,8 +12,12 @@ export const userDevices = sqliteTable('devices', {
 	storage: integer('storage'),
 	os: integer('os'),
 	brand: integer('brand'),
-	tagIDs: text('tag_ids', { mode: 'json' }).$type<number[]>().$defaultFn(() => []),
-    imageURLs: text('image_urls', { mode: 'json' }).$type<string[]>().$defaultFn(() => []),
+	tagIDs: text('tag_ids', { mode: 'json' })
+		.$type<number[]>()
+		.$defaultFn(() => []),
+	imageURLs: text('image_urls', { mode: 'json' })
+		.$type<string[]>()
+		.$defaultFn(() => []),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' })
 });
@@ -23,9 +27,9 @@ export const tags = sqliteTable('tags', {
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	tagName: text('tag_name', { length: 255 }).notNull(),
-	tagColour: text('tag_color', { length: 7 }).default('#FFFFFF'),
-	tagTextColour: text('tag_text_color', { length: 7 }).default('#000000'),
+	tagName: text('tag_name', { length: 40 }).notNull(),
+	tagColour: text('tag_color', { length: 7 }),
+	tagTextColour: text('tag_text_color', { length: 7 }),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' })
 });

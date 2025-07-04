@@ -5,12 +5,20 @@
 	const device = data.device;
 </script>
 
-<div class="fixed top-16 left-4 z-50">
+<div
+	class:fixed={device.imageURLs && device.imageURLs.length > 0}
+	class:top-16={device.imageURLs && device.imageURLs.length > 0}
+	class:left-4={device.imageURLs && device.imageURLs.length > 0}
+	class:z-50={device.imageURLs && device.imageURLs.length > 0}
+	class:p-4={!device.imageURLs || device.imageURLs.length === 0}
+	class:pb-0={!device.imageURLs || device.imageURLs.length === 0}
+>
 	<button
 		onclick={() => history.back()}
-		class="cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 shadow-md transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-600 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
+		class="flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 shadow-md transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 	>
 		<MoveLeft size="20" />
+		<p>Back</p>
 	</button>
 </div>
 

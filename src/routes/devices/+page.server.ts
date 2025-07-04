@@ -195,12 +195,26 @@ export const actions = {
 			return error(400, 'Invalid form');
 		}
 
+		// thank you https://stackoverflow.com/a/41491220
+		function colorIsDarkSimple(bgColor: string) {
+			const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+			const r = parseInt(color.substring(0, 2), 16); // hexToR
+			const g = parseInt(color.substring(2, 4), 16); // hexToG
+			const b = parseInt(color.substring(4, 6), 16); // hexToB
+			return r * 0.299 + g * 0.587 + b * 0.114 <= 186;
+		}
+
 		try {
 			await db.insert(tags).values({
 				userId: session.user.id,
 				tagName: form.data.tagName,
-				tagColour: form.data.colour || null,
-				tagTextColour: form.data.textColour || null,
+				tagColour: (form.data.colourEnabled && form.data.colour) || null,
+				tagTextColour:
+					form.data.colourEnabled && form.data.colour
+						? colorIsDarkSimple(form.data.colour)
+							? '#FFFFFF'
+							: '#000000'
+						: null,
 				createdAt: new Date()
 			});
 

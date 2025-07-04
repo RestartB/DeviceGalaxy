@@ -1,6 +1,7 @@
 import { z } from 'zod/v4';
 
 export const newDeviceSchema = z.object({
+	deviceID: z.number().optional(),
 	deviceName: z
 		.string()
 		.min(1, 'Device name is required')
