@@ -2,7 +2,24 @@
 	import { fade } from 'svelte/transition';
 	import { Cpu, MemoryStick, HardDrive, Cog, Trash, Edit, Share, Menu, X } from '@lucide/svelte';
 
-	const { id, name, description, brand, cpu, memory, storage, os, background, deleteDevice } = $props();
+	import type { InferSelectModel } from 'drizzle-orm';
+	import type { tags } from '$lib/server/db/schema';
+
+	type Tag = InferSelectModel<typeof tags>;
+
+	const {
+		id,
+		name,
+		description,
+		brand,
+		cpu,
+		memory,
+		storage,
+		os,
+		background,
+		deviceTags,
+		deleteDevice
+	} = $props();
 
 	let showingOverlay = $state(false);
 	let confirmDelete = $state(false);
@@ -55,6 +72,17 @@
 					<p>{os}</p>
 				</div>
 			{/if}
+
+			{#if deviceTags && deviceTags.length > 0}
+				{#each deviceTags as tag}
+					<div
+						class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 p-2 px-4"
+						style="background-color: {tag.tagColour}; color: {tag.tagTextColour};"
+					>
+						<p>{tag.tagName}</p>
+					</div>
+				{/each}
+			{/if}
 		</div>
 	</div>
 
@@ -63,6 +91,7 @@
 			onclick={(event) => {
 				event.preventDefault();
 				showingOverlay = !showingOverlay;
+				confirmDelete = false;
 			}}
 			class="z-10 cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 shadow-md transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 		>

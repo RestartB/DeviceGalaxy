@@ -20,12 +20,12 @@
 	let {
 		options,
 		sourceForm,
-		message = $bindable(),
+		refreshAll,
 		selectedItems = $bindable(selected)
 	}: {
 		options: Array<Tags>;
 		sourceForm: SuperValidated<Infer<typeof newTagSchema>>;
-		message: any;
+		refreshAll: any;
 		selectedItems?: number[];
 	} = $props();
 
@@ -48,7 +48,7 @@
 	});
 </script>
 
-<Form {sourceForm} bind:createPopupOpen bind:message />
+<Form {sourceForm} {refreshAll} bind:createPopupOpen />
 
 <div class="relative" transition:fly={{ x: -20, duration: 300 }}>
 	<button
@@ -88,7 +88,7 @@
 				</div>
 				<ul class="flex w-full flex-wrap justify-start gap-2 overflow-y-auto p-6">
 					{#if options.length === 0}
-						<p>No tags yet! Please create one to filter by tags</p>
+						<p>No tags yet! Please create one to filter by tags.</p>
 					{:else}
 						{#each options as option}
 							<li class="h-fit w-fit">
@@ -101,7 +101,7 @@
 									class:bg-zinc-200={!selectedItems.includes(option.id)}
 									class:dark:bg-zinc-700={!selectedItems.includes(option.id)}
 									class:brightness-150={selectedItems.includes(option.id) && option.tagColour}
-									style="{option.tagColour ? `background-color: ${option.tagColour}` : ''}"
+									style={option.tagColour ? `background-color: ${option.tagColour}` : ''}
 								>
 									{option.tagName}
 								</button>

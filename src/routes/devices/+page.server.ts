@@ -169,6 +169,7 @@ export const actions = {
 					os: newOS?.id,
 					brand: newBrand?.id,
 					imageURLs: form.data.imageURLs,
+					tagIDs: form.data.tagIDs,
 					createdAt: new Date()
 				});
 			});

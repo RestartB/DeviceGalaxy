@@ -1,8 +1,8 @@
 import { json } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
-import { eq, asc, desc, count, and, inArray, like } from 'drizzle-orm';
-import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+import { eq, asc, desc, count, and, inArray, like, or, sql, type SQL } from 'drizzle-orm';
+import { userDevices, cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
 
 export async function GET(event) {
 	// Check if the user is authenticated
@@ -44,6 +44,11 @@ export async function GET(event) {
 			.get('brand')
 			?.split(',')
 			.map((id) => parseInt(id))
+			.filter((id) => !isNaN(id)),
+		tags: event.url.searchParams
+			.get('tags')
+			?.split(',')
+			.map((id) => parseInt(id))
 			.filter((id) => !isNaN(id))
 	};
 
@@ -83,6 +88,26 @@ export async function GET(event) {
 		if ((selectedFilters.brand ?? []).length > 0) {
 			conditions.push(inArray(userDevices.brand, selectedFilters.brand ?? []));
 		}
+		if ((selectedFilters.tags ?? []).length > 0) {
+			const tagConditions = selectedFilters
+				.tags!.map((tagId) => {
+					const condition = or(
+						sql`json_extract(${userDevices.tagIDs}, '$') LIKE '%[' || ${tagId} || ',%'`,
+						sql`json_extract(${userDevices.tagIDs}, '$') LIKE '%,' || ${tagId} || ']%'`,
+						sql`json_extract(${userDevices.tagIDs}, '$') = '[' || ${tagId} || ']'`,
+						sql`json_extract(${userDevices.tagIDs}, '$') LIKE '%,' || ${tagId} || ',%'`
+					);
+					return condition;
+				})
+				.filter((condition): condition is SQL<unknown> => condition !== undefined);
+
+			if (tagConditions.length > 0) {
+				const combinedCondition = or(...tagConditions);
+				if (combinedCondition) {
+					conditions.push(combinedCondition);
+				}
+			}
+		}
 
 		const devices = await db
 			.select()
@@ -117,6 +142,11 @@ export async function GET(event) {
 			.select({ id: brands.id, value: brands.value, displayName: brands.displayName })
 			.from(brands)
 			.where(eq(brands.userId, session.user.id));
+
+		const tagData = await db
+			.select({id: tags.id, tagName: tags.tagName, tagColour: tags.tagColour, tagTextColour: tags.tagTextColour})
+			.from(tags)
+			.where(eq(tags.userId, session.user.id));
 
 		const matchedDevices = devices.map((device) => {
 			return {

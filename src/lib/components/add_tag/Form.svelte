@@ -15,11 +15,11 @@
 	let {
 		sourceForm,
 		createPopupOpen = $bindable(),
-		message: parentMessage = $bindable()
+		refreshAll
 	}: {
 		sourceForm: SuperValidated<Infer<schemaType>>;
 		createPopupOpen: boolean;
-		message: any;
+		refreshAll: any;
 	} = $props();
 
 	const { form, errors, message, enhance } = superForm(sourceForm, {
@@ -45,8 +45,15 @@
 
 	$effect(() => {
 		if ($message) {
-			parentMessage = $message;
+			if ($message === 'Tag created successfully!') {
+				toast.success($message as string);
+				refreshAll();
+				createPopupOpen = false;
+			} else if (typeof $message === 'string' && $message) {
+				toast.warning($message);
+			}
 		}
+		$message = null;
 	});
 
 	onMount(() => {
@@ -113,8 +120,7 @@
 						</div>
 						<input
 							id="tagColour"
-							name="tagColour"
-							defaultValue="#ffffff"
+							name="colour"
 							type="color"
 							class="h-24 w-full rounded-lg border"
 							bind:value={$form.colour}

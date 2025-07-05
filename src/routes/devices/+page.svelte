@@ -98,7 +98,7 @@
 			const response = await fetch(url);
 			const data = await response.json();
 
-			devices = data.devices as Device[];
+			devices = data.devices;
 			totalDevices = data.totalDevices;
 		} catch (error) {
 			console.error('Error fetching devices:', error);
@@ -123,7 +123,6 @@
 			attributeLists.storage = data.storage as Storage[];
 			attributeLists.os = data.os as OS[];
 			attributeLists.brands = data.brands as Brand[];
-			attributeLists.tags = data.tags as Tag[];
 		} catch (error) {
 			console.error('Error fetching attributes:', error);
 			errorLoadingAttributes = true;
@@ -182,30 +181,15 @@
 	}
 
 	function refreshAll() {
+		console.log('Refreshing all data...');
 		fetchDevices();
 		getAttributes();
 		getTags();
+		console.log('Data refreshed successfully.');
 	}
 
 	onMount(() => {
 		refreshAll();
-	});
-
-	$effect(() => {
-		if (message) {
-			if (message === 'Device added successfully!') {
-				toast.success(message as string);
-				refreshAll();
-				createPopupOpen = false;
-			} else if (message === 'Tag added successfully!') {
-				toast.success(message as string);
-				refreshAll();
-				createPopupOpen = false;
-			} else if (typeof message === 'string' && message) {
-				toast.warning(message);
-			}
-		}
-		message = undefined;
 	});
 
 	$effect(() => {
@@ -230,7 +214,14 @@
 </script>
 
 {#if data.user}
-	<Form sourceForm={data.newDeviceForm} {attributeLists} bind:createPopupOpen bind:message />
+	<Form
+		sourceForm={data.newDeviceForm}
+		newTagForm={data.newTagForm}
+		{refreshAll}
+		{attributeLists}
+		{tagList}
+		bind:createPopupOpen
+	/>
 
 	<div class="flex flex-col gap-2">
 		<h1 class="text-4xl font-bold">Devices</h1>
@@ -307,7 +298,7 @@
 				<TagFilterPill
 					options={tagList}
 					sourceForm={data.newTagForm}
-					{message}
+					{refreshAll}
 					bind:selectedItems={selectedFilters.tags}
 				/>
 			{/if}
@@ -352,6 +343,7 @@
 						storage={device.storage}
 						os={device.os}
 						background={device.imageURLs === null ? undefined : device.imageURLs[0]}
+						deviceTags={device.tags}
 						{deleteDevice}
 					/>
 				{/each}

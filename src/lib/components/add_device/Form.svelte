@@ -6,13 +6,16 @@
 	import type { SuperValidated, Infer } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { newDeviceSchema } from '$lib/schema/newDevice';
+	import { newTagSchema } from '$lib/schema/newTag';
 
 	import type { InferSelectModel } from 'drizzle-orm';
 	import type { cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
-	import { X } from '@lucide/svelte';
+	import { X, Plus } from '@lucide/svelte';
 	import Field from './Field.svelte';
+
+	import NewTagForm from '$lib/components/add_tag/Form.svelte';
 
 	type CPU = InferSelectModel<typeof cpus>;
 	type Memory = InferSelectModel<typeof memory>;
@@ -27,19 +30,22 @@
 		storage: Storage[];
 		os: OS[];
 		brands: Brand[];
-		tags: Tag[];
 	};
 
 	let {
 		sourceForm,
+		newTagForm,
 		attributeLists,
+		tagList,
 		createPopupOpen = $bindable(),
-		message: parentMessage = $bindable()
+		refreshAll
 	}: {
 		sourceForm: SuperValidated<Infer<typeof newDeviceSchema>>;
+		newTagForm: SuperValidated<Infer<typeof newTagSchema>>;
 		attributeLists: AttributeLists;
+		tagList: Tag[];
 		createPopupOpen: boolean;
-		message: any;
+		refreshAll: any;
 	} = $props();
 
 	const { form, errors, message, enhance, validateForm } = superForm(sourceForm, {
@@ -54,9 +60,12 @@
 	});
 
 	let formPage = $state(0);
+	let tagFormOpen = $state(false);
+
 	let newImgURL = $state('');
-	let uploadAllowed = false;
 	let newImgURLEl: HTMLInputElement | undefined = $state();
+	let uploadAllowed = false;
+
 	type FormErrors = typeof $errors;
 
 	let hasErrors = $derived(
@@ -82,12 +91,19 @@
 
 	$effect(() => {
 		if ($message) {
-			parentMessage = $message;
+			if ($message === 'Device added successfully!') {
+				toast.success($message as string);
+				refreshAll();
+				createPopupOpen = false;
+			} else if (typeof $message === 'string' && $message) {
+				toast.warning($message);
+			}
 		}
+		$message = null;
 	});
 
 	$effect(() => {
-		if (formPage === 2) {
+		if (formPage === 4) {
 			asyncValidateForm();
 		}
 	});
@@ -102,8 +118,10 @@
 </script>
 
 {#if createPopupOpen}
+	<NewTagForm {refreshAll} sourceForm={newTagForm} bind:createPopupOpen={tagFormOpen} />
+
 	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+		class="fixed inset-0 z-40 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 		transition:fade={{ duration: 100 }}
 	>
 		<div
@@ -186,6 +204,49 @@
 						class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
 						style:transform="translateX({(2 - formPage) * 100}%)"
 					>
+						<h3 class="text-xl font-semibold">Tags</h3>
+						<p>
+							You can select tags to categorise your device. To delete or edit tags, please go to
+							the tags page.
+						</p>
+
+						<div class="flex flex-wrap gap-2">
+							{#each tagList as tag}
+								<label class="cursor-pointer">
+									<input
+										type="checkbox"
+										name="tags"
+										value={tag.id}
+										bind:group={$form.tagIDs}
+										class="peer hidden"
+									/>
+									<span
+										class="inline-flex items-center justify-center rounded-full border-2 border-zinc-400
+										bg-zinc-100 px-4 py-2 text-zinc-700 transition-all peer-checked:brightness-80
+										dark:bg-zinc-800 dark:text-zinc-200 peer-checked:dark:text-white
+										dark:peer-checked:brightness-150"
+										style={tag.tagColour
+											? `background-color: ${tag.tagColour}; color: ${tag.tagTextColour}`
+											: ''}
+									>
+										{tag.tagName}
+									</span>
+								</label>
+							{/each}
+							<button
+								type="button"
+								class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-zinc-400 bg-blue-600 p-2 text-white transition-colors hover:bg-blue-700"
+								onclick={() => (tagFormOpen = true)}
+							>
+								<Plus size="20" />
+							</button>
+						</div>
+					</div>
+
+					<div
+						class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
+						style:transform="translateX({(3 - formPage) * 100}%)"
+					>
 						{#if uploadAllowed}
 							<h3 class="text-xl font-semibold">Upload Images</h3>
 							<p>
@@ -233,7 +294,7 @@
 
 					<div
 						class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
-						style:transform="translateX({(3 - formPage) * 100}%)"
+						style:transform="translateX({(4 - formPage) * 100}%)"
 					>
 						<h3 class="text-xl font-semibold">Confirm Details</h3>
 						<div class="rounded-lg bg-zinc-200 p-4 text-sm dark:bg-zinc-700">
@@ -302,15 +363,15 @@
 						style:visibility={formPage > 0 ? 'visible' : 'hidden'}>Previous</button
 					>
 
-					{#if formPage < 3}
+					{#if formPage < 4}
 						<button
 							type="button"
 							class="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-white"
-							onclick={() => (formPage = Math.min(formPage + 1, 3))}>Next</button
+							onclick={() => (formPage = Math.min(formPage + 1, 4))}>Next</button
 						>
 					{/if}
 
-					{#if formPage === 3}
+					{#if formPage === 4}
 						<button
 							type="submit"
 							class="flex-1 cursor-pointer rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
