@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
-import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+import { userDevices, cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
 import { eq, and } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
@@ -46,13 +46,28 @@ export const load: PageServerLoad = async (event) => {
 		.from(brands)
 		.where(and(eq(brands.userId, session.user.id), eq(brands.id, device[0].brand as number)));
 
+	const tagData = await db
+		.select({
+			id: tags.id,
+			tagName: tags.tagName,
+			tagColour: tags.tagColour,
+			tagTextColour: tags.tagTextColour
+		})
+		.from(tags)
+		.where(eq(tags.userId, session.user.id));
+
+	const deviceTags = (device[0].tags || [])
+		.map((tagId: number) => tagData.find((tag) => tag.id === tagId))
+		.filter(Boolean);
+
 	const processedDevice = {
 		...device[0],
 		cpu: cpuData[0]?.displayName ?? null,
 		memory: memoryData[0]?.displayName ?? null,
 		storage: storageData[0]?.displayName ?? null,
 		os: osData[0]?.displayName ?? null,
-		brand: brandData[0]?.displayName ?? null
+		brand: brandData[0]?.displayName ?? null,
+		tags: deviceTags,
 	};
 
 	return {

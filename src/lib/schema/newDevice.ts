@@ -13,5 +13,5 @@ export const newDeviceSchema = z.object({
 	os: z.string().max(255, 'OS must be 255 characters or less').optional(),
 	brand: z.string().max(255, 'Brand must be 255 characters or less').optional(),
 	imageURLs: z.url().array().min(0).max(5, 'You can only select up to 5 images'),
-	tagIDs: z.number().array().min(0)
+	tags: z.number().array().min(0)
 });

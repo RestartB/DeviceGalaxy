@@ -12,7 +12,7 @@ export const userDevices = sqliteTable('devices', {
 	storage: integer('storage'),
 	os: integer('os'),
 	brand: integer('brand'),
-	tagIDs: text('tag_ids', { mode: 'json' })
+	tags: text('tag_ids', { mode: 'json' })
 		.$type<number[]>()
 		.$defaultFn(() => []),
 	imageURLs: text('image_urls', { mode: 'json' })

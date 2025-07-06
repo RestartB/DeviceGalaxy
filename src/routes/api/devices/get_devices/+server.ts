@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
-import { eq, asc, desc, count, and, inArray, like, or, sql, type SQL } from 'drizzle-orm';
+import { eq, asc, desc, count, and, inArray, like, sql } from 'drizzle-orm';
 import { userDevices, cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
 
 export async function GET(event) {
@@ -89,22 +89,15 @@ export async function GET(event) {
 			conditions.push(inArray(userDevices.brand, selectedFilters.brand ?? []));
 		}
 		if ((selectedFilters.tags ?? []).length > 0) {
-			const tagConditions = selectedFilters
-				.tags!.map((tagId) => {
-					const condition = or(
-						sql`json_extract(${userDevices.tagIDs}, '$') LIKE '%[' || ${tagId} || ',%'`,
-						sql`json_extract(${userDevices.tagIDs}, '$') LIKE '%,' || ${tagId} || ']%'`,
-						sql`json_extract(${userDevices.tagIDs}, '$') = '[' || ${tagId} || ']'`,
-						sql`json_extract(${userDevices.tagIDs}, '$') LIKE '%,' || ${tagId} || ',%'`
-					);
-					return condition;
-				})
-				.filter((condition): condition is SQL<unknown> => condition !== undefined);
+			const tagConditions = selectedFilters.tags!.map(
+				(tagId) =>
+					sql`EXISTS (SELECT 1 FROM json_each(${userDevices.tags}) WHERE json_each.value = ${tagId})`
+			);
 
 			if (tagConditions.length > 0) {
-				const combinedCondition = or(...tagConditions);
-				if (combinedCondition) {
-					conditions.push(combinedCondition);
+				const orCondition = and(...tagConditions);
+				if (orCondition) {
+					conditions.push(orCondition);
 				}
 			}
 		}
@@ -144,18 +137,30 @@ export async function GET(event) {
 			.where(eq(brands.userId, session.user.id));
 
 		const tagData = await db
-			.select({id: tags.id, tagName: tags.tagName, tagColour: tags.tagColour, tagTextColour: tags.tagTextColour})
+			.select({
+				id: tags.id,
+				tagName: tags.tagName,
+				tagColour: tags.tagColour,
+				tagTextColour: tags.tagTextColour
+			})
 			.from(tags)
 			.where(eq(tags.userId, session.user.id));
 
 		const matchedDevices = devices.map((device) => {
+			const deviceTagIds = device.tags || [];
+
+			const deviceTags = deviceTagIds
+				.map((tagId: number) => tagData.find((tag) => tag.id === tagId))
+				.filter(Boolean);
+
 			return {
 				...device,
 				cpu: cpuData.find((cpu) => cpu.id === device.cpu)?.displayName,
 				memory: memoryData.find((mem) => mem.id === device.memory)?.displayName,
 				storage: storageData.find((stor) => stor.id === device.storage)?.displayName,
 				os: osData.find((osItem) => osItem.id === device.os)?.displayName,
-				brand: brandData.find((brand) => brand.id === device.brand)?.displayName
+				brand: brandData.find((brand) => brand.id === device.brand)?.displayName,
+				tags: deviceTags
 			};
 		});
 

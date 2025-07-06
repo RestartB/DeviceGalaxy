@@ -2,23 +2,16 @@
 	import { fade } from 'svelte/transition';
 	import { Cpu, MemoryStick, HardDrive, Cog, Trash, Edit, Share, Menu, X } from '@lucide/svelte';
 
-	import type { InferSelectModel } from 'drizzle-orm';
-	import type { tags } from '$lib/server/db/schema';
-
-	type Tag = InferSelectModel<typeof tags>;
-
-	const {
-		id,
-		name,
-		description,
-		brand,
-		cpu,
-		memory,
-		storage,
-		os,
-		background,
-		deviceTags,
-		deleteDevice
+	let {
+		device,
+		deleteDevice,
+		editPopupOpen = $bindable(),
+		toEdit = $bindable()
+	}: {
+		device: any;
+		deleteDevice: any;
+		editPopupOpen?: boolean;
+		toEdit: any;
 	} = $props();
 
 	let showingOverlay = $state(false);
@@ -27,54 +20,54 @@
 
 <a
 	class="relative flex max-w-sm min-w-64 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md dark:bg-zinc-700"
-	href={`/device/${id}`}
+	href={`/device/${device.id}`}
 >
-	{#if background}
-		<img src={background} alt={name} class="h-48 w-full object-cover" />
+	{#if device.imageURLs && device.imageURLs.length > 0}
+		<img src={device.imageURLs[0]} alt={device.deviceName} class="h-48 w-full object-cover" />
 	{/if}
 	<div class="flex w-full flex-col gap-2 p-4">
 		<div>
-			<p class="text-sm text-zinc-600 dark:text-zinc-400">{brand}</p>
-			<h2 class="text-xl font-semibold">{name}</h2>
-			<p>{description}</p>
+			<p class="text-sm text-zinc-600 dark:text-zinc-400">{device.brand}</p>
+			<h2 class="text-xl font-semibold">{device.deviceName}</h2>
+			<p>{device.description}</p>
 		</div>
 
 		<div class="flex w-full flex-wrap gap-1 text-sm">
-			{#if cpu}
+			{#if device.cpu}
 				<div
 					class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
 				>
 					<Cpu size="20" />
-					<p>{cpu}</p>
+					<p>{device.cpu}</p>
 				</div>
 			{/if}
-			{#if memory}
+			{#if device.memory}
 				<div
 					class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
 				>
 					<MemoryStick size="20" />
-					<p>{memory}</p>
+					<p>{device.memory}</p>
 				</div>
 			{/if}
-			{#if storage}
+			{#if device.storage}
 				<div
 					class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
 				>
 					<HardDrive size="20" />
-					<p>{storage}</p>
+					<p>{device.storage}</p>
 				</div>
 			{/if}
-			{#if os}
+			{#if device.os}
 				<div
 					class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
 				>
 					<Cog size="20" />
-					<p>{os}</p>
+					<p>{device.os}</p>
 				</div>
 			{/if}
 
-			{#if deviceTags && deviceTags.length > 0}
-				{#each deviceTags as tag}
+			{#if device.tags && device.tags.length > 0}
+				{#each device.tags as tag}
 					<div
 						class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 p-2 px-4"
 						style="background-color: {tag.tagColour}; color: {tag.tagTextColour};"
@@ -93,6 +86,7 @@
 				showingOverlay = !showingOverlay;
 				confirmDelete = false;
 			}}
+			aria-label="Toggle menu"
 			class="z-10 cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 shadow-md transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 		>
 			{#if showingOverlay}
@@ -113,9 +107,17 @@
 				event.preventDefault();
 			}}
 		>
-			<button class="flex w-full cursor-pointer items-center justify-center gap-2">
+			<button
+				class="flex w-full cursor-pointer items-center justify-center gap-2"
+				onclick={(event) => {
+					event.preventDefault();
+					showingOverlay = false;
+					editPopupOpen = true;
+					toEdit = device;
+				}}
+			>
 				<Edit size="20" />
-				<p>Edit...</p>
+				<p>Edit</p>
 			</button>
 			<hr class="w-full border-zinc-800 dark:border-zinc-200" />
 			<button class="flex w-full cursor-pointer items-center justify-center gap-2">
@@ -129,7 +131,7 @@
 					if (!confirmDelete) {
 						confirmDelete = true;
 					} else {
-						deleteDevice(id);
+						deleteDevice(device.id);
 					}
 				}}
 			>

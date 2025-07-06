@@ -17,46 +17,40 @@
 
 	import NewTagForm from '$lib/components/add_tag/Form.svelte';
 
-	type CPU = InferSelectModel<typeof cpus>;
-	type Memory = InferSelectModel<typeof memory>;
-	type Storage = InferSelectModel<typeof storage>;
-	type OS = InferSelectModel<typeof os>;
-	type Brand = InferSelectModel<typeof brands>;
-	type Tag = InferSelectModel<typeof tags>;
-
 	export type AttributeLists = {
-		cpus: CPU[];
-		memory: Memory[];
-		storage: Storage[];
-		os: OS[];
-		brands: Brand[];
+		cpus: InferSelectModel<typeof cpus>[];
+		memory: InferSelectModel<typeof memory>[];
+		storage: InferSelectModel<typeof storage>[];
+		os: InferSelectModel<typeof os>[];
+		brands: InferSelectModel<typeof brands>[];
 	};
 
 	let {
 		sourceForm,
 		newTagForm,
+		toEdit,
 		attributeLists,
 		tagList,
-		createPopupOpen = $bindable(),
+		editPopupOpen = $bindable(),
 		refreshAll
 	}: {
 		sourceForm: SuperValidated<Infer<typeof newDeviceSchema>>;
 		newTagForm: SuperValidated<Infer<typeof newTagSchema>>;
+		toEdit: any;
 		attributeLists: AttributeLists;
-		tagList: Tag[];
-		createPopupOpen: boolean;
+		tagList: InferSelectModel<typeof tags>[];
+		editPopupOpen: boolean;
 		refreshAll: any;
 	} = $props();
 
-	const { form, errors, message, enhance, validateForm } = superForm(sourceForm, {
+	const { form, errors, message, formId, enhance, validateForm } = superForm(sourceForm, {
 		validators: zod4Client(newDeviceSchema),
 		customValidity: false,
 		validationMethod: 'auto',
-		id: 'newDeviceForm',
 
 		onError: (error) => {
 			console.error('Form submission error:', error);
-			toast.error('Failed to create device. Try again later.');
+			toast.error('Failed to update device. Try again later.');
 		}
 	});
 
@@ -91,11 +85,29 @@
 	}
 
 	$effect(() => {
+		if (editPopupOpen && toEdit) {
+			$form.deviceName = toEdit.deviceName;
+			$form.description = toEdit.description || undefined;
+
+			$form.brand = toEdit.brand || '';
+			$form.cpu = toEdit.cpu || '';
+			$form.memory = toEdit.memory || '';
+			$form.storage = toEdit.storage || '';
+			$form.os = toEdit.os || '';
+
+			$form.imageURLs = toEdit.imageURLs || [];
+			$form.tags = toEdit.tags?.map((tag: any) => tag.id) || [];
+
+			$formId = toEdit.id.toString();
+		}
+	});
+
+	$effect(() => {
 		if ($message) {
-			if ($message === 'Device added successfully!') {
+			if ($message === 'Device updated successfully!') {
 				toast.success($message as string);
 				refreshAll();
-				createPopupOpen = false;
+				editPopupOpen = false;
 			} else if (typeof $message === 'string' && $message) {
 				toast.warning($message);
 			}
@@ -108,17 +120,23 @@
 			asyncValidateForm();
 		}
 	});
+
+	$effect(() => {
+		if (!editPopupOpen) {
+			formPage = 0;
+		}
+	});
 </script>
 
 <svelte:window
 	onkeydown={(event) => {
 		if (event.key === 'Escape') {
-			createPopupOpen = false;
+			editPopupOpen = false;
 		}
 	}}
 />
 
-{#if createPopupOpen}
+{#if editPopupOpen}
 	<NewTagForm {refreshAll} sourceForm={newTagForm} bind:createPopupOpen={tagFormOpen} />
 
 	<div
@@ -127,22 +145,22 @@
 	>
 		<div
 			class="absolute inset-0 z-70"
-			onclick={() => (createPopupOpen = false)}
+			onclick={() => (editPopupOpen = false)}
 			aria-hidden="true"
 		></div>
 		<div
 			class="z-80 flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 		>
 			<div class="flex items-center justify-between border-b p-4">
-				<h2 class="text-xl font-bold">Create New Device</h2>
+				<h2 class="text-xl font-bold">Edit Device</h2>
 				<button
-					onclick={() => (createPopupOpen = false)}
+					onclick={() => (editPopupOpen = false)}
 					class="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-400"
 					aria-label="Close"><X /></button
 				>
 			</div>
 
-			<form method="POST" class="flex flex-col" action="?/newDevice" use:enhance>
+			<form method="POST" class="flex flex-col" action="?/editDevice" use:enhance>
 				<div class="relative h-110 overflow-hidden">
 					<div
 						class="absolute inset-0 flex flex-col gap-4 overflow-y-auto p-6 transition-transform duration-300"
@@ -257,8 +275,8 @@
 							<h3 class="text-xl font-semibold">Upload Images</h3>
 							<p>
 								You can upload images of your device here. The first image will also be used for the
-								thumbnail. Please ensure that your images comply with the Terms of Service. Max
-								size per image: 5MB.
+								thumbnail. Please ensure that your images comply with the Terms of Service. Max size
+								per image: 5MB.
 							</p>
 						{:else}
 							<h3 class="text-xl font-semibold">Add Images</h3>
@@ -356,7 +374,7 @@
 							</div>
 						{/if}
 						<p class="mt-auto text-base text-zinc-500">
-							Once you're happy with the details above, click below to create.
+							Once you're happy with the details above, click below to update.
 						</p>
 					</div>
 				</div>
@@ -381,7 +399,7 @@
 						<button
 							type="submit"
 							class="flex-1 cursor-pointer rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
-							disabled={hasErrors}>Create Device</button
+							disabled={hasErrors}>Update Device</button
 						>
 					{/if}
 				</div>

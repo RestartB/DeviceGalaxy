@@ -24,10 +24,10 @@ export async function DELETE(event) {
 			const device = await tx
 				.select()
 				.from(userDevices)
-				.where(eq(userDevices.id, parseInt(deviceId)))
-				.limit(1);
+				.where(and(eq(userDevices.id, parseInt(deviceId)), eq(userDevices.userId, session.user.id)))
+				.get();
 
-			if (device.length === 0) {
+			if (!device) {
 				return json({ error: 'Device not found' }, { status: 404 });
 			}
 
@@ -35,67 +35,67 @@ export async function DELETE(event) {
 
 			// Check if any other devices exist for each parameter
 			let cpuExists = null;
-			if (device[0].cpu !== null && device[0].cpu !== undefined) {
+			if (device.cpu !== null && device.cpu !== undefined) {
 				cpuExists = await tx
 					.select()
 					.from(cpus)
-					.where(and(eq(cpus.userID, session.user.id), eq(cpus.id, device[0].cpu)))
+					.where(and(eq(cpus.userID, session.user.id), eq(cpus.id, device.cpu)))
 					.limit(1);
 
 				if (cpuExists.length === 0) {
-					await tx.delete(cpus).where(eq(cpus.id, device[0].cpu));
+					await tx.delete(cpus).where(eq(cpus.id, device.cpu));
 				}
 			}
 
 			let memoryExists = null;
-			if (device[0].memory !== null && device[0].memory !== undefined) {
+			if (device.memory !== null && device.memory !== undefined) {
 				memoryExists = await tx
 					.select()
 					.from(memory)
-					.where(and(eq(memory.userID, session.user.id), eq(memory.id, device[0].memory)))
+					.where(and(eq(memory.userID, session.user.id), eq(memory.id, device.memory)))
 					.limit(1);
 
 				if (memoryExists.length === 0) {
-					await tx.delete(memory).where(eq(memory.id, device[0].memory));
+					await tx.delete(memory).where(eq(memory.id, device.memory));
 				}
 			}
 
 			let storageExists = null;
-			if (device[0].storage !== null && device[0].storage !== undefined) {
+			if (device.storage !== null && device.storage !== undefined) {
 				storageExists = await tx
 					.select()
 					.from(storage)
-					.where(and(eq(storage.userID, session.user.id), eq(storage.id, device[0].storage)))
+					.where(and(eq(storage.userID, session.user.id), eq(storage.id, device.storage)))
 					.limit(1);
 
 				if (storageExists.length === 0) {
-					await tx.delete(storage).where(eq(storage.id, device[0].storage));
+					await tx.delete(storage).where(eq(storage.id, device.storage));
 				}
 			}
 
 			let osExists = null;
-			if (device[0].os !== null && device[0].os !== undefined) {
+			if (device.os !== null && device.os !== undefined) {
 				osExists = await tx
 					.select()
 					.from(os)
-					.where(and(eq(os.userID, session.user.id), eq(os.id, device[0].os)))
+					.where(and(eq(os.userID, session.user.id), eq(os.id, device.os)))
 					.limit(1);
 
 				if (osExists.length === 0) {
-					await tx.delete(os).where(eq(os.id, device[0].os));
+					await tx.delete(os).where(eq(os.id, device.os));
 				}
 			}
 
 			let brandExists = null;
-			if (device[0].brand !== null && device[0].brand !== undefined) {
+			if (device.brand !== null && device.brand !== undefined) {
 				brandExists = await tx
 					.select()
 					.from(brands)
-					.where(and(eq(brands.userId, session.user.id), eq(brands.id, device[0].brand)))
+					.where(and(eq(brands.userId, session.user.id), eq(brands.id, device.brand)))
 					.limit(1);
 
 				if (brandExists.length === 0) {
-					await tx.delete(brands).where(eq(brands.id, device[0].brand));
+					await tx.delete(brands).where(eq(brands.id, device.brand));
 				}
 			}
 		});

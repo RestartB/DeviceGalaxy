@@ -10,7 +10,9 @@
 	import DeviceCard from '$lib/components/DeviceCard.svelte';
 	import FilterPill from '$lib/components/FilterPill.svelte';
 	import TagFilterPill from '$lib/components/TagFilterPill.svelte';
-	import Form from '$lib/components/add_device/Form.svelte';
+
+	import AddDeviceForm from '$lib/components/add_device/Form.svelte';
+	import EditDeviceForm from '$lib/components/edit_device/Form.svelte';
 	import type { AttributeLists } from '$lib/components/add_device/Form.svelte';
 
 	type Device = InferSelectModel<typeof userDevices>;
@@ -25,7 +27,9 @@
 
 	let devices = $state<Device[]>([]);
 	let createPopupOpen: boolean = $state(false);
-	let message = $state();
+
+	let editPopupOpen: boolean = $state(false);
+	let toEdit: Device | undefined = $state();
 
 	let totalDevices = $state(0);
 	let loadingDevices = $state(false);
@@ -181,11 +185,9 @@
 	}
 
 	function refreshAll() {
-		console.log('Refreshing all data...');
 		fetchDevices();
 		getAttributes();
 		getTags();
-		console.log('Data refreshed successfully.');
 	}
 
 	onMount(() => {
@@ -214,7 +216,7 @@
 </script>
 
 {#if data.user}
-	<Form
+	<AddDeviceForm
 		sourceForm={data.newDeviceForm}
 		newTagForm={data.newTagForm}
 		{refreshAll}
@@ -223,8 +225,19 @@
 		bind:createPopupOpen
 	/>
 
+	<EditDeviceForm
+		sourceForm={data.editDeviceForm}
+		newTagForm={data.newTagForm}
+		{toEdit}
+		{refreshAll}
+		{attributeLists}
+		{tagList}
+		bind:editPopupOpen
+	/>
+
 	<div class="flex flex-col gap-2">
 		<h1 class="text-4xl font-bold">Devices</h1>
+		<p>View all of the devices saved to your account.</p>
 		<div class="flex flex-wrap gap-2">
 			<button
 				class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-blue-500 text-white"
@@ -242,7 +255,7 @@
 				type="text"
 				id="search"
 				name="search"
-				class="z-20 flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+				class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
 				bind:value={search}
 				placeholder="Search devices..."
 				onkeydown={(e) => {
@@ -256,7 +269,7 @@
 				}}
 			/>
 			<button
-				class="z-20 flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
+				class="flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 				onclick={() => (filtersVisible = !filtersVisible)}
 			>
 				<p>{filtersVisible ? 'Hide' : 'Show'} Filters</p>
@@ -297,8 +310,6 @@
 				<!-- prettier-ignore -->
 				<TagFilterPill
 					options={tagList}
-					sourceForm={data.newTagForm}
-					{refreshAll}
 					bind:selectedItems={selectedFilters.tags}
 				/>
 			{/if}
@@ -330,20 +341,12 @@
 		{:else if totalDevices === 0}
 			<p>No devices found.</p>
 		{:else}
-			<p class="text-sm text-zinc-500">Total devices: {totalDevices}</p>
 			<div class="flex w-full flex-wrap justify-center gap-2">
 				{#each devices as device}
 					<DeviceCard
-						id={device.id}
-						name={device.deviceName}
-						description={device.description}
-						brand={device.brand}
-						cpu={device.cpu}
-						memory={device.memory}
-						storage={device.storage}
-						os={device.os}
-						background={device.imageURLs === null ? undefined : device.imageURLs[0]}
-						deviceTags={device.tags}
+						{device}
+						bind:editPopupOpen
+						bind:toEdit
 						{deleteDevice}
 					/>
 				{/each}

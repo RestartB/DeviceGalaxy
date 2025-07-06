@@ -1,31 +1,22 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { fly, fade } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
+	import Fuse from 'fuse.js';
 
 	import type { InferSelectModel } from 'drizzle-orm';
 	import type { tags } from '$lib/server/db/schema';
 
-	import type { SuperValidated, Infer } from 'sveltekit-superforms';
-	import type { newTagSchema } from '$lib/schema/newTag';
-
-	import { Tag, Plus } from '@lucide/svelte';
-	import Form from '$lib/components/add_tag/Form.svelte';
-
-	type Tags = InferSelectModel<typeof tags>;
+	import { Tag, X } from '@lucide/svelte';
 
 	let selected = $state<number[]>([]);
 	let dropdownOpen = $state(false);
-	let createPopupOpen = $state(false);
+	let search = $state('');
+	let searchedTags: InferSelectModel<typeof tags>[] = $state([]);
 
 	let {
 		options,
-		sourceForm,
-		refreshAll,
 		selectedItems = $bindable(selected)
 	}: {
-		options: Array<Tags>;
-		sourceForm: SuperValidated<Infer<typeof newTagSchema>>;
-		refreshAll: any;
+		options: InferSelectModel<typeof tags>[];
 		selectedItems?: number[];
 	} = $props();
 
@@ -39,20 +30,38 @@
 		}
 	}
 
-	onMount(() => {
-		document.addEventListener('keydown', (event) => {
-			if (event.key === 'Escape') {
-				dropdownOpen = false;
-			}
+	function searchTags() {
+		if (search.trim() === '') {
+			searchedTags = options;
+			return;
+		}
+
+		const fuse = new Fuse(options, {
+			keys: ['tagName'],
+			includeScore: true,
+			threshold: 0.3
 		});
+
+		const results = fuse.search(search.trim());
+		searchedTags = results.map((result) => result.item);
+	}
+
+	$effect(() => {
+		searchTags();
 	});
 </script>
 
-<Form {sourceForm} {refreshAll} bind:createPopupOpen />
+<svelte:window
+	onkeydown={(event) => {
+		if (event.key === 'Escape') {
+			dropdownOpen = false;
+		}
+	}}
+/>
 
 <div class="relative" transition:fly={{ x: -20, duration: 300 }}>
 	<button
-		class="z-20 flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
+		class="flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 		onclick={() => (dropdownOpen = !dropdownOpen)}
 	>
 		<Tag />
@@ -61,36 +70,38 @@
 
 	{#if dropdownOpen}
 		<div
-			class="fixed inset-0 z-40 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+			class="fixed inset-0 z-30 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 			transition:fade={{ duration: 100 }}
 		>
 			<div
-				class="absolute inset-0 z-[999]"
+				class="absolute inset-0 z-40"
 				onclick={() => (dropdownOpen = false)}
 				aria-hidden="true"
 			></div>
 			<div
-				class="z-[1000] flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+				class="z-50 flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 			>
-				<div class="flex w-full items-center justify-center gap-2 border-b p-4">
-					<input
-						type="text"
-						placeholder="Search tags..."
-						class="w-full rounded-lg border-2 border-zinc-500 px-4 py-2 dark:bg-zinc-700 dark:text-white"
-					/>
+				<div class="flex w-full items-center justify-between gap-2 border-b p-4">
+					<h1 class="text-xl font-bold text-nowrap">Select Tags</h1>
 					<button
-						type="button"
-						class="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-green-500 text-white hover:bg-green-600"
-						onclick={() => (createPopupOpen = true)}
+						onclick={() => (dropdownOpen = false)}
+						class="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-400"
+						aria-label="Close"><X /></button
 					>
-						<Plus size="20" />
-					</button>
 				</div>
-				<ul class="flex w-full flex-wrap justify-start gap-2 overflow-y-auto p-6">
+				<input
+					type="text"
+					placeholder="Search tags..."
+					class="m-6 mb-0 flex-1 rounded-lg border-2 border-zinc-500 px-4 py-2 dark:bg-zinc-700 dark:text-white"
+					bind:value={search}
+				/>
+				<ul class="flex w-full flex-wrap justify-center gap-2 overflow-y-auto p-6">
 					{#if options.length === 0}
 						<p>No tags yet! Please create one to filter by tags.</p>
+					{:else if searchedTags.length === 0}
+						<p>No results found.</p>
 					{:else}
-						{#each options as option}
+						{#each searchedTags as option}
 							<li class="h-fit w-fit">
 								<button
 									type="button"
@@ -101,7 +112,7 @@
 									class:bg-zinc-200={!selectedItems.includes(option.id)}
 									class:dark:bg-zinc-700={!selectedItems.includes(option.id)}
 									class:brightness-150={selectedItems.includes(option.id) && option.tagColour}
-									style={option.tagColour ? `background-color: ${option.tagColour}` : ''}
+									style="background-color: {option.tagColour}; color: {option.tagTextColour};"
 								>
 									{option.tagName}
 								</button>

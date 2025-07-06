@@ -10,7 +10,7 @@
 </script>
 
 <header
-	class="fixed z-[1000] box-border flex h-12 w-full items-center justify-center gap-4 border-b-4 border-zinc-300 bg-zinc-200 px-4 dark:border-zinc-700 dark:bg-zinc-800"
+	class="fixed z-1000 box-border flex h-12 w-full items-center justify-center gap-4 border-b-4 border-zinc-300 bg-zinc-200 px-4 dark:border-zinc-700 dark:bg-zinc-800"
 >
 	<h1 class="p-2 pr-0 text-xl font-bold">myDevices</h1>
 	<nav class="flex h-full items-center justify-center">
@@ -21,6 +21,10 @@
 		<a
 			class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 			href="/devices">Devices</a
+		>
+		<a
+			class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+			href="/tags">Tags</a
 		>
 		<a
 			class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"

@@ -9,7 +9,7 @@
 	class:fixed={device.imageURLs && device.imageURLs.length > 0}
 	class:top-16={device.imageURLs && device.imageURLs.length > 0}
 	class:left-4={device.imageURLs && device.imageURLs.length > 0}
-	class:z-50={device.imageURLs && device.imageURLs.length > 0}
+	class:z-20={device.imageURLs && device.imageURLs.length > 0}
 	class:p-4={!device.imageURLs || device.imageURLs.length === 0}
 	class:pb-0={!device.imageURLs || device.imageURLs.length === 0}
 >
@@ -38,6 +38,19 @@
 		<h1 class="text-4xl font-bold">{device.deviceName}</h1>
 		<p>{device.description || 'No description.'}</p>
 	</div>
+
+	{#if device.tags && device.tags.length > 0}
+		<div class="flex w-fit flex-wrap items-center justify-center gap-2">
+			{#each device.tags as tag}
+				<span
+					class="rounded-full bg-zinc-300 px-3 py-1 text-sm font-semibold text-zinc-800 dark:bg-zinc-600 dark:text-zinc-200"
+					style="background-color: {tag?.tagColour}; color: {tag?.tagTextColour};"
+				>
+					{tag?.tagName}
+				</span>
+			{/each}
+		</div>
+	{/if}
 
 	<div class="flex w-fit flex-wrap items-center justify-center gap-2">
 		{#if device.cpu}
