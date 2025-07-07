@@ -15,7 +15,10 @@ export const userDevices = sqliteTable('devices', {
 	tags: text('tag_ids', { mode: 'json' })
 		.$type<number[]>()
 		.$defaultFn(() => []),
-	imageURLs: text('image_urls', { mode: 'json' })
+	internalImages: text('internal_images', { mode: 'json' })
+		.$type<string[]>()
+		.$defaultFn(() => []),
+	externalImages: text('image_urls', { mode: 'json' })
 		.$type<string[]>()
 		.$defaultFn(() => []),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),

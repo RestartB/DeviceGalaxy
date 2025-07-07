@@ -19,11 +19,17 @@
 </script>
 
 <a
-	class="relative flex max-w-sm min-w-64 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md dark:bg-zinc-700"
+	class="relative flex max-w-sm min-w-50 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
 	href={`/device/${device.id}`}
 >
-	{#if device.imageURLs && device.imageURLs.length > 0}
-		<img src={device.imageURLs[0]} alt={device.deviceName} class="h-48 w-full object-cover" />
+	{#if device.externalImages && device.externalImages.length > 0}
+		<img src={device.externalImages[0]} alt={device.deviceName} class="h-48 w-full object-cover" />
+	{:else if device.internalImages && device.internalImages.length > 0}
+		<img
+			src={`/api/image/device/${device.id}/${device.internalImages[0]}`}
+			alt={device.deviceName}
+			class="h-48 w-full object-cover"
+		/>
 	{/if}
 	<div class="flex w-full flex-col gap-2 p-4">
 		<div>
@@ -69,7 +75,7 @@
 			{#if device.tags && device.tags.length > 0}
 				{#each device.tags as tag}
 					<div
-						class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 p-2 px-4"
+						class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
 						style="background-color: {tag.tagColour}; color: {tag.tagTextColour};"
 					>
 						<p>{tag.tagName}</p>

@@ -341,14 +341,9 @@
 		{:else if totalDevices === 0}
 			<p>No devices found.</p>
 		{:else}
-			<div class="flex w-full flex-wrap justify-center gap-2">
+			<div class="flex w-full flex-wrap justify-center gap-4">
 				{#each devices as device}
-					<DeviceCard
-						{device}
-						bind:editPopupOpen
-						bind:toEdit
-						{deleteDevice}
-					/>
+					<DeviceCard {device} bind:editPopupOpen bind:toEdit {deleteDevice} />
 				{/each}
 			</div>
 

@@ -3,6 +3,7 @@ import { error } from '@sveltejs/kit';
 import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { newDeviceSchema } from '$lib/schema/newDevice';
+import { editDeviceSchema } from '$lib/schema/editDevice';
 import { newTagSchema } from '$lib/schema/newTag';
 
 import { auth } from '$lib/server/auth';
@@ -12,9 +13,14 @@ import { db } from '$lib/server/db';
 import type { InferSelectModel } from 'drizzle-orm';
 import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
+import sharp from 'sharp';
+import { existsSync } from 'fs';
+import { writeFile, unlink, mkdir } from 'fs/promises';
+import { join } from 'path';
+
 export const load = async () => {
 	const newDeviceForm = await superValidate(zod4(newDeviceSchema));
-	const editDeviceForm = await superValidate(zod4(newDeviceSchema));
+	const editDeviceForm = await superValidate(zod4(editDeviceSchema));
 	const newTagForm = await superValidate(zod4(newTagSchema));
 
 	return { newDeviceForm, editDeviceForm, newTagForm };
@@ -160,20 +166,63 @@ export const actions = {
 					}
 				}
 
-				// Insert the device with the authenticated user's ID
-				await tx.insert(userDevices).values({
-					userId: session.user.id,
-					deviceName: form.data.deviceName,
-					description: form.data.description,
-					cpu: newCPU?.id,
-					memory: newMemory?.id,
-					storage: newStorage?.id,
-					os: newOS?.id,
-					brand: newBrand?.id,
-					imageURLs: form.data.imageURLs,
-					tags: form.data.tags,
-					createdAt: new Date()
-				});
+				// Insert the device with the authenticated user's ID, get ID
+				const insertedRows = await tx
+					.insert(userDevices)
+					.values({
+						userId: session.user.id,
+						deviceName: form.data.deviceName,
+						description: form.data.description,
+						cpu: newCPU?.id,
+						memory: newMemory?.id,
+						storage: newStorage?.id,
+						os: newOS?.id,
+						brand: newBrand?.id,
+						externalImages: form.data.imageURLs,
+						tags: form.data.tags,
+						createdAt: new Date()
+					})
+					.returning();
+
+				const deviceID = insertedRows[0].id;
+
+				// Images
+				const processedImages: string[] = [];
+				if (form.data.images && form.data.images.length > 0) {
+					for (const image of form.data.images) {
+						const uploadDir = join(process.cwd(), 'user_uploads', 'device', deviceID.toString());
+						await mkdir(uploadDir, { recursive: true });
+
+						// Get unique path for image
+						const imageId = crypto.randomUUID();
+						const filePath = join(uploadDir, imageId + '.webp');
+
+						// Convert image to buffer
+						const imageBuffer = Buffer.from(await image.arrayBuffer());
+
+						// Convert to WebP
+						const processedBuffer = await sharp(imageBuffer)
+							.webp({
+								quality: 85,
+								effort: 4
+							})
+							.rotate()
+							.toBuffer();
+
+						// Save processed image
+						await writeFile(filePath, processedBuffer);
+
+						processedImages.push(imageId);
+					}
+				}
+
+				// Add images to device
+				await tx
+					.update(userDevices)
+					.set({
+						internalImages: processedImages
+					})
+					.where(eq(userDevices.id, deviceID));
 			});
 
 			return message(form, 'Device added successfully!');
@@ -192,7 +241,9 @@ export const actions = {
 			return error(401, 'Unauthorized');
 		}
 
-		const form = await superValidate(request, zod4(newDeviceSchema));
+		const form = await superValidate(request, zod4(editDeviceSchema));
+		console.log('Form ID:', form.id);
+		console.log('Raw form data:', form.data);
 
 		if (!form.valid) {
 			return error(400, 'Invalid form');
@@ -331,6 +382,72 @@ export const actions = {
 					}
 				}
 
+				const processedImages = form.data.oldImages || [];
+				console.log('Processed images:', processedImages);
+
+				// Compare and delete images that are not in the new list
+				if (form.data.oldImages && form.data.oldImages.length > 0) {
+					const existingImages = existingDevice.internalImages || [];
+					const imagesToDelete = existingImages.filter(
+						(image) => !form.data.oldImages?.includes(image)
+					);
+
+					console.log('Images to delete:', imagesToDelete);
+
+					if (imagesToDelete.length > 0) {
+						for (const imageId of imagesToDelete) {
+							const imagePath = join(
+								process.cwd(),
+								'user_uploads',
+								'device',
+								existingDevice.id.toString(),
+								imageId + '.webp'
+							);
+							try {
+								if (existsSync(imagePath)) {
+									await unlink(imagePath);
+								}
+							} catch (err) {
+								console.error(`Error deleting image ${imageId}:`, err);
+							}
+						}
+					}
+				}
+
+				// Upload new images
+				if (form.data.newImages && form.data.newImages.length > 0) {
+					for (const image of form.data.newImages) {
+						const uploadDir = join(
+							process.cwd(),
+							'user_uploads',
+							'device',
+							existingDevice.id.toString()
+						);
+						await mkdir(uploadDir, { recursive: true });
+
+						// Get unique path for image
+						const imageId = crypto.randomUUID();
+						const filePath = join(uploadDir, imageId + '.webp');
+
+						// Convert image to buffer
+						const imageBuffer = Buffer.from(await image.arrayBuffer());
+
+						// Convert to WebP
+						const processedBuffer = await sharp(imageBuffer)
+							.webp({
+								quality: 85,
+								effort: 4
+							})
+							.rotate()
+							.toBuffer();
+
+						// Save processed image
+						await writeFile(filePath, processedBuffer);
+
+						processedImages.push(imageId);
+					}
+				}
+
 				// Insert the device
 				await tx
 					.update(userDevices)
@@ -342,7 +459,8 @@ export const actions = {
 						storage: newStorage?.id,
 						os: newOS?.id,
 						brand: newBrand?.id,
-						imageURLs: form.data.imageURLs,
+						internalImages: processedImages,
+						externalImages: form.data.imageURLs,
 						tags: form.data.tags,
 						updatedAt: new Date()
 					})

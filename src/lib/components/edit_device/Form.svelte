@@ -2,17 +2,18 @@
 	import { tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 
-	import { superForm } from 'sveltekit-superforms';
+	import { filesProxy, superForm } from 'sveltekit-superforms';
+	import SuperDebug from 'sveltekit-superforms';
 	import type { SuperValidated, Infer } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
-	import { newDeviceSchema } from '$lib/schema/newDevice';
+	import { editDeviceSchema } from '$lib/schema/editDevice';
 	import { newTagSchema } from '$lib/schema/newTag';
 
 	import type { InferSelectModel } from 'drizzle-orm';
 	import type { cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
-	import { X, Plus } from '@lucide/svelte';
+	import { X, Plus, Trash } from '@lucide/svelte';
 	import Field from './Field.svelte';
 
 	import NewTagForm from '$lib/components/add_tag/Form.svelte';
@@ -34,7 +35,7 @@
 		editPopupOpen = $bindable(),
 		refreshAll
 	}: {
-		sourceForm: SuperValidated<Infer<typeof newDeviceSchema>>;
+		sourceForm: SuperValidated<Infer<typeof editDeviceSchema>>;
 		newTagForm: SuperValidated<Infer<typeof newTagSchema>>;
 		toEdit: any;
 		attributeLists: AttributeLists;
@@ -44,9 +45,15 @@
 	} = $props();
 
 	const { form, errors, message, formId, enhance, validateForm } = superForm(sourceForm, {
-		validators: zod4Client(newDeviceSchema),
+		validators: zod4Client(editDeviceSchema),
+		dataType: 'json',
 		customValidity: false,
 		validationMethod: 'auto',
+
+		onSubmit: () => {
+			console.log('ID:', $formId);
+			console.log('Existing images:', $form.oldImages);
+		},
 
 		onError: (error) => {
 			console.error('Form submission error:', error);
@@ -54,22 +61,100 @@
 		}
 	});
 
+	const files = filesProxy(form, 'newImages');
+
 	let formPage = $state(0);
 	let tagFormOpen = $state(false);
 
 	let newImgURL = $state('');
 	let newImgURLEl: HTMLInputElement | undefined = $state();
-	let uploadAllowed = false;
+	let uploadAllowed = true;
 
 	type FormErrors = typeof $errors;
 
 	let hasErrors = $derived(
-		Object.keys($errors).some((key) => {
-			const typedKey = key as keyof FormErrors;
-			return typedKey !== '_errors' && $errors[typedKey];
-		}) ||
-			($errors._errors && $errors._errors.length > 0)
+		(() => {
+			// Check top-level _errors
+			if ($errors._errors && $errors._errors.length > 0) return true;
+
+			// Check all form fields (excluding special cases)
+			const fieldKeys = Object.keys($errors).filter(
+				(key) => !['_errors', 'images', 'imageURLs'].includes(key)
+			);
+			const hasFieldErrors = fieldKeys.some((key) => $errors[key as keyof FormErrors]);
+
+			if (hasFieldErrors) return true;
+
+			// Check image errors (for uploads)
+			if ($errors.newImages) {
+				// Check images._errors
+				if ($errors.newImages._errors && $errors.newImages._errors.length > 0) return true;
+
+				// Check individual file errors
+				const hasFileErrors = Object.entries($errors.newImages).some(
+					([index, fileErrors]) =>
+						index !== '_errors' &&
+						fileErrors &&
+						(Array.isArray(fileErrors) ? fileErrors.length > 0 : Boolean(fileErrors))
+				);
+				if (hasFileErrors) return true;
+			}
+
+			// Check imageURL errors (for URL inputs)
+			if ($errors.imageURLs) {
+				if ($errors.imageURLs._errors && $errors.imageURLs._errors.length > 0) return true;
+
+				const hasUrlErrors = Object.entries($errors.imageURLs).some(
+					([index, urlErrors]) =>
+						index !== '_errors' &&
+						urlErrors &&
+						(Array.isArray(urlErrors) ? urlErrors.length > 0 : Boolean(urlErrors))
+				);
+				if (hasUrlErrors) return true;
+			}
+
+			return false;
+		})()
 	);
+
+	let imagesHaveErrors = $derived(
+		(() => {
+			// Check image errors (for uploads)
+			if ($errors.newImages) {
+				// Check images._errors
+				if ($errors.newImages._errors && $errors.newImages._errors.length > 0) return true;
+
+				// Check individual file errors
+				const hasFileErrors = Object.entries($errors.newImages).some(
+					([index, fileErrors]) =>
+						index !== '_errors' &&
+						fileErrors &&
+						(Array.isArray(fileErrors) ? fileErrors.length > 0 : Boolean(fileErrors))
+				);
+				if (hasFileErrors) return true;
+			}
+		})()
+	);
+
+	$effect(() => {
+		if (editPopupOpen && toEdit) {
+			$formId = toEdit.id.toString();
+
+			$form.deviceName = toEdit.deviceName;
+			$form.description = toEdit.description || undefined;
+
+			$form.brand = toEdit.brand || '';
+			$form.cpu = toEdit.cpu || '';
+			$form.memory = toEdit.memory || '';
+			$form.storage = toEdit.storage || '';
+			$form.os = toEdit.os || '';
+
+			$form.oldImages = toEdit.internalImages || [];
+			$form.imageURLs = toEdit.imageURLs || [];
+
+			$form.tags = toEdit.tags?.map((tag: any) => tag.id) || [];
+		}
+	});
 
 	async function asyncValidateForm() {
 		await validateForm({ update: true });
@@ -83,24 +168,6 @@
 		await tick();
 		setTimeout(() => (newImgURL = ''), 1);
 	}
-
-	$effect(() => {
-		if (editPopupOpen && toEdit) {
-			$form.deviceName = toEdit.deviceName;
-			$form.description = toEdit.description || undefined;
-
-			$form.brand = toEdit.brand || '';
-			$form.cpu = toEdit.cpu || '';
-			$form.memory = toEdit.memory || '';
-			$form.storage = toEdit.storage || '';
-			$form.os = toEdit.os || '';
-
-			$form.imageURLs = toEdit.imageURLs || [];
-			$form.tags = toEdit.tags?.map((tag: any) => tag.id) || [];
-
-			$formId = toEdit.id.toString();
-		}
-	});
 
 	$effect(() => {
 		if ($message) {
@@ -126,6 +193,8 @@
 			formPage = 0;
 		}
 	});
+
+	$inspect($form.oldImages);
 </script>
 
 <svelte:window
@@ -160,13 +229,19 @@
 				>
 			</div>
 
-			<form method="POST" class="flex flex-col" action="?/editDevice" use:enhance>
+			<form
+				method="POST"
+				class="flex flex-col"
+				action="?/editDevice"
+				enctype="multipart/form-data"
+				use:enhance
+			>
 				<div class="relative h-110 overflow-hidden">
 					<div
 						class="absolute inset-0 flex flex-col gap-4 overflow-y-auto p-6 transition-transform duration-300"
 						style:transform="translateX({(0 - formPage) * 100}%)"
 					>
-						<h3 class="text-xl font-semibold">Basic Information</h3>
+						<h3 class="text-2xl font-semibold">Basic Information</h3>
 						<label for="deviceName" class="text-sm font-medium">Device Name</label>
 						<input
 							type="text"
@@ -190,7 +265,7 @@
 						class="absolute inset-0 flex flex-col gap-4 overflow-y-auto p-6 transition-transform duration-300"
 						style:transform="translateX({(1 - formPage) * 100}%)"
 					>
-						<h3 class="text-xl font-semibold">Specifications</h3>
+						<h3 class="text-2xl font-semibold">Specifications</h3>
 
 						<Field
 							name="Brand"
@@ -228,7 +303,7 @@
 						class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
 						style:transform="translateX({(2 - formPage) * 100}%)"
 					>
-						<h3 class="text-xl font-semibold">Tags</h3>
+						<h3 class="text-2xl font-semibold">Tags</h3>
 						<p>
 							You can select tags to categorise your device. To delete or edit tags, please go to
 							the tags page.
@@ -271,48 +346,126 @@
 						class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
 						style:transform="translateX({(3 - formPage) * 100}%)"
 					>
+						<h3 class="text-2xl font-semibold">Manage Images</h3>
+
+						<!-- Existing Images Section -->
+						{#if $form.oldImages && $form.oldImages.length > 0}
+							<div>
+								<h4 class="text-lg font-semibold">Current Images</h4>
+								<p>Click on an image to remove it.</p>
+								<div class="flex flex-wrap gap-2">
+									{#each $form.oldImages as image, index}
+										<!-- svelte-ignore a11y_click_events_have_key_events -->
+										<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+										<img
+											src="/api/image/device/{$formId}/{image}"
+											alt="Device image {index + 1}"
+											class="h-32 w-32 cursor-pointer rounded-lg object-cover"
+											onclick={() => {
+												$form.oldImages = $form.oldImages.filter((_, idx) => idx !== index);
+												asyncValidateForm();
+											}}
+										/>
+									{/each}
+								</div>
+							</div>
+						{/if}
+
 						{#if uploadAllowed}
-							<h3 class="text-xl font-semibold">Upload Images</h3>
-							<p>
-								You can upload images of your device here. The first image will also be used for the
-								thumbnail. Please ensure that your images comply with the Terms of Service. Max size
-								per image: 5MB.
-							</p>
-						{:else}
-							<h3 class="text-xl font-semibold">Add Images</h3>
-							<p>
-								Uploading images is disabled on this instance. Instead, you can provide image URLs.
-								The first image will be used for the thumbnail.
-							</p>
-
-							{#each $form.imageURLs as _, i}
+							<!-- New Images Upload Section -->
+							<div>
+								<h4 class="text-lg font-semibold">Add New Images</h4>
+								<p>Max size per image: 5MB</p>
 								<input
-									class="w-full rounded-lg border p-2"
-									type="text"
-									name="imageURLs"
-									bind:value={$form.imageURLs[i]}
+									type="file"
+									multiple
+									name="newImages"
+									accept="image/png, image/jpeg, image/webp"
+									bind:files={$files}
 								/>
-								{#if $errors.imageURLs?.[i]}<span class="text-red-600">{$errors.imageURLs[i]}</span
-									>{/if}
-							{/each}
 
-							<input
-								class="w-full rounded-lg border p-2"
-								type="text"
-								placeholder="Enter image URL..."
-								bind:value={newImgURL}
-								bind:this={newImgURLEl}
-								onchange={() => addImageURL()}
-							/>
+								{#if imagesHaveErrors}
+									<!-- Error handling for new images -->
+									{#if $errors.newImages?._errors}
+										<ul class="text-red-600">
+											{#each $errors.newImages._errors as error}
+												<li>{error}</li>
+											{/each}
+										</ul>
+									{/if}
+									<!-- ... rest of error handling ... -->
+								{/if}
 
-							{#if newImgURL}
+								<!-- Preview new images -->
+								{#if $files && $files.length > 0}
+									<div class="flex flex-wrap gap-2">
+										{#each $files as file, index}
+											<div class="relative">
+												<!-- svelte-ignore a11y_click_events_have_key_events -->
+												<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+												<img
+													src={URL.createObjectURL(file)}
+													alt={file.name}
+													class="h-32 w-32 rounded-lg object-cover"
+													onclick={() => {
+														files.update((currentFiles) => {
+															const newFiles = [...currentFiles];
+															newFiles.splice(index, 1);
+															return newFiles;
+														});
+														asyncValidateForm();
+													}}
+												/>
+											</div>
+										{/each}
+									</div>
+								{/if}
+							</div>
+						{:else}
+							<!-- Image URLs Section -->
+							<div>
+								<h4 class="text-lg font-semibold">Add Image URLs</h4>
+
+								{#each $form.imageURLs as _, i}
+									<div class="flex gap-2">
+										<input
+											class="flex-1 rounded-lg border p-2"
+											type="text"
+											name="newImageURLs"
+											bind:value={$form.imageURLs[i]}
+											placeholder="Enter image URL..."
+										/>
+										<button
+											type="button"
+											class="rounded-lg bg-red-500 px-3 py-2 text-white hover:bg-red-600"
+											onclick={() => {
+												$form.imageURLs = $form.imageURLs.filter((_, idx) => idx !== i);
+											}}
+										>
+											<X size="16" />
+										</button>
+									</div>
+									{#if $errors.imageURLs?.[i]}
+										<span class="text-red-600">{$errors.imageURLs[i]}</span>
+									{/if}
+								{/each}
+
 								<input
 									class="w-full rounded-lg border p-2"
 									type="text"
 									placeholder="Enter image URL..."
-									onfocus={() => newImgURLEl?.focus()}
+									bind:value={newImgURL}
+									bind:this={newImgURLEl}
+									onchange={() => addImageURL()}
 								/>
-							{/if}
+							</div>
+						{/if}
+
+						<!-- Total image count validation -->
+						{#if $errors._errors}
+							{#each $errors._errors as error}
+								<div class="text-red-600">{error}</div>
+							{/each}
 						{/if}
 					</div>
 
@@ -320,20 +473,29 @@
 						class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
 						style:transform="translateX({(4 - formPage) * 100}%)"
 					>
-						<h3 class="text-xl font-semibold">Confirm Details</h3>
+						<h3 class="text-2xl font-semibold">Confirm Details</h3>
 						<div class="rounded-lg bg-zinc-200 p-4 text-sm dark:bg-zinc-700">
-							<p><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
-							<p><strong>Description:</strong> {$form.description || 'N/A'}</p>
-							<p><strong>Brand:</strong> {$form.brand || 'N/A'}</p>
-							<p><strong>CPU:</strong> {$form.cpu || 'N/A'}</p>
-							<p><strong>Memory:</strong> {$form.memory || 'N/A'}</p>
-							<p><strong>Storage:</strong> {$form.storage || 'N/A'}</p>
-							<p><strong>OS:</strong> {$form.os || 'N/A'}</p>
-							{#if $form.imageURLs && $form.imageURLs.length > 0}
+							<p class="break-words"><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
+							<p class="break-words"><strong>Description:</strong> {$form.description || 'N/A'}</p>
+							<p class="break-words"><strong>Brand:</strong> {$form.brand || 'N/A'}</p>
+							<p class="break-words"><strong>CPU:</strong> {$form.cpu || 'N/A'}</p>
+							<p class="break-words"><strong>Memory:</strong> {$form.memory || 'N/A'}</p>
+							<p class="break-words"><strong>Storage:</strong> {$form.storage || 'N/A'}</p>
+							<p class="break-words"><strong>OS:</strong> {$form.os || 'N/A'}</p>
+							{#if uploadAllowed}
+								{#if $files && $files.length > 0}
+									<p><strong>Images:</strong></p>
+									{#each $files as file}
+										<p class="break-words">{file.name} ({file.size} bytes)</p>
+									{/each}
+								{:else}
+									<p><strong>Images:</strong> None</p>
+								{/if}
+							{:else if $form.imageURLs && $form.imageURLs.length > 0}
 								<p><strong>Images:</strong></p>
 								<ul class="list-disc pl-5">
 									{#each $form.imageURLs as imageURL}
-										<li>{imageURL}</li>
+										<li class="break-words">{imageURL}</li>
 									{/each}
 								</ul>
 							{:else}
@@ -365,6 +527,44 @@
 									{#if $errors.os}
 										<li class="text-red-600 dark:text-red-400">{$errors.os}</li>
 									{/if}
+									{#if uploadAllowed}
+										{#if $errors.newImages}
+											{#if $errors.newImages._errors}
+												{#each $errors.newImages._errors as error}
+													<li class="text-red-600 dark:text-red-400">{error}</li>
+												{/each}
+											{/if}
+											{#each Object.entries($errors.newImages) as [index, fileErrors]}
+												{#if index !== '_errors' && fileErrors}
+													<li class="text-red-600 dark:text-red-400">
+														{#if $files && $files[parseInt(index)] && $files[parseInt(index)].name}
+															{$files[parseInt(index)].name} (file {parseInt(index) + 1})
+														{:else}
+															File {parseInt(index) + 1}
+														{/if}:
+														{#if Array.isArray(fileErrors)}
+															{fileErrors.join(', ')}
+														{:else}
+															{fileErrors}
+														{/if}
+													</li>
+												{/if}
+											{/each}
+										{/if}
+									{:else if $errors.imageURLs}
+										{#each Object.entries($errors.imageURLs) as [index, imageErrors]}
+											{#if index !== '_errors' && imageErrors}
+												<li class="text-red-600 dark:text-red-400">
+													{$form.imageURLs[parseInt(index)]}:
+													{#if Array.isArray(imageErrors)}
+														{imageErrors.join(', ')}
+													{:else}
+														{imageErrors}
+													{/if}
+												</li>
+											{/if}
+										{/each}
+									{/if}
 									{#if $errors._errors}
 										{#each $errors._errors as error}
 											<li class="text-red-600 dark:text-red-400">{error}</li>
@@ -373,8 +573,11 @@
 								</ul>
 							</div>
 						{/if}
+						<div class="h-44">
+							<SuperDebug data={$form} />
+						</div>
 						<p class="mt-auto text-base text-zinc-500">
-							Once you're happy with the details above, click below to update.
+							Once you're happy with the details above, click below to create.
 						</p>
 					</div>
 				</div>

@@ -4,6 +4,10 @@ import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
 import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
+import { existsSync } from 'fs';
+import { rm } from 'fs/promises';
+import { join } from 'path';
+
 export async function DELETE(event) {
 	// Check if the user is authenticated
 	const session = await auth.api.getSession({
@@ -97,6 +101,12 @@ export async function DELETE(event) {
 				if (brandExists.length === 0) {
 					await tx.delete(brands).where(eq(brands.id, device.brand));
 				}
+			}
+
+			// Delete device's image folder
+			const deviceImagePath = join(process.cwd(), 'user_uploads', 'device', deviceId.toString());
+			if (existsSync(deviceImagePath)) {
+				await rm(deviceImagePath, { recursive: true });
 			}
 		});
 

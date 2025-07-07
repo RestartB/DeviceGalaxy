@@ -24,3 +24,7 @@ vite.config.ts.timestamp-*
 
 # SQLite
 *.db
+
+# User Uploads
+/static/pfp
+/user_uploads
