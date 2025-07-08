@@ -45,7 +45,7 @@
 
 	$effect(() => {
 		if ($message) {
-			console.log('Message from form:', $message);
+			console.debug('Message from form:', $message);
 			if ($message === 'Tag created successfully!') {
 				toast.success($message as string);
 				refreshAll();

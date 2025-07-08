@@ -6,8 +6,7 @@ import { eq, count, desc } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { session, user } = await parent();
-	console.log('Session:', session);
-
+	
 	if (!session || !user) {
 		return {
 			devices: [],

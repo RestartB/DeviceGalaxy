@@ -9,7 +9,7 @@
 <div class="flex w-full flex-col gap-2">
 	{#if data.user}
 		<div class="flex w-full gap-4">
-			<div class="flex min-w-42 max-w-42 flex-col items-center gap-2 overflow-hidden text-center">
+			<div class="flex max-w-42 min-w-42 flex-col items-center gap-2 overflow-hidden text-center">
 				<h1 class="text-4xl font-bold">Settings</h1>
 				<Avatar
 					size={140}
@@ -34,7 +34,7 @@
 					<p class="text-2xl font-bold">{data.totalTags}</p>
 				</div>
 			</div>
-			<div class="flex w-full flex-col items-center">
+			<div class="flex w-full flex-col">
 				<div class="mb-2 flex w-fit rounded-full bg-zinc-200 p-1 dark:bg-zinc-800">
 					<a
 						class="rounded-full px-4 py-1 transition-colors hover:bg-zinc-300 dark:hover:bg-zinc-700"
@@ -47,17 +47,17 @@
 					</a>
 					<a
 						class="rounded-full px-4 py-1 transition-colors hover:bg-zinc-300 dark:hover:bg-zinc-700"
-						class:bg-zinc-100={page.url.pathname === '/settings/profile'}
-						class:dark:bg-zinc-600={page.url.pathname === '/settings/profile'}
-						href="/settings/profile"
-						title="Profile Settings"
+						class:bg-zinc-100={page.url.pathname === '/settings/security'}
+						class:dark:bg-zinc-600={page.url.pathname === '/settings/security'}
+						href="/settings/security"
+						title="Security Settings"
 					>
-						Profile
+						Security
 					</a>
 					<a
 						class="rounded-full px-4 py-1 transition-colors hover:bg-red-300 dark:hover:bg-red-700"
-						class:bg-zinc-100={page.url.pathname === '/settings/security'}
-						class:dark:bg-zinc-600={page.url.pathname === '/settings/security'}
+						class:bg-zinc-100={page.url.pathname === '/settings/delete'}
+						class:dark:bg-zinc-600={page.url.pathname === '/settings/delete'}
 						href="/settings/delete"
 						title="Delete Account"
 					>

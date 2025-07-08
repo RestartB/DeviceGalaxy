@@ -258,8 +258,6 @@ export const actions = {
 		}
 
 		const form = await superValidate(request, zod4(editDeviceSchema));
-		console.log('Form ID:', form.id);
-		console.log('Raw form data:', form.data);
 
 		if (!form.valid) {
 			return error(400, 'Invalid form');
@@ -421,8 +419,6 @@ export const actions = {
 					const imagesToDelete = existingImages.filter(
 						(image) => !form.data.oldImages?.includes(image)
 					);
-
-					console.log('Images to delete:', imagesToDelete);
 
 					if (imagesToDelete.length > 0) {
 						for (const imageId of imagesToDelete) {

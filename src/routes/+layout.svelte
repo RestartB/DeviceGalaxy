@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/state';
+
 	import { Toaster } from 'svelte-sonner';
 	import Header from '$lib/components/Header.svelte';
 

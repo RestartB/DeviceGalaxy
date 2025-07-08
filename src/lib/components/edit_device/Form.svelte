@@ -49,11 +49,6 @@
 		customValidity: false,
 		validationMethod: 'auto',
 
-		onSubmit: () => {
-			console.log('ID:', $formId);
-			console.log('Existing images:', $form.oldImages);
-		},
-
 		onError: (error) => {
 			console.error('Form submission error:', error);
 			toast.error('Failed to update device. Try again later.');

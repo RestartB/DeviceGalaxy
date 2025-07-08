@@ -15,5 +15,7 @@ export const load: LayoutServerLoad = async (event) => {
 
 		// No need to be here if you're already authed
 		redirect(302, '/');
+	} else if (event.url.pathname === '/auth/setup-2fa') {
+		return;
 	}
 };

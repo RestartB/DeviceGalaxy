@@ -1,41 +1,36 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { authClient } from '$lib/client';
 
-	import { UserPlus, LoaderCircle } from '@lucide/svelte';
+	import { superForm } from 'sveltekit-superforms';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
+	import { newUserSchema } from '$lib/schema/newUser';
 
-	let fullname = $state('');
-	let email = $state('');
-	let password = $state('');
-	let passwordConfirm = $state('');
+	import { UserPlus } from '@lucide/svelte';
+	import { toast } from 'svelte-sonner';
 
-	let submitting = $state(false);
-	let error = $state('');
+	const { data } = $props();
 
-	async function handleSignUp(event: Event) {
-		event.preventDefault();
-		submitting = true;
-		error = '';
+	const { form, errors, message, enhance } = superForm(data.newUserForm, {
+		validators: zod4Client(newUserSchema),
+		customValidity: false,
+		validationMethod: 'auto',
 
-		try {
-			const { data, error: signUpError } = await authClient.signUp.email({
-				email,
-				password,
-				name: fullname
-			});
-
-			if (signUpError) {
-				error = signUpError.message || 'Failed to create account';
-				return;
-			}
-
-			await goto('/auth/setup-2fa');
-		} catch (err) {
-			error = 'An unexpected error occurred. Please try again.';
-		} finally {
-			submitting = false;
+		onError: (error) => {
+			console.error('Form submission error:', error);
+			toast.error('Failed to create an account. Try again later.');
 		}
-	}
+	});
+
+	$effect(() => {
+		if ($message === 'User created successfully') {
+			toast.success('Account created successfully! Redirecting to setup...');
+			setTimeout(() => {
+				goto('/auth/setup-2fa');
+			}, 2000);
+		} else if ($message) {
+			toast.error($message);
+		}
+	});
 </script>
 
 <div class="box-border flex h-full min-h-fit w-full items-center justify-center text-center">
@@ -45,7 +40,9 @@
 	></div>
 	<form
 		class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-2 border-zinc-700 bg-zinc-100 p-4 backdrop-blur-lg dark:bg-zinc-800/80"
-		onsubmit={handleSignUp}
+		action="?/createAccount"
+		method="POST"
+		use:enhance
 	>
 		<h1 class="flex items-center justify-center gap-2 text-2xl font-bold">
 			<UserPlus /> Create Account
@@ -56,30 +53,36 @@
 			<label for="name" class="w-full text-start font-semibold">Name</label>
 			<input
 				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
+				name="name"
 				id="name"
 				type="text"
-				bind:value={fullname}
+				bind:value={$form.name}
 			/>
+			{#if $errors.name}<span class="text-red-600">{$errors.name}</span>{/if}
 		</div>
 
 		<div class="flex w-full flex-col gap-2">
 			<label for="email" class="w-full text-start font-semibold">Email</label>
 			<input
 				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
+				name="email"
 				id="email"
 				type="email"
-				bind:value={email}
+				bind:value={$form.email}
 			/>
+			{#if $errors.email}<span class="text-red-600">{$errors.email}</span>{/if}
 		</div>
 
 		<div class="flex w-full flex-col gap-2">
 			<label for="password" class="w-full text-start font-semibold">Password</label>
 			<input
 				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
+				name="password"
 				id="password"
 				type="password"
-				bind:value={password}
+				bind:value={$form.password}
 			/>
+			{#if $errors.password}<span class="text-red-600">{$errors.password}</span>{/if}
 		</div>
 
 		<div class="flex w-full flex-col gap-2">
@@ -88,7 +91,6 @@
 				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
 				id="confirm"
 				type="password"
-				bind:value={passwordConfirm}
 			/>
 		</div>
 
@@ -97,20 +99,18 @@
 		</a>
 
 		<button
-			disabled={submitting}
 			class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+			type="submit"
 		>
-			{#if submitting}
-				<LoaderCircle class="animate-spin" />
-			{:else}
-				<UserPlus />
-			{/if}
-			{submitting ? 'Loading...' : 'Sign Up'}
+			<UserPlus />
+			Sign Up
 		</button>
-		{#if error !== ''}
-			<div class="text-red-700">
-				{error}
-			</div>
+		{#if $errors._errors && $errors._errors.length > 0}
+			{#each $errors._errors as error}
+				<div class="text-red-700">
+					{error}
+				</div>
+			{/each}
 		{/if}
 	</form>
 </div>

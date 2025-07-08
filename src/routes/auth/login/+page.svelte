@@ -1,36 +1,36 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { authClient } from '$lib/client';
 
-	import { LogIn, LoaderCircle } from '@lucide/svelte';
+	import { superForm } from 'sveltekit-superforms';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
+	import { logInSchema } from '$lib/schema/logIn';
 
-	let email = $state('');
-	let password = $state('');
+	import { LogIn } from '@lucide/svelte';
+	import { toast } from 'svelte-sonner';
 
-	let submitting = $state(false);
-	let error = $state('');
+	const { data } = $props();
 
-	async function handleSignIn(event: Event) {
-		event.preventDefault();
-		submitting = true;
-		error = '';
+	const { form, errors, message, enhance } = superForm(data.logInForm, {
+		validators: zod4Client(logInSchema),
+		customValidity: false,
+		validationMethod: 'auto',
 
-		try {
-			const { data, error: signInError } = await authClient.signIn.email({
-				email,
-				password
-			});
-
-			if (signInError) {
-				error = signInError.message || 'Failed to create account';
-				return;
-			}
-		} catch (err) {
-			error = 'An unexpected error occurred. Please try again.';
-		} finally {
-			submitting = false;
+		onError: (error) => {
+			console.error('Form submission error:', error);
+			toast.error('Failed to log in. Try again later.');
 		}
-	}
+	});
+
+	$effect(() => {
+		if ($message === 'User logged in successfully') {
+			toast.success('Logged in! Redirecting...');
+			setTimeout(() => {
+				goto('/');
+			}, 2000);
+		} else if ($message) {
+			toast.error($message);
+		}
+	});
 </script>
 
 <div class="box-border flex h-full min-h-fit w-full items-center justify-center text-center">
@@ -40,7 +40,9 @@
 	></div>
 	<form
 		class="flex h-fit w-full max-w-lg flex-col items-center justify-center gap-4 rounded-xl border-4 border-zinc-700 bg-zinc-100 p-4 backdrop-blur-lg dark:bg-zinc-800/80"
-		onsubmit={handleSignIn}
+		action="?/logIn"
+		method="POST"
+		use:enhance
 	>
 		<h1 class="flex items-center justify-center gap-2 text-2xl font-bold"><LogIn /> Sign in</h1>
 		<p><strong>Welcome back!</strong> Please enter your credentials.</p>
@@ -48,20 +50,24 @@
 			<label for="email" class="w-full text-start font-semibold">Email</label>
 			<input
 				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
+				name="email"
 				id="email"
 				type="email"
-				bind:value={email}
+				bind:value={$form.email}
 			/>
+			{#if $errors.email}<span class="text-red-600">{$errors.email}</span>{/if}
 		</div>
 
 		<div class="flex w-full flex-col gap-2">
 			<label for="password" class="w-full text-start font-semibold">Password</label>
 			<input
 				class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
+				name="password"
 				id="password"
 				type="password"
-				bind:value={password}
+				bind:value={$form.password}
 			/>
+			{#if $errors.password}<span class="text-red-600">{$errors.password}</span>{/if}
 		</div>
 
 		<a href="/auth/signup" class="text-blue-600 hover:underline dark:text-blue-400">
@@ -69,20 +75,17 @@
 		</a>
 
 		<button
-			disabled={submitting}
 			class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
 		>
-			{#if submitting}
-				<LoaderCircle class="animate-spin" />
-			{:else}
-				<LogIn />
-			{/if}
-			{submitting ? 'Logging in...' : 'Log in'}
+			<LogIn />
+			Log in
 		</button>
-		{#if error !== ''}
-			<div class="text-red-700">
-				{error}
-			</div>
+		{#if $errors._errors && $errors._errors.length > 0}
+			{#each $errors._errors as error}
+				<div class="text-red-700">
+					{error}
+				</div>
+			{/each}
 		{/if}
 	</form>
 </div>

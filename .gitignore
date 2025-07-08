@@ -26,5 +26,5 @@ vite.config.ts.timestamp-*
 *.db
 
 # User Uploads
-/static/pfp
+/static/public
 /user_uploads

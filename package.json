@@ -46,10 +46,11 @@
 	"dependencies": {
 		"@libsql/client": "^0.14.0",
 		"@lucide/svelte": "^0.523.0",
-		"better-auth": "^1.2.10",
+		"better-auth": "^1.2.12",
 		"drizzle-orm": "^0.40.0",
 		"fuse.js": "^7.1.0",
 		"sharp": "^0.34.2",
-		"svelte-sonner": "^1.0.5"
+		"svelte-sonner": "^1.0.5",
+		"ua-parser-js": "^2.0.4"
 	}
 }
