@@ -3,7 +3,6 @@
 	import { fade } from 'svelte/transition';
 
 	import { filesProxy, superForm } from 'sveltekit-superforms';
-	import SuperDebug from 'sveltekit-superforms';
 	import type { SuperValidated, Infer } from 'sveltekit-superforms';
 	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { editDeviceSchema } from '$lib/schema/editDevice';
@@ -193,8 +192,6 @@
 			formPage = 0;
 		}
 	});
-
-	$inspect($form.oldImages);
 </script>
 
 <svelte:window
@@ -573,9 +570,6 @@
 								</ul>
 							</div>
 						{/if}
-						<div class="h-44">
-							<SuperDebug data={$form} />
-						</div>
 						<p class="mt-auto text-base text-zinc-500">
 							Once you're happy with the details above, click below to create.
 						</p>
@@ -585,7 +579,7 @@
 				<div class="flex items-center justify-between gap-4 border-t p-4">
 					<button
 						type="button"
-						class="cursor-pointer rounded-md border bg-zinc-50 px-4 py-2 dark:bg-zinc-950"
+						class="cursor-pointer rounded-md border px-4 py-2"
 						onclick={() => (formPage = Math.max(formPage - 1, 0))}
 						style:visibility={formPage > 0 ? 'visible' : 'hidden'}>Previous</button
 					>
@@ -593,7 +587,7 @@
 					{#if formPage < 4}
 						<button
 							type="button"
-							class="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-white"
+							class="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
 							onclick={() => (formPage = Math.min(formPage + 1, 4))}>Next</button
 						>
 					{/if}
@@ -601,7 +595,7 @@
 					{#if formPage === 4}
 						<button
 							type="submit"
-							class="flex-1 cursor-pointer rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
+							class="flex-1 cursor-pointer rounded-md bg-green-500 px-4 py-2 font-bold text-white transition-colors hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
 							disabled={hasErrors}>Update Device</button
 						>
 					{/if}

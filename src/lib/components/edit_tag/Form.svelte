@@ -152,7 +152,7 @@
 				<div class="border-t p-6">
 					<button
 						type="submit"
-						class="w-full cursor-pointer rounded-md bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
+						class="w-full cursor-pointer rounded-md bg-green-500 px-4 py-2 font-bold text-white transition-colors hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
 						disabled={hasErrors}>Edit Tag</button
 					>
 				</div>

@@ -70,7 +70,6 @@
 	});
 	let filtersVisible = $state(false);
 	let showApplyFilters = $state(false);
-	let applyingFilters = $state(false);
 
 	let page = $state(1);
 	let maxPages = $derived(Math.ceil(totalDevices / 10));
@@ -86,7 +85,9 @@
 		try {
 			let url = `/api/devices/get_devices?offset=${(page - 1) * 10}&limit=10`;
 
-			if (applyingFilters) {
+			const hasActiveFilters = Object.values(activeFilters).some((filter) => filter.length > 0);
+
+			if (hasActiveFilters) {
 				if (activeFilters.cpu.length > 0) url += `&cpu=${activeFilters.cpu.join(',')}`;
 				if (activeFilters.memory.length > 0) url += `&memory=${activeFilters.memory.join(',')}`;
 				if (activeFilters.storage.length > 0) url += `&storage=${activeFilters.storage.join(',')}`;
@@ -109,7 +110,6 @@
 			errorLoadingDevices = true;
 		} finally {
 			loadingDevices = false;
-			applyingFilters = false;
 		}
 	}
 
@@ -191,6 +191,34 @@
 	}
 
 	onMount(() => {
+		// Get filter arguments from URL
+		const urlParams = new URLSearchParams(window.location.search);
+		const filterParams = {
+			brand: urlParams.get('brand')?.split(',').map(Number) || [],
+			cpu: urlParams.get('cpu')?.split(',').map(Number) || [],
+			memory: urlParams.get('memory')?.split(',').map(Number) || [],
+			storage: urlParams.get('storage')?.split(',').map(Number) || [],
+			os: urlParams.get('os')?.split(',').map(Number) || [],
+			tags: urlParams.get('tags')?.split(',').map(Number) || []
+		};
+
+		selectedFilters = {
+			brand: filterParams.brand,
+			cpu: filterParams.cpu,
+			memory: filterParams.memory,
+			storage: filterParams.storage,
+			os: filterParams.os,
+			tags: filterParams.tags
+		};
+		activeFilters = {
+			brand: [...selectedFilters.brand],
+			cpu: [...selectedFilters.cpu],
+			memory: [...selectedFilters.memory],
+			storage: [...selectedFilters.storage],
+			os: [...selectedFilters.os],
+			tags: [...selectedFilters.tags]
+		};
+
 		refreshAll();
 	});
 
@@ -315,10 +343,8 @@
 			{/if}
 			{#if showApplyFilters}
 				<button
-					class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-500 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40"
-					disabled={applyingFilters}
+					class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-500 px-4 py-2 text-white"
 					onclick={() => {
-						applyingFilters = true;
 						showApplyFilters = false;
 						activeFilters = {
 							brand: [...selectedFilters.brand],

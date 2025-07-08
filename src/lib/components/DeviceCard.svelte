@@ -1,16 +1,29 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { Cpu, MemoryStick, HardDrive, Cog, Trash, Edit, Share, Menu, X } from '@lucide/svelte';
+	import {
+		Cpu,
+		MemoryStick,
+		HardDrive,
+		Cog,
+		Tag,
+		Trash,
+		Edit,
+		Share,
+		Menu,
+		X
+	} from '@lucide/svelte';
 
 	let {
 		device,
-		deleteDevice,
+		includeMenu = true,
+		deleteDevice = undefined,
 		editPopupOpen = $bindable(),
 		toEdit = $bindable()
 	}: {
 		device: any;
+		includeMenu?: boolean;
 		deleteDevice: any;
-		editPopupOpen?: boolean;
+		editPopupOpen: boolean;
 		toEdit: any;
 	} = $props();
 
@@ -78,6 +91,7 @@
 						class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
 						style="background-color: {tag.tagColour}; color: {tag.tagTextColour};"
 					>
+						<Tag size="20" />
 						<p>{tag.tagName}</p>
 					</div>
 				{/each}
@@ -85,23 +99,25 @@
 		</div>
 	</div>
 
-	<div class="mt-auto flex w-full items-end justify-end p-4 pt-0">
-		<button
-			onclick={(event) => {
-				event.preventDefault();
-				showingOverlay = !showingOverlay;
-				confirmDelete = false;
-			}}
-			aria-label="Toggle menu"
-			class="z-10 cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 shadow-md transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
-		>
-			{#if showingOverlay}
-				<X size="20" />
-			{:else}
-				<Menu size="20" />
-			{/if}
-		</button>
-	</div>
+	{#if includeMenu}
+		<div class="mt-auto flex w-full items-end justify-end p-4 pt-0">
+			<button
+				onclick={(event) => {
+					event.preventDefault();
+					showingOverlay = !showingOverlay;
+					confirmDelete = false;
+				}}
+				aria-label="Toggle menu"
+				class="z-10 cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 shadow-md transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
+			>
+				{#if showingOverlay}
+					<X size="20" />
+				{:else}
+					<Menu size="20" />
+				{/if}
+			</button>
+		</div>
+	{/if}
 
 	{#if showingOverlay}
 		<!-- svelte-ignore a11y_click_events_have_key_events -->

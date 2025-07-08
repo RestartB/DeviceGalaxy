@@ -9,6 +9,7 @@
 	import CreateTagForm from '$lib/components/add_tag/Form.svelte';
 	import EditTagForm from '$lib/components/edit_tag/Form.svelte';
 	import { Plus, RefreshCw, X, Eye, Pencil, Trash } from '@lucide/svelte';
+	import { toast } from 'svelte-sonner';
 
 	const { data } = $props();
 
@@ -63,6 +64,30 @@
 		searchedTags = results.map((result) => result.item);
 	}
 
+	function deleteTag(tag: InferSelectModel<typeof tags>) {
+		if (!tag || !tag.id) return;
+
+		fetch(`/api/tags/delete_tag?id=${tag.id}`, {
+			method: 'DELETE'
+		})
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Failed to delete tag');
+				} else {
+					toast.success('Tag deleted successfully!');
+				}
+				return response.json();
+			})
+			.then(() => {
+				getTags();
+				deletePopupOpen = false;
+			})
+			.catch((error) => {
+				toast.error('Failed to delete tag. Please try again later.');
+				console.error('Error deleting tag:', error);
+			});
+	}
+
 	$effect(() => {
 		searchTags();
 	});
@@ -106,6 +131,17 @@
 					<p>{toDelete.tagName}</p>
 				</div>
 				<p>Are you sure you want to delete this tag? This action cannot be undone.</p>
+			</div>
+
+			<div class="border-t p-6">
+				<button
+					type="submit"
+					class="w-full cursor-pointer rounded-md bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-600 disabled:hover:bg-red-500"
+					onclick={() => {
+						if (!toDelete) return;
+						deleteTag(toDelete);
+					}}>Delete Tag</button
+				>
 			</div>
 		</div>
 	</div>
@@ -160,6 +196,7 @@
 						</a>
 						<button
 							class="cursor-pointer"
+							title="Edit Tag"
 							onclick={() => {
 								toEdit = tag;
 								editPopupOpen = true;
@@ -169,6 +206,7 @@
 						</button>
 						<button
 							class="cursor-pointer"
+							title="Delete Tag"
 							onclick={() => {
 								toDelete = tag;
 								deletePopupOpen = true;

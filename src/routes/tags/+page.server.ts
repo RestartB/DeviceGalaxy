@@ -54,7 +54,8 @@ export const actions = {
 							? '#FFFFFF'
 							: '#000000'
 						: null,
-				createdAt: new Date()
+				createdAt: new Date(),
+				updatedAt: new Date()
 			});
 
 			return message(form, 'Tag created successfully!');

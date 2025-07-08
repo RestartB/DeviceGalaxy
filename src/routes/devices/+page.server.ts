@@ -43,6 +43,21 @@ export const actions = {
 			return error(400, 'Invalid form');
 		}
 
+		// Check that all provided tags exist
+		if (form.data.tags && form.data.tags.length > 0) {
+			const existingTags = await db.query.tags.findMany({
+				where: eq(userDevices.userId, session.user.id)
+			});
+			const tagValues = existingTags.map((tag) => tag.id);
+			const invalidTags = form.data.tags.filter((tag) => !tagValues.includes(tag));
+			if (invalidTags.length > 0) {
+				return error(
+					400,
+					"Some provided tags don't exist. Please try refreshing the devices list."
+				);
+			}
+		}
+
 		try {
 			let newCPU: InferSelectModel<typeof cpus> | undefined;
 			let newMemory: InferSelectModel<typeof memory> | undefined;
@@ -180,7 +195,8 @@ export const actions = {
 						brand: newBrand?.id,
 						externalImages: form.data.imageURLs,
 						tags: form.data.tags,
-						createdAt: new Date()
+						createdAt: new Date(),
+						updatedAt: new Date()
 					})
 					.returning();
 
@@ -264,6 +280,21 @@ export const actions = {
 
 			if (!existingDevice) {
 				return error(404, 'Device not found');
+			}
+
+			// Check that all provided tags exist
+			if (form.data.tags && form.data.tags.length > 0) {
+				const existingTags = await db.query.tags.findMany({
+					where: eq(userDevices.userId, session.user.id)
+				});
+				const tagValues = existingTags.map((tag) => tag.id);
+				const invalidTags = form.data.tags.filter((tag) => !tagValues.includes(tag));
+				if (invalidTags.length > 0) {
+					return error(
+						400,
+						"Some provided tags don't exist. Please try refreshing the devices list."
+					);
+				}
 			}
 
 			await db.transaction(async (tx) => {
@@ -383,7 +414,6 @@ export const actions = {
 				}
 
 				const processedImages = form.data.oldImages || [];
-				console.log('Processed images:', processedImages);
 
 				// Compare and delete images that are not in the new list
 				if (form.data.oldImages && form.data.oldImages.length > 0) {

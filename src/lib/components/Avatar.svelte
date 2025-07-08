@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { size = 40, src = '', name = '', alt = 'Avatar', className = '' } = $props();
+	let { size = 40, src = '', name = '', alt = 'Avatar', className = '', textClass = '' } = $props();
 	let generatedAvatar = $state(false);
 	let initials = name
 		.split(' ')
@@ -13,10 +13,10 @@
 
 {#if generatedAvatar}
 	<div
-		class={`flex items-center justify-center rounded-full border-2 border-zinc-400 bg-gray-200 select-none ${className}`}
+		class={`flex items-center justify-center rounded-full border-2 border-zinc-400 bg-gray-200 text-sm select-none ${className}`}
 		style="width: {size}px; height: {size}px;"
 	>
-		<span class="text-sm font-semibold text-gray-700">
+		<span class="font-semibold text-gray-700 {textClass}">
 			{initials}
 		</span>
 	</div>

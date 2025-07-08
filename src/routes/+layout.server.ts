@@ -7,15 +7,24 @@ export const load: LayoutServerLoad = async (event) => {
 		headers: event.request.headers
 	});
 
+	console.log(event.url.pathname);
+
 	if (session === null) {
 		if (!event.url.pathname.startsWith('/auth/')) {
+			console.log('No session found, redirecting to login');
 			return redirect(302, '/auth/login');
 		}
 		return { user: null, session: null };
 	}
 
-	if (!session.user.twoFactorEnabled && !event.url.pathname.startsWith('/auth/setup-2fa')) {
-		return redirect(302, '/auth/setup-2fa');
+	// Only redirect to 2FA setup if not already on the 2FA setup page
+	if (!session.user.twoFactorEnabled) {
+		if (event.url.pathname !== '/auth/setup-2fa') {
+			console.log('User does not have 2FA enabled, redirecting to setup');
+			return redirect(302, '/auth/setup-2fa');
+		}
+		// If already on setup-2fa page and 2FA is not enabled, allow access
+		return session;
 	}
 
 	return session;
