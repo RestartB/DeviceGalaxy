@@ -210,7 +210,7 @@
 						{/if}
 
 						<input
-							class="file:w-fit file:cursor-pointer file:rounded-lg file:border-2 file:border-zinc-400 file:bg-zinc-200 file:p-2 file:font-semibold file:text-zinc-700 file:transition-colors file:hover:bg-zinc-300 dark:file:bg-zinc-700 dark:file:text-zinc-200 dark:file:hover:bg-zinc-600 w-full"
+							class="w-full file:w-fit file:cursor-pointer file:rounded-lg file:border-2 file:border-zinc-400 file:bg-zinc-200 file:p-2 file:font-semibold file:text-zinc-700 file:transition-colors file:hover:bg-zinc-300 dark:file:bg-zinc-700 dark:file:text-zinc-200 dark:file:hover:bg-zinc-600"
 							name="image"
 							type="file"
 							accept="image/png, image/jpeg, image/webp"

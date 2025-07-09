@@ -8,6 +8,8 @@
 		X,
 		Pencil,
 		RefreshCw,
+		Ban,
+		Shield,
 		Gamepad,
 		Microchip,
 		Phone,
@@ -40,6 +42,9 @@
 	let reset2FAPopupOpen = $state(false);
 	let resetConfirmPassword = $state('');
 
+	let disable2FAPopupOpen = $state(false);
+	let disableConfirmPassword = $state('');
+
 	async function changePassword() {
 		if (newPassword) {
 			try {
@@ -64,7 +69,7 @@
 		}
 	}
 
-	async function disable2FA() {
+	async function reset2FA() {
 		try {
 			const { data } = await authClient.twoFactor.disable({
 				password: resetConfirmPassword
@@ -78,6 +83,23 @@
 		} catch (error) {
 			toast.error('Failed to reset 2FA. Please try again.');
 			console.error('Error resetting 2FA:', error);
+		}
+	}
+
+	async function disable2FA() {
+		try {
+			const { data } = await authClient.twoFactor.disable({
+				password: disableConfirmPassword
+			});
+
+			if (data?.status) {
+				window.location.reload();
+			} else {
+				toast.error('Failed to disable 2FA. Check your password is correct, then try again.');
+			}
+		} catch (error) {
+			toast.error('Failed to disable 2FA. Please try again.');
+			console.error('Error disabling 2FA:', error);
 		}
 	}
 
@@ -208,7 +230,56 @@
 					type="submit"
 					class="w-full cursor-pointer rounded-md bg-red-500 px-4 py-2 font-bold text-white transition-colors hover:bg-red-600"
 					disabled={resetConfirmPassword === ''}
-					onclick={disable2FA}>Reset 2FA</button
+					onclick={reset2FA}>Reset 2FA</button
+				>
+			</div>
+		</div>
+	</div>
+{/if}
+
+{#if disable2FAPopupOpen}
+	<div
+		class="fixed inset-0 z-60 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+		transition:fade={{ duration: 100 }}
+	>
+		<div
+			class="absolute inset-0 z-70"
+			onclick={() => (disable2FAPopupOpen = false)}
+			aria-hidden="true"
+		></div>
+
+		<div
+			class="z-80 flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+		>
+			<div class="flex items-center justify-between border-b p-4">
+				<h2 class="text-xl font-bold">Disable 2FA</h2>
+				<button
+					onclick={() => (disable2FAPopupOpen = false)}
+					class="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-400"
+					aria-label="Close"><X /></button
+				>
+			</div>
+			<div class="flex flex-col gap-4 p-6">
+				<p>
+					Confirm your password, then press the button below to disable 2FA for your account. Tou
+					may be logged out of other devices.
+				</p>
+
+				<label for="confirmPassword" class="text-sm font-medium">Confirm Password</label>
+				<input
+					type="password"
+					id="confirmPassword"
+					name="confirmPassword"
+					class="w-full rounded-lg border p-2"
+					bind:value={disableConfirmPassword}
+				/>
+			</div>
+			<div class="border-t p-6">
+				<button
+					type="submit"
+					class="w-full cursor-pointer rounded-md bg-red-500 px-4 py-2 font-bold text-white transition-colors hover:bg-red-600"
+					disabled={disableConfirmPassword === ''}
+					onclick={disable2FA}>Disable 2FA</button
 				>
 			</div>
 		</div>
@@ -272,16 +343,35 @@
 	</div>
 
 	<div class="flex flex-col gap-2">
-		<h4 class="text-xl font-semibold">Reset 2FA</h4>
-		<p>Reset your 2FA if you're setting up a new authenticator app.</p>
+		<h4 class="text-xl font-semibold">Manage 2FA</h4>
+		<p>Enable, disable or reset your account's 2FA for enhanced security.</p>
 
-		<button
-			class="flex w-fit items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-red-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-red-600"
-			onclick={() => (reset2FAPopupOpen = true)}
-		>
-			<RefreshCw size="20" />
-			Reset
-		</button>
+		<div class="flex flex-wrap items-center gap-2">
+			{#if data.user?.twoFactorEnabled}
+				<button
+					class="flex w-fit items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-red-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-red-600"
+					onclick={() => (disable2FAPopupOpen = true)}
+				>
+					<Ban size="20" />
+					Disable
+				</button>
+				<button
+					class="flex w-fit items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-red-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-red-600"
+					onclick={() => (reset2FAPopupOpen = true)}
+				>
+					<RefreshCw size="20" />
+					Reset
+				</button>
+			{:else}
+				<a
+					class="flex w-fit items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
+					href="/auth/setup-2fa"
+				>
+					<Shield size="20" />
+					Enable 2FA
+				</a>
+			{/if}
+		</div>
 	</div>
 
 	<div class="flex flex-col gap-2">

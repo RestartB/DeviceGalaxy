@@ -3,7 +3,7 @@ import { twoFactorClient } from 'better-auth/client/plugins';
 import { goto } from '$app/navigation';
 
 export const authClient = createAuthClient({
-	baseURL: "https://devices.restartb.xyz",
+	baseURL: "http://localhost:5173",
 	plugins: [
 		twoFactorClient({
 			onTwoFactorRedirect() {

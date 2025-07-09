@@ -15,14 +15,5 @@ export const load: LayoutServerLoad = async (event) => {
 		return { user: null, session: null };
 	}
 
-	// Only redirect to 2FA setup if not already on the 2FA setup page
-	if (!session.user.twoFactorEnabled) {
-		if (event.url.pathname !== '/auth/setup-2fa') {
-			console.debug('User does not have 2FA enabled, redirecting to setup');
-			return redirect(302, '/auth/setup-2fa');
-		}
-		return session;
-	}
-
 	return session;
 };

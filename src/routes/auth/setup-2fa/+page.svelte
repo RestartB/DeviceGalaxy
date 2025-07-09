@@ -53,7 +53,7 @@
 				return;
 			}
 
-			goto('/');
+			goto('/', { invalidateAll: true, replaceState: true, state: {} });
 		} catch (err) {
 			error = 'An unexpected error occurred. Please try again.';
 		} finally {
@@ -122,8 +122,8 @@
 		>
 			<h1 class="text-2xl font-bold">Set up 2FA</h1>
 			<p>
-				To help keep your account secure, we require that you enable 2FA. To get started, please
-				verify your password.
+				To help keep your account secure, you should enable 2FA. To get started, please verify your
+				password. If you want to skip this step, you can click the "Skip" button below.
 			</p>
 			<div class="flex w-full flex-col gap-2">
 				<label for="password" class="w-full text-start font-semibold">Verify Password</label>
@@ -135,12 +135,20 @@
 				/>
 			</div>
 
-			<button
-				disabled={submitting}
-				class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
-			>
-				{submitting ? 'Verifying...' : 'Verify'}
-			</button>
+			<div class="flex items-center justify-center gap-2">
+				<button
+					disabled={submitting}
+					class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+				>
+					{submitting ? 'Verifying...' : 'Verify'}
+				</button>
+				<a
+					class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+					href="/"
+				>
+					Skip
+				</a>
+			</div>
 			{#if error !== ''}
 				<div class="text-red-700">
 					{error}
