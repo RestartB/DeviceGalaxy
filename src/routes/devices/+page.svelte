@@ -243,6 +243,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>DeviceGalaxy- Devices</title>
+</svelte:head>
+
 {#if data.user}
 	<AddDeviceForm
 		sourceForm={data.newDeviceForm}

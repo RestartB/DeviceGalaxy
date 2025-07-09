@@ -31,6 +31,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>DeviceGalaxy - Verify 2FA</title>
+</svelte:head>
+
 <div class="box-border flex h-full min-h-fit w-full items-center justify-center p-2 text-center">
 	<div
 		class="absolute top-0 left-0 -z-10 h-full w-full after:pointer-events-none after:absolute after:top-0 after:left-0 after:h-full after:w-full after:backdrop-blur-lg after:backdrop-brightness-120 after:content-['']"

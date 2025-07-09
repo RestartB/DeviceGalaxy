@@ -10,6 +10,10 @@
 
 <svelte:body bind:clientWidth />
 
+<svelte:head>
+	<title>DeviceGalaxy - Settings</title>
+</svelte:head>
+
 <div class="flex w-full flex-col gap-2">
 	{#if data.user}
 		<div class="flex w-full flex-col gap-4 sm:flex-row">

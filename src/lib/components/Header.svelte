@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto, onNavigate } from '$app/navigation';
 	import { fade, fly } from 'svelte/transition';
+	import { prefersReducedMotion } from 'svelte/motion';
 	import type { LayoutData } from '../../routes/$types';
 
 	import { authClient } from '$lib/client';
@@ -20,7 +21,7 @@
 <header
 	class="fixed z-1000 box-border flex h-12 w-full items-center justify-center gap-4 border-b-4 border-zinc-300 bg-zinc-200 px-4 dark:border-zinc-700 dark:bg-zinc-800"
 >
-	<h1 class="p-2 pr-0 text-xl font-bold">myDevices</h1>
+	<h1 class="p-2 pr-0 text-xl font-bold">DeviceGalaxy</h1>
 	{#if data.user}
 		<nav class="xs:flex hidden h-full items-center justify-center">
 			<a
@@ -74,7 +75,7 @@
 				</div>
 			{/if}
 			<button
-				class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+				class="xs:hidden flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				title="Menu"
 				onclick={() => {
 					menuOpen = !menuOpen;
@@ -98,7 +99,7 @@
 
 			<div
 				class="z-80 flex max-h-full w-full flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 p-4 shadow-2xl dark:bg-zinc-800"
-				transition:fly={{ duration: 300, y: -10, opacity: 0 }}
+				transition:fly={{ duration: 300, y: prefersReducedMotion.current ? 0 : -10, opacity: 0 }}
 			>
 				<nav class="flex h-full w-full flex-col items-center justify-start gap-2">
 					<a

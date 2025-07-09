@@ -32,7 +32,7 @@
 </script>
 
 <a
-	class="relative flex min-w-85 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
+	class="relative flex min-w-85 max-w-100 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
 	href={`/device/${device.id}`}
 >
 	{#if device.externalImages && device.externalImages.length > 0}

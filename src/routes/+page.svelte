@@ -6,6 +6,10 @@
 	import DeviceCard from '$lib/components/DeviceCard.svelte';
 </script>
 
+<svelte:head>
+	<title>DeviceGalaxy</title>
+</svelte:head>
+
 <div class="flex w-full flex-col gap-2">
 	{#if data.user}
 		<h1 class="text-4xl font-bold">Home</h1>

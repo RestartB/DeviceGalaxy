@@ -9,6 +9,10 @@
 	let imageSrc = $state('');
 </script>
 
+<svelte:head>
+	<title>DeviceGalaxy - {device.deviceName}</title>
+</svelte:head>
+
 <div
 	class:fixed={(device.externalImages && device.externalImages.length > 0) ||
 		(device.internalImages && device.internalImages.length > 0)}

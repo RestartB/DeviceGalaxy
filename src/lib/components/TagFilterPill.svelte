@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
+	import { prefersReducedMotion } from 'svelte/motion';
 	import Fuse from 'fuse.js';
 
 	import type { InferSelectModel } from 'drizzle-orm';
@@ -59,7 +60,7 @@
 	}}
 />
 
-<div class="relative" transition:fly={{ x: -20, duration: 300 }}>
+<div class="relative" transition:fly={{ x: prefersReducedMotion.current ? 0 : -20, duration: 300 }}>
 	<button
 		class="flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 		onclick={() => (dropdownOpen = !dropdownOpen)}

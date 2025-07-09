@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { twoFactor } from 'better-auth/plugins';
+import { BETTER_AUTH_SECRET } from '$env/static/private';
 
 import { svelteCookies } from './svelte-cookies';
 
@@ -8,11 +9,12 @@ import { existsSync } from 'fs';
 import { unlink, rm } from 'fs/promises';
 import { join } from 'path';
 
-import { BETTER_AUTH_SECRET } from '$env/static/private';
 import { db } from './db';
+import { userDevices } from './db/schema';
+import { eq } from 'drizzle-orm';
 
 export const auth = betterAuth({
-	appName: 'myDevices',
+	appName: 'DeviceGalaxy',
 	secret: BETTER_AUTH_SECRET,
 	database: drizzleAdapter(db, {
 		provider: 'sqlite'
@@ -59,13 +61,17 @@ export const auth = betterAuth({
 						}
 
 						// Find all of user's devices and delete any images
-						const devices = await db.query.userDevices.findMany({
-							where: (userDevices, { eq }) => eq(userDevices.userId, user.id)
-						});
+						const devices = await db
+							.select()
+							.from(userDevices)
+							.where(eq(userDevices.userId, user.id));
 
 						for (const device of devices) {
 							if (existsSync(join(process.cwd(), 'user_uploads', 'device', device.id.toString()))) {
-								await rm(join(process.cwd(), 'user_uploads', 'device', device.id.toString()), { recursive: true, force: true });
+								await rm(join(process.cwd(), 'user_uploads', 'device', device.id.toString()), {
+									recursive: true,
+									force: true
+								});
 							}
 						}
 					} catch (error) {

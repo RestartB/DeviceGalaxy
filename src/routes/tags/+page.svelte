@@ -98,6 +98,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>DeviceGalaxy- Tags</title>
+</svelte:head>
+
 <CreateTagForm sourceForm={data.newTagForm} bind:createPopupOpen refreshAll={getTags} />
 <EditTagForm sourceForm={data.editTagForm} bind:editPopupOpen tag={toEdit} refreshAll={getTags} />
 
