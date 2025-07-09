@@ -13,6 +13,8 @@
 	// Get session from props
 	const { data } = $props();
 
+	let clientWidth = $state(0);
+
 	const { form, message, errors, enhance } = superForm(data.profilePictureForm, {
 		validators: zod4Client(profilePictureSchema),
 		customValidity: false,
@@ -66,9 +68,11 @@
 	}
 </script>
 
+<svelte:body bind:clientWidth />
+
 {#if emailPopupOpen}
 	<div
-		class="fixed inset-0 z-60 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+		class="fixed inset-0 z-60 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 		transition:fade={{ duration: 100 }}
 	>
 		<div
@@ -78,7 +82,7 @@
 		></div>
 
 		<div
-			class="z-80 flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+			class="z-80 flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 		>
 			<div class="flex items-center justify-between border-b p-4">
 				<h2 class="text-xl font-bold">Change Email Address</h2>
@@ -179,12 +183,12 @@
 
 		<div class="flex items-center gap-2">
 			<Avatar
-				size={120}
+				size={clientWidth > 640 ? 120 : 60}
 				src={data.user?.image || ''}
 				name={data.user?.name || ''}
 				alt="User Avatar"
 				className="border-zinc-400"
-				textClass="text-6xl"
+				textClass="text-3xl sm:text-6xl"
 			/>
 
 			<div class="flex flex-col gap-2">

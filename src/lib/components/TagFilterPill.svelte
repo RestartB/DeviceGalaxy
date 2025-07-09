@@ -70,7 +70,7 @@
 
 	{#if dropdownOpen}
 		<div
-			class="fixed inset-0 z-30 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+			class="fixed inset-0 z-30 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 			transition:fade={{ duration: 100 }}
 		>
 			<div

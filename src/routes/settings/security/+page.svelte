@@ -99,7 +99,7 @@
 
 {#if passwordPopupOpen}
 	<div
-		class="fixed inset-0 z-60 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+		class="fixed inset-0 z-60 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 		transition:fade={{ duration: 100 }}
 	>
 		<div
@@ -109,7 +109,7 @@
 		></div>
 
 		<div
-			class="z-80 flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+			class="z-80 flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 		>
 			<div class="flex items-center justify-between border-b p-4">
 				<h2 class="text-xl font-bold">Change Password</h2>
@@ -168,7 +168,7 @@
 
 {#if reset2FAPopupOpen}
 	<div
-		class="fixed inset-0 z-60 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+		class="fixed inset-0 z-60 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 		transition:fade={{ duration: 100 }}
 	>
 		<div
@@ -178,7 +178,7 @@
 		></div>
 
 		<div
-			class="z-80 flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+			class="z-80 flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 		>
 			<div class="flex items-center justify-between border-b p-4">
 				<h2 class="text-xl font-bold">Reset 2FA</h2>

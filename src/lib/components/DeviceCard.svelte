@@ -32,7 +32,7 @@
 </script>
 
 <a
-	class="relative flex max-w-sm min-w-50 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
+	class="relative flex min-w-85 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
 	href={`/device/${device.id}`}
 >
 	{#if device.externalImages && device.externalImages.length > 0}
@@ -48,7 +48,11 @@
 		<div>
 			<p class="text-sm text-zinc-600 dark:text-zinc-400">{device.brand}</p>
 			<h2 class="text-xl font-semibold">{device.deviceName}</h2>
-			<p>{device.description}</p>
+			{#if !device.description || device.description.trim() === ''}
+				<p class="text-sm text-zinc-500 dark:text-zinc-300">No description available</p>
+			{:else}
+				<p>{device.description}</p>
+			{/if}
 		</div>
 
 		<div class="flex w-full flex-wrap gap-1 text-sm">

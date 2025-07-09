@@ -14,7 +14,7 @@
 {#if generatedAvatar}
 	<div
 		class={`flex items-center justify-center rounded-full border-2 border-zinc-400 bg-gray-200 text-sm select-none ${className}`}
-		style="width: {size}px; height: {size}px;"
+		style="min-width: {size}px; min-height: {size}px;"
 	>
 		<span class="font-semibold text-gray-700 {textClass}">
 			{initials}

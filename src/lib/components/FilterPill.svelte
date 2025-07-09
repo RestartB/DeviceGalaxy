@@ -89,7 +89,7 @@
 
 	{#if dropdownOpen}
 		<div
-			class="fixed inset-0 z-30 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+			class="fixed inset-0 z-30 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
 			transition:fade={{ duration: 100 }}
 		>
 			<div
@@ -98,7 +98,7 @@
 				aria-hidden="true"
 			></div>
 			<div
-				class="z-50 flex w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+				class="z-50 flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
 			>
 				<div class="flex w-full items-center justify-between gap-2 border-b p-4">
 					<h1 class="text-xl font-bold text-nowrap">Select Filters - {name}</h1>

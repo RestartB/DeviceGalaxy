@@ -4,34 +4,46 @@
 
 	import { page } from '$app/state';
 	import Avatar from '$lib/components/Avatar.svelte';
+
+	let clientWidth = $state(0);
 </script>
+
+<svelte:body bind:clientWidth />
 
 <div class="flex w-full flex-col gap-2">
 	{#if data.user}
-		<div class="flex w-full gap-4">
-			<div class="flex max-w-42 min-w-42 flex-col items-center gap-2 overflow-hidden text-center">
+		<div class="flex w-full flex-col gap-4 sm:flex-row">
+			<div
+				class="flex flex-col gap-2 overflow-hidden sm:max-w-42 sm:min-w-42 sm:items-center sm:text-center"
+			>
 				<h1 class="text-4xl font-bold">Settings</h1>
-				<Avatar
-					size={140}
-					src={data.user.image || ''}
-					name={data.user.name || ''}
-					alt="User Avatar"
-					className="border-zinc-400"
-					textClass="text-7xl"
-				/>
-				<h2 class="text-2xl font-semibold">{data.user.name}</h2>
-				<p>User since <strong>{data.user.createdAt.toLocaleDateString()}</strong></p>
-
-				<hr class="w-full text-zinc-600" />
-
-				<div>
-					<h3>Total Devices</h3>
-					<p class="text-2xl font-bold">{data.totalDevices}</p>
+				<div class="flex items-center gap-2 overflow-hidden text-center sm:flex-col">
+					<Avatar
+						size={clientWidth > 640 ? 140 : 60}
+						src={data.user.image || ''}
+						name={data.user.name || ''}
+						alt="User Avatar"
+						className="border-zinc-400"
+						textClass="text-3xl sm:text-7xl"
+					/>
+					<div class="flex w-full flex-col overflow-hidden text-start sm:gap-2 sm:text-center">
+						<h2 class="w-full truncate text-2xl font-semibold sm:text-nowrap">{data.user.name}</h2>
+						<p>User since <strong>{data.user.createdAt.toLocaleDateString()}</strong></p>
+					</div>
 				</div>
 
-				<div>
-					<h3>Total Tags</h3>
-					<p class="text-2xl font-bold">{data.totalTags}</p>
+				<hr class="hidden w-full text-zinc-600 sm:block" />
+
+				<div class="hidden sm:block">
+					<div>
+						<h3>Total Devices</h3>
+						<p class="text-2xl font-bold">{data.totalDevices}</p>
+					</div>
+
+					<div>
+						<h3>Total Tags</h3>
+						<p class="text-2xl font-bold">{data.totalTags}</p>
+					</div>
 				</div>
 			</div>
 			<div class="flex w-full flex-col">

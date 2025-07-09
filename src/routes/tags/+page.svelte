@@ -183,7 +183,7 @@
 	{:else if searchedTags.length === 0}
 		<p>No tags found matching your search.</p>
 	{:else}
-		<ul class="flex list-none flex-wrap gap-2">
+		<ul class="flex list-none flex-wrap justify-center gap-2 sm:justify-start">
 			{#each searchedTags as tag (tag.id)}
 				<li class="h-fit w-fit">
 					<div
