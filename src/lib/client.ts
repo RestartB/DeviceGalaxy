@@ -2,10 +2,8 @@ import { createAuthClient } from 'better-auth/svelte';
 import { twoFactorClient } from 'better-auth/client/plugins';
 import { goto } from '$app/navigation';
 
-import { PUBLIC_BETTER_AUTH_URL } from '$env/static/public';
-
 export const authClient = createAuthClient({
-	baseURL: PUBLIC_BETTER_AUTH_URL,
+	baseURL: "https://devices.restartb.xyz",
 	plugins: [
 		twoFactorClient({
 			onTwoFactorRedirect() {
