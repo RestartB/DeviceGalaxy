@@ -1,13 +1,20 @@
 <script lang="ts">
-	import { authClient } from '$lib/client';
+	import { goto, onNavigate } from '$app/navigation';
+	import { fade, fly } from 'svelte/transition';
 	import type { LayoutData } from '../../routes/$types';
-	import { goto } from '$app/navigation';
+
+	import { authClient } from '$lib/client';
 
 	import Avatar from '$lib/components/Avatar.svelte';
-	import { LogOut } from '@lucide/svelte';
+	import { House, Monitor, Tag, Cog, LogOut, Menu } from '@lucide/svelte';
 
 	// Get session from props
 	let { data }: { data: LayoutData } = $props();
+	let menuOpen = $state(false);
+
+	onNavigate(() => {
+		menuOpen = false;
+	});
 </script>
 
 <header
@@ -15,26 +22,28 @@
 >
 	<h1 class="p-2 pr-0 text-xl font-bold">myDevices</h1>
 	{#if data.user}
-		<nav class="flex h-full items-center justify-center">
+		<nav class="xs:flex hidden h-full items-center justify-center">
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-				href="/">Home</a
+				href="/"
 			>
+				Home
+			</a>
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-				href="/devices">Devices</a
+				href="/devices"
 			>
+				Devices
+			</a>
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-				href="/tags">Tags</a
+				href="/tags"
 			>
-			<a
-				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-				href="/settings/account">Settings</a
-			>
+				Tags
+			</a>
 		</nav>
 
-		<div class="ml-auto flex h-full items-center justify-center gap-2">
+		<div class="ml-auto flex h-full max-w-[50%] items-center justify-end gap-2">
 			{#if data.user}
 				<Avatar
 					size={30}
@@ -43,20 +52,110 @@
 					alt="User Avatar"
 					className="border-zinc-400"
 				/>
-				<p class="font-bold">{data.user.name}</p>
-				<button
-					class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-					title="Sign Out"
-					onclick={() => {
-						authClient.signOut();
-						goto('/auth/login');
-					}}
-				>
-					<LogOut size="20" />
-				</button>
-			{:else}
-				<p>Not signed in</p>
+				<p class="xxs:block hidden max-w-full truncate font-bold text-nowrap">{data.user.name}</p>
+				<div class="xs:flex hidden h-full">
+					<a
+						class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+						href="/settings/account"
+						title="Settings"
+					>
+						<Cog size="20" />
+					</a>
+					<button
+						class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+						title="Sign Out"
+						onclick={() => {
+							authClient.signOut();
+							goto('/auth/login');
+						}}
+					>
+						<LogOut size="20" />
+					</button>
+				</div>
 			{/if}
+			<button
+				class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+				title="Menu"
+				onclick={() => {
+					menuOpen = !menuOpen;
+				}}
+			>
+				<Menu size="20" />
+			</button>
+		</div>
+	{/if}
+
+	{#if menuOpen && data.user}
+		<div
+			class="fixed inset-0 z-60 mt-12 flex items-start justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+			transition:fade={{ duration: 100 }}
+		>
+			<div
+				class="absolute inset-0 z-70"
+				onclick={() => (menuOpen = false)}
+				aria-hidden="true"
+			></div>
+
+			<div
+				class="z-80 flex max-h-full w-full flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 p-4 shadow-2xl dark:bg-zinc-800"
+				transition:fly={{ duration: 300, y: -10, opacity: 0 }}
+			>
+				<nav class="flex h-full w-full flex-col items-center justify-start gap-2">
+					<a
+						class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
+						href="/"
+					>
+						<House size="30" />
+						Home
+					</a>
+					<a
+						class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
+						href="/devices"
+					>
+						<Monitor size="30" />
+						Devices
+					</a>
+					<a
+						class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
+						href="/tags"
+					>
+						<Tag size="30" />
+						Tags
+					</a>
+
+					<hr class="w-full text-zinc-800 dark:text-zinc-200" />
+
+					<div class="flex w-full items-center justify-center gap-2">
+						<Avatar
+							size={30}
+							src={data.user.image || ''}
+							name={data.user.name || ''}
+							alt="User Avatar"
+							className="border-zinc-400"
+						/>
+						<p class="max-w-full truncate text-xl text-nowrap">{data.user.name}</p>
+					</div>
+					<div class="flex w-full items-center justify-center gap-2">
+						<a
+							class="flex h-full flex-1 items-center justify-center gap-2 rounded-lg border-2 border-zinc-400 bg-zinc-300 p-2 font-semibold dark:bg-zinc-700"
+							href="/settings/account"
+						>
+							<Cog size="20" />
+							Settings
+						</a>
+						<button
+							class="flex h-full flex-1 items-center justify-center gap-2 rounded-lg border-2 border-zinc-400 bg-zinc-300 p-2 font-semibold dark:bg-zinc-700"
+							onclick={() => {
+								authClient.signOut();
+								goto('/auth/login');
+							}}
+						>
+							<LogOut size="20" />
+							Sign Out
+						</button>
+					</div>
+				</nav>
+			</div>
 		</div>
 	{/if}
 </header>

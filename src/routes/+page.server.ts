@@ -6,7 +6,7 @@ import { eq, count, desc } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	const { session, user } = await parent();
-	
+
 	if (!session || !user) {
 		return {
 			devices: [],
@@ -114,7 +114,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 		'Greetings,',
 		'Hey there,',
 		"What's up,",
-		'Hai,'
+		'Haii,'
 	];
 	const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
 

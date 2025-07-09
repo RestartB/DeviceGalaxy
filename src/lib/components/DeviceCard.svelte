@@ -145,12 +145,12 @@
 				<Edit size="20" />
 				<p>Edit</p>
 			</button>
-			<hr class="w-full border-zinc-800 dark:border-zinc-200" />
+			<hr class="w-full text-zinc-800 dark:text-zinc-200" />
 			<button class="flex w-full cursor-pointer items-center justify-center gap-2">
 				<Share size="20" />
 				<p>Share</p>
 			</button>
-			<hr class="w-full border-zinc-800 dark:border-zinc-200" />
+			<hr class="w-full text-zinc-800 dark:text-zinc-200" />
 			<button
 				class="flex w-full cursor-pointer items-center justify-center gap-2 text-red-700 dark:text-red-200"
 				onclick={() => {

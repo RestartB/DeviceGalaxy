@@ -2,4 +2,6 @@
 
 @theme {
     --font-family: "Figtree", sans-serif;
+    --breakpoint-xs: 35rem;
+    --breakpoint-xxs: 22rem
 }
