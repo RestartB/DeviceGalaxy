@@ -2,8 +2,10 @@ import { createAuthClient } from 'better-auth/svelte';
 import { twoFactorClient } from 'better-auth/client/plugins';
 import { goto } from '$app/navigation';
 
+import { PUBLIC_BETTER_AUTH_URL } from '$env/static/public';
+
 export const authClient = createAuthClient({
-	baseURL: 'http://localhost:5173', // the base url of your auth server
+	baseURL: PUBLIC_BETTER_AUTH_URL,
 	plugins: [
 		twoFactorClient({
 			onTwoFactorRedirect() {

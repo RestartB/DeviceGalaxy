@@ -1,5 +1,5 @@
 {
-	"name": "DeviceGalaxy",
+	"name": "devicegalaxy",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -21,6 +21,7 @@
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
 		"@sveltejs/adapter-auto": "^6.0.0",
+		"@sveltejs/adapter-node": "^5.2.13",
 		"@sveltejs/enhanced-img": "^0.6.1",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
@@ -48,6 +49,7 @@
 		"@libsql/client": "^0.14.0",
 		"@lucide/svelte": "^0.523.0",
 		"better-auth": "^1.2.12",
+		"dotenv": "^17.2.0",
 		"drizzle-orm": "^0.40.0",
 		"fuse.js": "^7.1.0",
 		"sharp": "^0.34.2",
