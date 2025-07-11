@@ -88,7 +88,8 @@ export const shares = sqliteTable('shares', {
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
 	type: integer('type').notNull(),
-	sharedDevice: integer('shared_device'),
+	sharedDevice: integer('shared_device')
+		.references(() => userDevices.id, { onDelete: 'cascade' }),
 	sharedTags: text('shared_tags', { mode: 'json' })
 		.$type<number[]>()
 		.$defaultFn(() => [])
