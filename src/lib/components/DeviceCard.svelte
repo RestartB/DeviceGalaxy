@@ -15,12 +15,14 @@
 
 	let {
 		device,
+		shareID = '',
 		includeMenu = true,
 		deleteDevice = undefined,
 		editPopupOpen = $bindable(),
 		toEdit = $bindable()
 	}: {
 		device: any;
+		shareID?: string;
 		includeMenu?: boolean;
 		deleteDevice: any;
 		editPopupOpen: boolean;
@@ -29,17 +31,43 @@
 
 	let showingOverlay = $state(false);
 	let confirmDelete = $state(false);
+	let shareOverlayOpen = $state(false);
+	let shareLink = $state('');
+
+	async function shareDevice() {
+		try {
+			const response = await fetch(`/api/share/create_share`, {
+				method: 'POST',
+				body: JSON.stringify({ type: 2, deviceID: device.id }),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (response.ok) {
+				const json = await response.json();
+				console.log(json);
+				shareLink = `share/${json.share.id}`;
+				shareOverlayOpen = true;
+			} else {
+				alert('Failed to create share link. Please try again later.');
+			}
+		} catch (error) {
+			console.error('Error creating share link:', error);
+			alert('An error occurred while creating the share link.');
+		}
+	}
 </script>
 
 <a
-	class="relative flex min-w-85 max-w-100 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
+	class="relative flex max-w-100 min-w-85 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
 	href={`/device/${device.id}`}
 >
 	{#if device.externalImages && device.externalImages.length > 0}
 		<img src={device.externalImages[0]} alt={device.deviceName} class="h-48 w-full object-cover" />
 	{:else if device.internalImages && device.internalImages.length > 0}
 		<img
-			src={`/api/image/device/${device.id}/${device.internalImages[0]}`}
+			src={`/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID || ''}`}
 			alt={device.deviceName}
 			class="h-48 w-full object-cover"
 		/>
@@ -146,9 +174,15 @@
 				<p>Edit</p>
 			</button>
 			<hr class="w-full text-zinc-800 dark:text-zinc-200" />
-			<button class="flex w-full cursor-pointer items-center justify-center gap-2">
+			<button
+				class="flex w-full cursor-pointer items-center justify-center gap-2"
+				onclick={(event) => {
+					event.preventDefault();
+					shareDevice();
+				}}
+			>
 				<Share size="20" />
-				<p>Share</p>
+				<p>New Share Link</p>
 			</button>
 			<hr class="w-full text-zinc-800 dark:text-zinc-200" />
 			<button
@@ -171,3 +205,55 @@
 		</div>
 	{/if}
 </a>
+
+{#if shareOverlayOpen}
+	<div
+		class="fixed inset-0 z-60 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+		transition:fade={{ duration: 100 }}
+	>
+		<div
+			class="absolute inset-0 z-70"
+			onclick={() => (shareOverlayOpen = false)}
+			aria-hidden="true"
+		></div>
+
+		<div
+			class="z-80 flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+		>
+			<div class="flex items-center justify-between border-b p-4">
+				<h2 class="text-xl font-bold">Shared</h2>
+				<button
+					onclick={() => (shareOverlayOpen = false)}
+					class="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-400"
+					aria-label="Close"><X /></button
+				>
+			</div>
+
+			<p>
+				A share link has been created. Copy the link below to share the device. You can copy the
+				link or revoke it at any time in the shares page.
+			</p>
+
+			<div class="flex flex-col gap-4 p-6">
+				<label for="shareLink" class="text-sm font-medium">Share Link</label>
+				<input
+					type="text"
+					id="shareLink"
+					name="shareLink"
+					class="w-full rounded-lg border p-2"
+					value={shareLink}
+					readonly
+				/>
+				<button
+					onclick={() => {
+						navigator.clipboard.writeText(shareLink);
+						alert('Share link copied to clipboard!');
+					}}
+					class="mt-2 w-full rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600"
+				>
+					Copy Share Link
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}

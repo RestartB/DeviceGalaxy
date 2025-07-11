@@ -21,9 +21,12 @@
 	<Header {data} />
 	<div
 		class="box-border h-full max-h-full flex-1 overflow-y-auto p-4 pt-16"
-		class:p-4={!page.url.pathname.startsWith('/device/')}
-		class:pt-12={page.url.pathname.startsWith('/device/')}
-		class:pt-16={!page.url.pathname.startsWith('/device/')}
+		class:p-4={!page.url.pathname.startsWith('/device/') &&
+			!page.url.pathname.startsWith('/share/')}
+		class:pt-12={page.url.pathname.startsWith('/device/') ||
+			page.url.pathname.startsWith('/share/')}
+		class:pt-16={!page.url.pathname.startsWith('/device/') &&
+			!page.url.pathname.startsWith('/share/')}
 	>
 		<Toaster position="top-center" richColors closeButton />
 		{@render children()}

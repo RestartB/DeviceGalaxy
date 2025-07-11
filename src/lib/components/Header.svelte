@@ -23,7 +23,7 @@
 >
 	<h1 class="p-2 pr-0 text-xl font-bold">DeviceGalaxy</h1>
 	{#if data.user}
-		<nav class="xs:flex hidden h-full items-center justify-center">
+		<nav class="hidden h-full items-center justify-center sm:flex">
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				href="/"
@@ -42,6 +42,12 @@
 			>
 				Tags
 			</a>
+			<a
+				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+				href="/shares"
+			>
+				Shared
+			</a>
 		</nav>
 
 		<div class="ml-auto flex h-full max-w-[50%] items-center justify-end gap-2">
@@ -54,7 +60,7 @@
 					className="border-zinc-400"
 				/>
 				<p class="xxs:block hidden max-w-full truncate font-bold text-nowrap">{data.user.name}</p>
-				<div class="xs:flex hidden h-full">
+				<div class="hidden h-full sm:flex">
 					<a
 						class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 						href="/settings/account"
@@ -75,7 +81,7 @@
 				</div>
 			{/if}
 			<button
-				class="xs:hidden flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+				class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 sm:hidden dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				title="Menu"
 				onclick={() => {
 					menuOpen = !menuOpen;

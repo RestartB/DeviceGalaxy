@@ -82,6 +82,18 @@ export const brands = sqliteTable('brands', {
 	displayName: text('display_name', { length: 255 }).notNull()
 });
 
+export const shares = sqliteTable('shares', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	type: integer('type').notNull(),
+	sharedDevice: integer('shared_device'),
+	sharedTags: text('shared_tags', { mode: 'json' })
+		.$type<number[]>()
+		.$defaultFn(() => [])
+});
+
 export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
 	name: text('name').notNull(),

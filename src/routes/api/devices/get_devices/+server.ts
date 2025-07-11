@@ -2,7 +2,16 @@ import { json } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, asc, desc, count, and, inArray, like, sql } from 'drizzle-orm';
-import { userDevices, cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
+import {
+	userDevices,
+	cpus,
+	memory,
+	storage,
+	os,
+	brands,
+	tags,
+	shares
+} from '$lib/server/db/schema';
 
 export async function GET(event) {
 	// Check if the user is authenticated
@@ -10,8 +19,34 @@ export async function GET(event) {
 		headers: event.request.headers
 	});
 
-	if (!session) {
+	const shareIdRaw = event.url.searchParams.get('share');
+
+	if (!session && !shareIdRaw) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
+	}
+
+	// Check share ID is valid
+	const shareId = parseInt(shareIdRaw || '-1');
+	if (shareIdRaw && (isNaN(shareId) || shareId < 0)) {
+		return json({ error: 'Invalid share ID' }, { status: 400 });
+	}
+
+	// Check for share in database
+	let share;
+	if (shareIdRaw) {
+		share = await db
+			.select()
+			.from(shares)
+			.where(eq(shares.id, shareId))
+			.get();
+
+		if (!share) {
+			return json({ error: 'Share not found' }, { status: 404 });
+		}
+
+		if (share.type !== 0) {
+			return json({ error: 'Unauthorized' }, { status: 401 });
+		}
 	}
 
 	const offset = parseInt(event.url.searchParams.get('offset') || '0', 10);
@@ -67,7 +102,16 @@ export async function GET(event) {
 	}
 
 	try {
-		const conditions = [eq(userDevices.userId, session.user.id)];
+		const conditions = [];
+		let userId = '';
+
+		if (share) {
+			conditions.push(eq(userDevices.userId, share.userId));
+			userId = share.userId;
+		} else if (session?.user) {
+			conditions.push(eq(userDevices.userId, session.user.id));
+			userId = session.user.id;
+		}
 
 		if (searchQuery) {
 			conditions.push(like(userDevices.deviceName, `%${searchQuery}%`));
@@ -114,27 +158,27 @@ export async function GET(event) {
 		const cpuData = await db
 			.select({ id: cpus.id, value: cpus.value, displayName: cpus.displayName })
 			.from(cpus)
-			.where(eq(cpus.userID, session.user.id));
+			.where(eq(cpus.userID, userId));
 
 		const memoryData = await db
 			.select({ id: memory.id, value: memory.value, displayName: memory.displayName })
 			.from(memory)
-			.where(eq(memory.userID, session.user.id));
+			.where(eq(memory.userID, userId));
 
 		const storageData = await db
 			.select({ id: storage.id, value: storage.value, displayName: storage.displayName })
 			.from(storage)
-			.where(eq(storage.userID, session.user.id));
+			.where(eq(storage.userID, userId));
 
 		const osData = await db
 			.select({ id: os.id, value: os.value, displayName: os.displayName })
 			.from(os)
-			.where(eq(os.userID, session.user.id));
+			.where(eq(os.userID, userId));
 
 		const brandData = await db
 			.select({ id: brands.id, value: brands.value, displayName: brands.displayName })
 			.from(brands)
-			.where(eq(brands.userId, session.user.id));
+			.where(eq(brands.userId, userId));
 
 		const tagData = await db
 			.select({
@@ -144,7 +188,7 @@ export async function GET(event) {
 				tagTextColour: tags.tagTextColour
 			})
 			.from(tags)
-			.where(eq(tags.userId, session.user.id));
+			.where(eq(tags.userId, String(userId)));
 
 		const matchedDevices = devices.map((device) => {
 			const deviceTagIds = device.tags || [];
