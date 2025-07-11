@@ -92,8 +92,9 @@ export const load = async (event) => {
 		return {
 			share,
 			shareUser,
+			baseURL: event.url.origin,
 			device: processedDevice
 		};
 	}
-	return { share, shareUser };
+	return { share, shareUser, baseURL: event.url.origin };
 };

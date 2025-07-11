@@ -153,7 +153,7 @@
 			if ($message === 'Device added successfully!') {
 				toast.success($message as string);
 				refreshAll();
-				
+
 				createPopupOpen = false;
 				formPage = 0;
 			} else if (typeof $message === 'string' && $message) {
@@ -227,7 +227,7 @@
 						<label for="description" class="text-sm font-medium">Description</label>
 						<textarea
 							id="description"
-							name="description"
+							name="og:description"
 							class="h-24 w-full rounded-lg border p-2"
 							bind:value={$form.description}
 						></textarea>

@@ -14,7 +14,7 @@
 
 	{#if !page.url.pathname.startsWith('/share') && !page.url.pathname.startsWith('/device/')}
 		<meta property="og:title" content="DeviceGalaxy" />
-		<meta name="description" content="Manage and share your galaxy of devices." />
+		<meta name="og:description" content="Manage and share your galaxy of devices." />
 		<meta content="https://devices.restartb.xyz/favicon.png" property="og:image" />
 	{/if}
 </svelte:head>

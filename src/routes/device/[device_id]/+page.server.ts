@@ -67,7 +67,7 @@ export const load: PageServerLoad = async (event) => {
 		storage: storageData[0]?.displayName ?? null,
 		os: osData[0]?.displayName ?? null,
 		brand: brandData[0]?.displayName ?? null,
-		tags: deviceTags,
+		tags: deviceTags
 	};
 
 	return {
