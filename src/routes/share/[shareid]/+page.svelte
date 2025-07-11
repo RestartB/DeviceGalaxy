@@ -32,7 +32,7 @@
 				<meta content="summary_large_image" name="twitter:card" />
 				<meta
 					property="og:image"
-					content="{data.baseURL}/api/image/{data.device.id}/{data.device
+					content="{data.baseURL}/api/image/device/{data.device.id}/{data.device
 						.internalImages[0]}?share={data.share.id}"
 				/>
 			{:else if data.device?.externalImages && data.device.externalImages.length > 0}

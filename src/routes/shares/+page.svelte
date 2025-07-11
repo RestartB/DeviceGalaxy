@@ -135,7 +135,7 @@
 							<button
 								class="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600"
 								onclick={() => {
-									navigator.clipboard.writeText(`/share/${share.shareId}`);
+									navigator.clipboard.writeText(`${window.location.origin}/share/${share.shareId}`);
 									toast.success('Copied to clipboard!');
 								}}
 							>
