@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { MoveLeft, Cpu, MemoryStick, HardDrive, Cog, X } from '@lucide/svelte';
+	import Avatar from '$lib/components/Avatar.svelte';
 
 	const { data, shareID } = $props();
 	const device = data.device;
@@ -74,6 +75,20 @@
 		</div>
 	{/if}
 
+	{#if shareID}
+		<div class="flex max-w-full flex-wrap items-center gap-2">
+			<Avatar
+				src={data.shareUser?.image}
+				name={data.shareUser?.name}
+				size={30}
+				className="rounded-full"
+			/>
+			<p class="text-base text-zinc-500 dark:text-zinc-400">
+				from <strong>{data.shareUser?.name}</strong>'s galaxy
+			</p>
+		</div>
+	{/if}
+
 	<div class="flex w-fit flex-wrap items-center justify-center gap-2">
 		{#if device.cpu}
 			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
@@ -123,7 +138,7 @@
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			{#each device.internalImages as image}
 				<button
-					style="background-image: url('/api/image/device/{device.id}/{image}');"
+					style="background-image: url('/api/image/device/{device.id}/{image}?share={shareID}');"
 					aria-label="Click to fullscreen image"
 					class="bg-fit h-48 w-full rounded-lg border-2 border-zinc-400 bg-cover bg-center"
 					onclick={() => {

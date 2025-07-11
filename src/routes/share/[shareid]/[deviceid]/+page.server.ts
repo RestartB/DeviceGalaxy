@@ -8,7 +8,8 @@ import {
 	os,
 	brands,
 	tags,
-	shares
+	shares,
+	user
 } from '$lib/server/db/schema';
 import { error } from '@sveltejs/kit';
 
@@ -47,6 +48,13 @@ export const load = async (event) => {
 	if (!device) {
 		return error(404, 'Device not found');
 	}
+
+	// Get user's name and PFP
+	const shareUser = await db
+		.select({ id: user.id, name: user.name, image: user.image })
+		.from(user)
+		.where(eq(user.id, share.userId))
+		.get();
 
 	const cpuData = await db
 		.select({ id: cpus.id, value: cpus.value, displayName: cpus.displayName })
@@ -98,6 +106,7 @@ export const load = async (event) => {
 
 	return {
 		share,
+		shareUser,
 		baseURL: event.url.origin,
 		device: processedDevice
 	};
