@@ -1,6 +1,6 @@
 <script lang="ts">
 	let { data } = $props();
-	
+
 	import Devices from '$lib/components/Devices.svelte';
 	import Device from '$lib/components/Device.svelte';
 </script>
@@ -10,7 +10,10 @@
 		{#if data.share.type === 0}
 			<title>DeviceGalaxy - {data.shareUser.name}'s devices</title>
 			<meta property="og:title" content="{data.shareUser.name}'s devices" />
-			<meta name="og:description" content="View {data.shareUser.name}'s devices on DeviceGalaxy." />
+			<meta
+				name="og:description"
+				content="View {data.shareUser.name}'s shared devices on DeviceGalaxy."
+			/>
 			<meta content="DeviceGalaxy" property="og:site_name" />
 
 			{#if data.shareUser.image}
