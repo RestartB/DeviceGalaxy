@@ -37,10 +37,8 @@
 	let shareLink = $state('');
 
 	if (shareID && shareID !== '') {
-		console.log('Using provided shareID:', shareID);
 		href = `/share/${shareID}/${device.id}`;
 	} else {
-		console.log('No shareID provided, using device ID for link');
 		href = `/device/${device.id}`;
 	}
 
@@ -56,7 +54,6 @@
 
 			if (response.ok) {
 				const json = await response.json();
-				console.log(json);
 				shareLink = `${window.location.origin}/share/${json.share.id}`;
 				shareOverlayOpen = true;
 			} else {

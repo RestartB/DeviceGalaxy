@@ -1,9 +1,8 @@
 <script lang="ts">
 	let { data } = $props();
+	
 	import Devices from '$lib/components/Devices.svelte';
 	import Device from '$lib/components/Device.svelte';
-
-	console.log('Share data:', data);
 </script>
 
 <svelte:head>
