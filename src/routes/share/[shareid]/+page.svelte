@@ -7,10 +7,46 @@
 </script>
 
 <svelte:head>
-	{#if data.share.type === 0}
-		<title>DeviceGalaxy - Share {data.share.id}</title>
-	{:else}
-		<title>DeviceGalaxy</title>
+	{#if data.shareUser}
+		{#if data.share.type === 0}
+			<title>DeviceGalaxy - {data.shareUser.name}'s devices</title>
+			<meta property="og:title" content="{data.shareUser.name}'s devices" />
+			<meta name="description" content="View {data.shareUser.name}'s devices on DeviceGalaxy." />
+			<meta content="DeviceGalaxy" property="og:site_name" />
+
+			{#if data.shareUser.image}
+				<meta property="og:image" content={data.shareUser.image} />
+			{:else}
+				<meta property="og:image" content="https://devices.restartb.xyz/favicon.png" />
+			{/if}
+		{:else if data.share.type === 2}
+			<title>DeviceGalaxy - {data.device?.deviceName}</title>
+			<meta property="og:title" content={data.device?.deviceName} />
+			<meta
+				name="description"
+				content={data.device?.description || `View ${data.device?.deviceName} on DeviceGalaxy.`}
+			/>
+			<meta content="DeviceGalaxy" property="og:site_name" />
+
+			{#if data.device?.internalImages && data.device.internalImages.length > 0}
+				<meta content="summary_large_image" name="twitter:card" />
+				<meta property="og:image" content={data.device.internalImages[0]} />
+			{:else if data.device?.externalImages && data.device.externalImages.length > 0}
+				<meta content="summary_large_image" name="twitter:card" />
+				<meta property="og:image" content={data.device.externalImages[0]} />
+			{:else}
+				<meta property="og:image" content="https://devices.restartb.xyz/favicon.png" />
+			{/if}
+		{:else}
+			<title>DeviceGalaxy - Share</title>
+			<meta property="og:title" content="{data.shareUser.name}'s Share" />
+			<meta
+				name="description"
+				content="View {data.shareUser.name}'s shared devices on DeviceGalaxy."
+			/>
+			<meta content="DeviceGalaxy" property="og:site_name" />
+			<meta property="og:image" content="https://devices.restartb.xyz/favicon.png" />
+		{/if}
 	{/if}
 </svelte:head>
 

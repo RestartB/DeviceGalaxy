@@ -40,6 +40,8 @@ export const actions = {
 		const form = await superValidate(request, zod4(newDeviceSchema));
 
 		if (!form.valid) {
+			console.error('Form invalid:', form.errors);
+			console.error('Form data:', form.data);
 			return error(400, 'Invalid form');
 		}
 
@@ -260,6 +262,8 @@ export const actions = {
 		const form = await superValidate(request, zod4(editDeviceSchema));
 
 		if (!form.valid) {
+			console.error('Form invalid:', form.errors);
+			console.error('Form data:', form.data);
 			return error(400, 'Invalid form');
 		}
 

@@ -168,7 +168,9 @@
 			if ($message === 'Device updated successfully!') {
 				toast.success($message as string);
 				refreshAll();
+
 				editPopupOpen = false;
+				formPage = 0;
 			} else if (typeof $message === 'string' && $message) {
 				toast.warning($message);
 			}

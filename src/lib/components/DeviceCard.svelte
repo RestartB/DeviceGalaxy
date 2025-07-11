@@ -12,6 +12,7 @@
 		Menu,
 		X
 	} from '@lucide/svelte';
+	import { toast } from 'svelte-sonner';
 
 	let {
 		device,
@@ -32,7 +33,16 @@
 	let showingOverlay = $state(false);
 	let confirmDelete = $state(false);
 	let shareOverlayOpen = $state(false);
+	let href = $state('');
 	let shareLink = $state('');
+
+	if (shareID && shareID !== '') {
+		console.log('Using provided shareID:', shareID);
+		href = `/share/${shareID}/${device.id}`;
+	} else {
+		console.log('No shareID provided, using device ID for link');
+		href = `/device/${device.id}`;
+	}
 
 	async function shareDevice() {
 		try {
@@ -47,21 +57,21 @@
 			if (response.ok) {
 				const json = await response.json();
 				console.log(json);
-				shareLink = `share/${json.share.id}`;
+				shareLink = `${window.location.origin}/share/${json.share.id}`;
 				shareOverlayOpen = true;
 			} else {
-				alert('Failed to create share link. Please try again later.');
+				toast.error('Failed to create share link. Please try again later.');
 			}
 		} catch (error) {
 			console.error('Error creating share link:', error);
-			alert('An error occurred while creating the share link.');
+			toast.error('An error occurred while creating the share link.');
 		}
 	}
 </script>
 
 <a
 	class="relative flex max-w-100 min-w-85 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
-	href={`/device/${device.id}`}
+	{href}
 >
 	{#if device.externalImages && device.externalImages.length > 0}
 		<img src={device.externalImages[0]} alt={device.deviceName} class="h-48 w-full object-cover" />
@@ -171,7 +181,7 @@
 				}}
 			>
 				<Edit size="20" />
-				<p>Edit</p>
+				<p>Edit Device</p>
 			</button>
 			<hr class="w-full text-zinc-800 dark:text-zinc-200" />
 			<button
@@ -199,7 +209,7 @@
 				{#if confirmDelete}
 					<p>Press again to confirm</p>
 				{:else}
-					<p>Delete</p>
+					<p>Delete Device</p>
 				{/if}
 			</button>
 		</div>
@@ -229,27 +239,25 @@
 				>
 			</div>
 
-			<p>
-				A share link has been created. Copy the link below to share the device. You can copy the
-				link or revoke it at any time in the shares page.
-			</p>
-
 			<div class="flex flex-col gap-4 p-6">
-				<label for="shareLink" class="text-sm font-medium">Share Link</label>
-				<input
-					type="text"
-					id="shareLink"
-					name="shareLink"
-					class="w-full rounded-lg border p-2"
-					value={shareLink}
-					readonly
-				/>
+				<p>
+					A share link has been created. Copy the link below to share the device. You can copy the
+					link or revoke it at any time in the shares page.
+				</p>
+
+				<p class="text-sm font-medium">Share Link</p>
+				<div class="w-full max-w-full overflow-hidden rounded-lg border p-2 text-wrap break-all">
+					{shareLink}
+				</div>
+			</div>
+
+			<div class="border-t p-6">
 				<button
 					onclick={() => {
 						navigator.clipboard.writeText(shareLink);
-						alert('Share link copied to clipboard!');
+						toast.success('Share link copied to clipboard!');
 					}}
-					class="mt-2 w-full rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600"
+					class="w-full rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600"
 				>
 					Copy Share Link
 				</button>

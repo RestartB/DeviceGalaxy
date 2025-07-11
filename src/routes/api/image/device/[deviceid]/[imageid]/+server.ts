@@ -7,7 +7,7 @@ import { join } from 'path';
 
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
-import { userDevices } from '$lib/server/db/schema';
+import { userDevices, shares } from '$lib/server/db/schema';
 
 export async function GET(event) {
 	// Check if the user is authenticated
@@ -15,7 +15,10 @@ export async function GET(event) {
 		headers: event.request.headers
 	});
 
-	if (!session) {
+	// Get share ID
+	const shareId = event.url.searchParams.get('share');
+
+	if (!session && !shareId) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
@@ -29,11 +32,35 @@ export async function GET(event) {
 		return json({ message: 'Image ID is required' }, { status: 400 });
 	}
 
-	const device = await db
-		.select()
-		.from(userDevices)
-		.where(and(eq(userDevices.id, parseInt(deviceId)), eq(userDevices.userId, session.user.id)))
-		.get();
+	let device;
+	if (shareId) {
+		// Get share
+		const share = await db
+			.select()
+			.from(shares)
+			.where(eq(shares.id, shareId))
+			.get();
+
+		if (!share) {
+			return json({ error: 'Share not found' }, { status: 404 });
+		}
+
+		if (share.type !== 0 && share.sharedDevice !== parseInt(deviceId)) {
+			return json({ error: 'Device does not match share' }, { status: 401 });
+		}
+
+		device = await db
+			.select()
+			.from(userDevices)
+			.where(and(eq(userDevices.id, parseInt(deviceId)), eq(userDevices.userId, share.userId)))
+			.get();
+	} else if (session) {
+		device = await db
+			.select()
+			.from(userDevices)
+			.where(and(eq(userDevices.id, parseInt(deviceId)), eq(userDevices.userId, session.user.id)))
+			.get();
+	}
 
 	if (!device) {
 		return json({ error: 'Device not found' }, { status: 404 });

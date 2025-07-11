@@ -8,16 +8,17 @@ import {
 	os,
 	brands,
 	tags,
-	shares
+	shares,
+	user
 } from '$lib/server/db/schema';
 import { error } from '@sveltejs/kit';
 
 export const load = async (event) => {
 	// Get share ID
-	const shareID = parseInt(event.params.shareid);
+	const shareID = event.params.shareid;
 
-	if (isNaN(shareID)) {
-		return error(400, 'Invalid share ID');
+	if (!shareID) {
+		return error(400, 'Share ID is required');
 	}
 
 	// Check if share ID is in database
@@ -26,6 +27,13 @@ export const load = async (event) => {
 	if (share === undefined) {
 		return error(404, 'Share not found');
 	}
+
+	// Get user's name and PFP
+	const shareUser = await db
+		.select({ id: user.id, name: user.name, image: user.image })
+		.from(user)
+		.where(eq(user.id, share.userId))
+		.get();
 
 	if (share.type === 2 && share.sharedDevice) {
 		const device = await db
@@ -83,8 +91,9 @@ export const load = async (event) => {
 
 		return {
 			share,
+			shareUser,
 			device: processedDevice
 		};
 	}
-	return { share };
+	return { share, shareUser };
 };

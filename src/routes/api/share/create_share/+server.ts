@@ -3,6 +3,23 @@ import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
 import { userDevices, shares } from '$lib/server/db/schema';
+import crypto from 'crypto';
+
+async function generateShareId() {
+	let trying = true;
+	let shareId;
+
+	while (trying) {
+		shareId = crypto.randomBytes(4).toString('hex');
+		const existingShare = await db.select().from(shares).where(eq(shares.id, shareId)).get();
+
+		if (!existingShare) {
+			trying = false;
+		}
+	}
+
+	return shareId;
+}
 
 export async function POST(event) {
 	// Check if the user is authenticated
@@ -29,9 +46,12 @@ export async function POST(event) {
 	if (typeInt === 0) {
 		// Share all devices
 		try {
+			const shareId = await generateShareId();
+
 			const share = await db
 				.insert(shares)
 				.values({
+					id: shareId,
 					userId: session.user.id,
 					type: typeInt,
 					sharedDevice: null,
@@ -71,9 +91,12 @@ export async function POST(event) {
 		}
 
 		try {
+			const shareId = await generateShareId();
+
 			const share = await db
 				.insert(shares)
 				.values({
+					id: shareId,
 					userId: session.user.id,
 					type: typeInt,
 					sharedDevice: deviceIDInt,

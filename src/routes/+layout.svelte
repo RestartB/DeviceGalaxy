@@ -10,11 +10,13 @@
 
 <svelte:head>
 	<title>DeviceGalaxy</title>
-
-	<meta property="og:title" content="DeviceGalaxy" />
-	<meta name="description" content="Manage and share your galaxy of devices." />
-	<meta content="https://devices.restartb.xyz/favicon.png" property="og:image" />
 	<meta content="#6463FF" data-react-helmet="true" name="theme-color" />
+
+	{#if !page.url.pathname.startsWith('/share') && !page.url.pathname.startsWith('/device/')}
+		<meta property="og:title" content="DeviceGalaxy" />
+		<meta name="description" content="Manage and share your galaxy of devices." />
+		<meta content="https://devices.restartb.xyz/favicon.png" property="og:image" />
+	{/if}
 </svelte:head>
 
 <div class="font-family font-lg h-screen max-h-screen w-full dark:text-white">

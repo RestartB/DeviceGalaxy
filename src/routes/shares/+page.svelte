@@ -5,7 +5,7 @@
 
 	const { data } = $props();
 
-	let toRevoke = $state(-1);
+	let toRevoke = $state('');
 	let revokePopupOpen = $state(false);
 
 	async function createAccountShare() {
@@ -57,6 +57,7 @@
 		<p>View and manage all of your share links.</p>
 
 		<h2 class="text-2xl font-semibold">Account Shares</h2>
+		<p>Share your entire collection of devices.</p>
 		<button
 			class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-blue-500 px-4 py-2 text-white"
 			onclick={createAccountShare}
@@ -65,8 +66,8 @@
 			Create Link
 		</button>
 		{#if data.accountShares && data.accountShares.length > 0}
-			<ul>
-				{#each data.accountShares as share}
+			<ul class="flex flex-col gap-2">
+				{#each data.accountShares as share, index}
 					<li class="flex w-full items-center justify-between gap-2">
 						<div>
 							<a
@@ -91,7 +92,7 @@
 							<button
 								class="flex items-center justify-center gap-2 rounded-lg bg-red-200 p-2 transition-colors hover:bg-red-300 dark:bg-red-700 dark:hover:bg-red-800"
 								onclick={() => {
-									toRevoke = share.id;
+									toRevoke = share.id || '';
 									revokePopupOpen = true;
 								}}
 							>
@@ -100,6 +101,11 @@
 							</button>
 						</div>
 					</li>
+					{#if index < data.accountShares.length - 1}
+						<li>
+							<hr class="w-full border-zinc-300 dark:border-zinc-600" />
+						</li>
+					{/if}
 				{/each}
 			</ul>
 		{:else}
@@ -107,9 +113,13 @@
 		{/if}
 
 		<h2 class="text-2xl font-semibold">Device Shares</h2>
+		<p>
+			To share a specific device, go to the devices page, find the device to share, click the menu
+			button, then click "Create Share Link".
+		</p>
 		{#if data.deviceShares && data.deviceShares.length > 0}
 			<ul class="flex flex-col gap-2">
-				{#each data.deviceShares as share}
+				{#each data.deviceShares as share, index}
 					<li class="flex w-full items-center justify-between gap-2">
 						<div>
 							<h3 class="text-xl font-semibold">{share.deviceName}</h3>
@@ -123,7 +133,7 @@
 						</div>
 						<div class="flex items-center gap-2">
 							<button
-								class="flex items-center justify-center gap-2 rounded-lg bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600"
+								class="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600"
 								onclick={() => {
 									navigator.clipboard.writeText(`/share/${share.shareId}`);
 									toast.success('Copied to clipboard!');
@@ -133,9 +143,9 @@
 								<span class="xs:block hidden">Copy</span>
 							</button>
 							<button
-								class="flex items-center justify-center gap-2 rounded-lg bg-red-200 p-2 transition-colors hover:bg-red-300 dark:bg-red-700 dark:hover:bg-red-800"
+								class="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-red-200 p-2 transition-colors hover:bg-red-300 dark:bg-red-700 dark:hover:bg-red-800"
 								onclick={() => {
-									toRevoke = share.shareId;
+									toRevoke = share.shareId || '';
 									revokePopupOpen = true;
 								}}
 							>
@@ -144,9 +154,11 @@
 							</button>
 						</div>
 					</li>
-					<li>
-						<hr class="w-full border-zinc-300 dark:border-zinc-600" />
-					</li>
+					{#if index < data.deviceShares.length - 1}
+						<li>
+							<hr class="w-full border-zinc-300 dark:border-zinc-600" />
+						</li>
+					{/if}
 				{/each}
 			</ul>
 		{:else}
@@ -188,7 +200,7 @@
 			<div class="border-t p-6">
 				<button
 					onclick={revokeShare}
-					class="mt-2 w-full rounded-lg bg-red-500 p-2 text-white hover:bg-red-600"
+					class="w-full cursor-pointer rounded-lg bg-red-500 p-2 text-white hover:bg-red-600"
 				>
 					Revoke
 				</button>

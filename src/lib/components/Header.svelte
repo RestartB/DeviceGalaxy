@@ -7,7 +7,7 @@
 	import { authClient } from '$lib/client';
 
 	import Avatar from '$lib/components/Avatar.svelte';
-	import { House, Monitor, Tag, Cog, LogOut, Menu } from '@lucide/svelte';
+	import { House, Monitor, Tag, Share, Cog, LogOut, Menu } from '@lucide/svelte';
 
 	// Get session from props
 	let { data }: { data: LayoutData } = $props();
@@ -128,6 +128,13 @@
 					>
 						<Tag size="30" />
 						Tags
+					</a>
+					<a
+						class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
+						href="/shares"
+					>
+						<Share size="30" />
+						Shared
 					</a>
 
 					<hr class="w-full text-zinc-800 dark:text-zinc-200" />

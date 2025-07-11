@@ -19,21 +19,15 @@ export async function GET(event) {
 		headers: event.request.headers
 	});
 
-	const shareIdRaw = event.url.searchParams.get('share');
+	const shareId = event.url.searchParams.get('share');
 
-	if (!session && !shareIdRaw) {
+	if (!session && !shareId) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
-	}
-
-	// Check share ID is valid
-	const shareId = parseInt(shareIdRaw || '-1');
-	if (shareIdRaw && (isNaN(shareId) || shareId < 0)) {
-		return json({ error: 'Invalid share ID' }, { status: 400 });
 	}
 
 	// Check for share in database
 	let share;
-	if (shareIdRaw) {
+	if (shareId) {
 		share = await db
 			.select()
 			.from(shares)

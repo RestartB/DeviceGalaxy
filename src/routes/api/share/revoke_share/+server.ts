@@ -19,17 +19,11 @@ export async function DELETE(event) {
 		return json({ message: 'Share ID is required' }, { status: 400 });
 	}
 
-	// Validate shareId is a number
-	const shareIdInt = parseInt(shareId, 10);
-	if (isNaN(shareIdInt)) {
-		return json({ error: 'Invalid share ID' }, { status: 400 });
-	}
-
 	// Check the share exists and that it belongs to the user
 	const shareExists = await db
 		.select()
 		.from(shares)
-		.where(and(eq(shares.id, shareIdInt), eq(shares.userId, session.user.id)))
+		.where(and(eq(shares.id, shareId), eq(shares.userId, session.user.id)))
 		.get();
 
 	if (!shareExists) {
@@ -39,7 +33,7 @@ export async function DELETE(event) {
 	try {
 		await db
 			.delete(shares)
-			.where(and(eq(shares.id, shareIdInt), eq(shares.userId, session.user.id)));
+			.where(and(eq(shares.id, shareId), eq(shares.userId, session.user.id)));
 
 		return json({ message: 'Share deleted successfully' }, { status: 200 });
 	} catch (error) {

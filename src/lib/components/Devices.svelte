@@ -259,10 +259,6 @@
 	});
 </script>
 
-<svelte:head>
-	<title>DeviceGalaxy - Devices</title>
-</svelte:head>
-
 {#if !shareID}
 	<AddDeviceForm
 		sourceForm={data.newDeviceForm}
@@ -392,7 +388,7 @@
 	{:else}
 		<div class="flex w-full flex-wrap justify-center gap-4">
 			{#each devices as device}
-				<DeviceCard {device} bind:editPopupOpen bind:toEdit {deleteDevice} shareID={data.shareID} includeMenu={!shareID} />
+				<DeviceCard {device} bind:editPopupOpen bind:toEdit {deleteDevice} {shareID} includeMenu={!shareID} />
 			{/each}
 		</div>
 

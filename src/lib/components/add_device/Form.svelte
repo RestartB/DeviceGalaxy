@@ -153,7 +153,9 @@
 			if ($message === 'Device added successfully!') {
 				toast.success($message as string);
 				refreshAll();
+				
 				createPopupOpen = false;
+				formPage = 0;
 			} else if (typeof $message === 'string' && $message) {
 				toast.warning($message);
 			}

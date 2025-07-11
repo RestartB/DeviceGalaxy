@@ -83,7 +83,7 @@ export const brands = sqliteTable('brands', {
 });
 
 export const shares = sqliteTable('shares', {
-	id: integer('id').primaryKey({ autoIncrement: true }),
+	id: text('id').unique(),
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
