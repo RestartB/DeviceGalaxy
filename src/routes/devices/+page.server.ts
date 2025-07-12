@@ -28,6 +28,9 @@ export const load = async () => {
 
 export const actions = {
 	newDevice: async ({ request }) => {
+		const formData = await request.formData();
+		console.log(formData);
+
 		// Check if the user is authenticated
 		const session = await auth.api.getSession({
 			headers: request.headers
@@ -37,7 +40,7 @@ export const actions = {
 			return error(401, 'Unauthorized');
 		}
 
-		const form = await superValidate(request, zod4(newDeviceSchema));
+		const form = await superValidate(formData, zod4(newDeviceSchema));
 
 		if (!form.valid) {
 			console.error('Form invalid:', form.errors);
@@ -250,6 +253,9 @@ export const actions = {
 		}
 	},
 	editDevice: async ({ request }) => {
+		const formData = await request.formData();
+		console.log(formData);
+
 		// Check if the user is authenticated
 		const session = await auth.api.getSession({
 			headers: request.headers
@@ -259,7 +265,7 @@ export const actions = {
 			return error(401, 'Unauthorized');
 		}
 
-		const form = await superValidate(request, zod4(editDeviceSchema));
+		const form = await superValidate(formData, zod4(editDeviceSchema));
 
 		if (!form.valid) {
 			console.error('Form invalid:', form.errors);
