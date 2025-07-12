@@ -50,9 +50,9 @@
 
 	const { form, errors, message, enhance, validateForm } = superForm(sourceForm, {
 		validators: zod4Client(newDeviceSchema),
+		dataType: 'json',
 		customValidity: false,
 		validationMethod: 'auto',
-		id: 'newDeviceForm',
 
 		onError: (error) => {
 			console.error('Form submission error:', error);
