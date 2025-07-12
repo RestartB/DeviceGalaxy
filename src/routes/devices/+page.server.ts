@@ -29,7 +29,6 @@ export const load = async () => {
 export const actions = {
 	newDevice: async ({ request }) => {
 		const formData = await request.formData();
-		console.log(formData);
 
 		// Check if the user is authenticated
 		const session = await auth.api.getSession({
@@ -43,8 +42,6 @@ export const actions = {
 		const form = await superValidate(formData, zod4(newDeviceSchema));
 
 		if (!form.valid) {
-			console.error('Form invalid:', form.errors);
-			console.error('Form data:', form.data);
 			return error(400, 'Invalid form');
 		}
 
@@ -254,7 +251,6 @@ export const actions = {
 	},
 	editDevice: async ({ request }) => {
 		const formData = await request.formData();
-		console.log(formData);
 
 		// Check if the user is authenticated
 		const session = await auth.api.getSession({
@@ -268,8 +264,6 @@ export const actions = {
 		const form = await superValidate(formData, zod4(editDeviceSchema));
 
 		if (!form.valid) {
-			console.error('Form invalid:', form.errors);
-			console.error('Form data:', form.data);
 			return error(400, 'Invalid form');
 		}
 
