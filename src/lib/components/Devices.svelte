@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
+	import { prefersReducedMotion } from 'svelte/motion';
 
 	import type { InferSelectModel } from 'drizzle-orm';
 	import type { tags, userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
@@ -70,6 +72,7 @@
 	});
 	let filtersVisible = $state(false);
 	let showApplyFilters = $state(false);
+	let showResetFilters = $derived(Object.values(activeFilters).some((filter) => filter.length > 0));
 
 	let page = $state(1);
 	let maxPages = $derived(Math.ceil(totalDevices / 10));
@@ -322,7 +325,7 @@
 			}}
 		/>
 		<button
-			class="flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
+			class="flex min-w-40 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 			onclick={() => (filtersVisible = !filtersVisible)}
 		>
 			<p>{filtersVisible ? 'Hide' : 'Show'} Filters</p>
@@ -330,6 +333,55 @@
 				<MoveRight size="20" />
 			</div>
 		</button>
+		{#if showApplyFilters}
+			<button
+				class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-500 px-4 py-2 text-white"
+				transition:fly={{ x: prefersReducedMotion.current ? 0 : -20, duration: 300 }}
+				onclick={() => {
+					showApplyFilters = false;
+					activeFilters = {
+						brand: [...selectedFilters.brand],
+						cpu: [...selectedFilters.cpu],
+						memory: [...selectedFilters.memory],
+						storage: [...selectedFilters.storage],
+						os: [...selectedFilters.os],
+						tags: [...selectedFilters.tags]
+					};
+					refreshAll();
+				}}
+			>
+				<Check size="20" />
+				Apply
+			</button>
+		{/if}
+		{#if showResetFilters}
+			<button
+				class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-red-500 px-4 py-2 text-white"
+				transition:fly={{ x: prefersReducedMotion.current ? 0 : -20, duration: 300 }}
+				onclick={() => {
+					activeFilters = {
+						brand: [],
+						cpu: [],
+						memory: [],
+						storage: [],
+						os: [],
+						tags: []
+					};
+					selectedFilters = {
+						brand: [],
+						cpu: [],
+						memory: [],
+						storage: [],
+						os: [],
+						tags: []
+					};
+					refreshAll();
+				}}
+			>
+				<RefreshCw size="20" />
+				Reset Filters
+			</button>
+		{/if}
 		{#if filtersVisible}
 			<FilterPill
 				name="Brand"
@@ -362,26 +414,6 @@
 				options={tagList}
 				bind:selectedItems={selectedFilters.tags}
 			/>
-		{/if}
-		{#if showApplyFilters}
-			<button
-				class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-500 px-4 py-2 text-white"
-				onclick={() => {
-					showApplyFilters = false;
-					activeFilters = {
-						brand: [...selectedFilters.brand],
-						cpu: [...selectedFilters.cpu],
-						memory: [...selectedFilters.memory],
-						storage: [...selectedFilters.storage],
-						os: [...selectedFilters.os],
-						tags: [...selectedFilters.tags]
-					};
-					refreshAll();
-				}}
-			>
-				<Check size="20" />
-				Apply
-			</button>
 		{/if}
 	</div>
 	{#if loadingDevices}
