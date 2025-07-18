@@ -28,11 +28,7 @@ export async function GET(event) {
 	// Check for share in database
 	let share;
 	if (shareId) {
-		share = await db
-			.select()
-			.from(shares)
-			.where(eq(shares.id, shareId))
-			.get();
+		share = await db.select().from(shares).where(eq(shares.id, shareId)).get();
 
 		if (!share) {
 			return json({ error: 'Share not found' }, { status: 404 });
@@ -182,7 +178,7 @@ export async function GET(event) {
 				tagTextColour: tags.tagTextColour
 			})
 			.from(tags)
-			.where(eq(tags.userId, String(userId)));
+			.where(eq(tags.userId, userId));
 
 		const matchedDevices = devices.map((device) => {
 			const deviceTagIds = device.tags || [];

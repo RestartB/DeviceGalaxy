@@ -13,6 +13,8 @@ import { db } from '$lib/server/db';
 import type { InferSelectModel } from 'drizzle-orm';
 import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
+import deleteOrphans from '$lib/deleteOrphans.js';
+
 import sharp from 'sharp';
 import { existsSync } from 'fs';
 import { writeFile, unlink, mkdir } from 'fs/promises';
@@ -495,6 +497,27 @@ export const actions = {
 						updatedAt: new Date()
 					})
 					.where(eq(userDevices.id, parseInt(form.id)));
+
+				// Delete orphans
+				if (existingDevice.cpu !== null && existingDevice.cpu !== undefined) {
+					await deleteOrphans(tx, cpus, existingDevice.cpu, session.user.id, 'cpu');
+				}
+
+				if (existingDevice.memory !== null && existingDevice.memory !== undefined) {
+					await deleteOrphans(tx, memory, existingDevice.memory, session.user.id, 'memory');
+				}
+
+				if (existingDevice.storage !== null && existingDevice.storage !== undefined) {
+					await deleteOrphans(tx, storage, existingDevice.storage, session.user.id, 'storage');
+				}
+
+				if (existingDevice.os !== null && existingDevice.os !== undefined) {
+					await deleteOrphans(tx, os, existingDevice.os, session.user.id, 'os');
+				}
+
+				if (existingDevice.brand !== null && existingDevice.brand !== undefined) {
+					await deleteOrphans(tx, brands, existingDevice.brand, session.user.id, 'brand');
+				}
 			});
 
 			return message(form, 'Device updated successfully!');
