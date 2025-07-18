@@ -6,7 +6,7 @@
 		.map((part) => part.charAt(0).toUpperCase())
 		.join('');
 
-	if (src === '') {
+	if (!src || src === '') {
 		generatedAvatar = true;
 	}
 </script>

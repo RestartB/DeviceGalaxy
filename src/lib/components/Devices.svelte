@@ -282,7 +282,13 @@
 
 <div class="flex flex-col gap-2">
 	<h1 class="text-4xl font-bold">Devices</h1>
-	<p>View all of the devices saved to your account.</p>
+	{#if shareID}
+		<p class="text-zinc-500 dark:text-zinc-400">
+			View devices shared by {data.shareUser.name}.
+		</p>
+	{:else}
+		<p>View all of the devices saved to your account.</p>
+	{/if}
 	<div class="flex flex-wrap gap-2">
 		{#if !shareID}
 			<button
@@ -320,10 +326,7 @@
 			onclick={() => (filtersVisible = !filtersVisible)}
 		>
 			<p>{filtersVisible ? 'Hide' : 'Show'} Filters</p>
-			<div
-				class="transition-transform duration-300 ease-in-out"
-				class:rotate-180={filtersVisible}
-			>
+			<div class="transition-transform duration-300 ease-in-out" class:rotate-180={filtersVisible}>
 				<MoveRight size="20" />
 			</div>
 		</button>
@@ -388,7 +391,14 @@
 	{:else}
 		<div class="flex w-full flex-wrap justify-center gap-4">
 			{#each devices as device}
-				<DeviceCard {device} bind:editPopupOpen bind:toEdit {deleteDevice} {shareID} includeMenu={!shareID} />
+				<DeviceCard
+					{device}
+					bind:editPopupOpen
+					bind:toEdit
+					{deleteDevice}
+					{shareID}
+					includeMenu={!shareID}
+				/>
 			{/each}
 		</div>
 
