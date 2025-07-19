@@ -74,7 +74,7 @@ export const actions = {
 				if (form.data.cpu) {
 					const cpuValue = form.data.cpu.trim().toLowerCase();
 					const existingCpu = await tx.query.cpus.findFirst({
-						where: eq(cpus.value, cpuValue)
+						where: and(eq(cpus.value, cpuValue), eq(cpus.userID, session.user.id))
 					});
 
 					if (!existingCpu) {
@@ -97,7 +97,7 @@ export const actions = {
 				if (form.data.memory) {
 					const memoryValue = form.data.memory.trim().toLowerCase();
 					const existingMemory = await tx.query.memory.findFirst({
-						where: eq(memory.value, memoryValue)
+						where: and(eq(memory.value, memoryValue), eq(memory.userID, session.user.id))
 					});
 
 					if (!existingMemory) {
@@ -120,7 +120,7 @@ export const actions = {
 				if (form.data.storage) {
 					const storageValue = form.data.storage.trim().toLowerCase();
 					const existingStorage = await tx.query.storage.findFirst({
-						where: eq(storage.value, storageValue)
+						where: and(eq(storage.value, storageValue), eq(storage.userID, session.user.id))
 					});
 
 					if (!existingStorage) {
@@ -143,7 +143,7 @@ export const actions = {
 				if (form.data.os) {
 					const osValue = form.data.os.trim().toLowerCase();
 					const existingOS = await tx.query.os.findFirst({
-						where: eq(os.value, osValue)
+						where: and(eq(os.value, osValue), eq(os.userID, session.user.id))
 					});
 
 					if (!existingOS) {
@@ -166,7 +166,7 @@ export const actions = {
 				if (form.data.brand) {
 					const brandValue = form.data.brand.trim().toLowerCase();
 					const existingBrand = await tx.query.brands.findFirst({
-						where: eq(brands.value, brandValue)
+						where: and(eq(brands.value, brandValue), eq(brands.userId, session.user.id))
 					});
 
 					if (!existingBrand) {
@@ -306,7 +306,7 @@ export const actions = {
 				if (form.data.cpu) {
 					const cpuValue = form.data.cpu.trim().toLowerCase();
 					const existingCpu = await tx.query.cpus.findFirst({
-						where: eq(cpus.value, cpuValue)
+						where: and(eq(cpus.value, cpuValue), eq(cpus.userID, session.user.id))
 					});
 
 					if (!existingCpu) {
@@ -329,7 +329,7 @@ export const actions = {
 				if (form.data.memory) {
 					const memoryValue = form.data.memory.trim().toLowerCase();
 					const existingMemory = await tx.query.memory.findFirst({
-						where: eq(memory.value, memoryValue)
+						where: and(eq(memory.value, memoryValue), eq(memory.userID, session.user.id))
 					});
 
 					if (!existingMemory) {
@@ -352,7 +352,7 @@ export const actions = {
 				if (form.data.storage) {
 					const storageValue = form.data.storage.trim().toLowerCase();
 					const existingStorage = await tx.query.storage.findFirst({
-						where: eq(storage.value, storageValue)
+						where: and(eq(storage.value, storageValue), eq(storage.userID, session.user.id))
 					});
 
 					if (!existingStorage) {
@@ -375,7 +375,7 @@ export const actions = {
 				if (form.data.os) {
 					const osValue = form.data.os.trim().toLowerCase();
 					const existingOS = await tx.query.os.findFirst({
-						where: eq(os.value, osValue)
+						where: and(eq(os.value, osValue), eq(os.userID, session.user.id))
 					});
 
 					if (!existingOS) {
@@ -398,7 +398,7 @@ export const actions = {
 				if (form.data.brand) {
 					const brandValue = form.data.brand.trim().toLowerCase();
 					const existingBrand = await tx.query.brands.findFirst({
-						where: eq(brands.value, brandValue)
+						where: and(eq(brands.value, brandValue), eq(brands.userId, session.user.id))
 					});
 
 					if (!existingBrand) {
