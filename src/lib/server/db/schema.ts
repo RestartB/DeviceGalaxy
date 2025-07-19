@@ -42,7 +42,7 @@ export const cpus = sqliteTable('cpus', {
 	userID: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	value: text('name', { length: 255 }).notNull().unique(),
+	value: text('name', { length: 255 }).notNull(),
 	displayName: text('display_name', { length: 255 }).notNull()
 });
 
@@ -51,7 +51,7 @@ export const memory = sqliteTable('memory', {
 	userID: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	value: text('name', { length: 255 }).notNull().unique(),
+	value: text('name', { length: 255 }).notNull(),
 	displayName: text('display_name', { length: 255 }).notNull()
 });
 
@@ -60,7 +60,7 @@ export const storage = sqliteTable('storage', {
 	userID: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	value: text('name', { length: 255 }).notNull().unique(),
+	value: text('name', { length: 255 }).notNull(),
 	displayName: text('display_name', { length: 255 }).notNull()
 });
 
@@ -69,7 +69,7 @@ export const os = sqliteTable('os', {
 	userID: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	value: text('name', { length: 255 }).notNull().unique(),
+	value: text('name', { length: 255 }).notNull(),
 	displayName: text('display_name', { length: 255 }).notNull()
 });
 
@@ -78,7 +78,7 @@ export const brands = sqliteTable('brands', {
 	userId: text('user_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	value: text('name', { length: 255 }).notNull().unique(),
+	value: text('name', { length: 255 }).notNull(),
 	displayName: text('display_name', { length: 255 }).notNull()
 });
 

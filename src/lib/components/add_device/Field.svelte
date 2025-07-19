@@ -53,7 +53,7 @@
 	{#if fuzzyResults && fuzzyResults.length > 0 && value && focus}
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<ul
-			class="absolute z-60 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg"
+			class="absolute z-60 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border bg-white shadow-lg dark:bg-black"
 			onmousedown={(event) => event.preventDefault()}
 			transition:fade={{ duration: 100 }}
 		>
@@ -61,7 +61,7 @@
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 				<li
-					class="cursor-pointer px-4 py-2 hover:bg-zinc-200"
+					class="cursor-pointer px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700"
 					onclick={() => {
 						value = result.item.displayName;
 						focus = false;
