@@ -308,7 +308,7 @@
 			<Monitor size="24" />
 		{/if}
 		<div>
-			<p>{session.userAgent}</p>
+			<p>{session.userAgent} - {session.ipAddress}</p>
 			<p class="text-sm text-zinc-500 dark:text-zinc-400">
 				Created: {new Date(session.createdAt).toLocaleString()}
 			</p>

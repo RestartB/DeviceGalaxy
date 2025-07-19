@@ -70,7 +70,7 @@ export const actions = {
 		await auth.api.updateUser({
 			headers: request.headers,
 			body: {
-				image: `${url.origin}/api/image/pfp/${session.user.id}`
+				image: `${url.origin}/api/image/pfp/${session.user.id}?v=${Date.now()}`
 			}
 		});
 

@@ -94,7 +94,7 @@ export const load: PageServerLoad = async (event) => {
 					const parser = new UAParser(session.userAgent);
 					const browser = parser.getBrowser();
 					const os = parser.getOS();
-					session.userAgent = `${browser.name || 'Unknown'} on ${os.name || 'Unknown'}`;
+					return `${browser.name || 'Unknown'} on ${os.name || 'Unknown'}`;
 				})(),
 				deviceType: (() => {
 					if (!session.userAgent) {
