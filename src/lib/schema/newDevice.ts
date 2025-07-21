@@ -8,6 +8,7 @@ export const newDeviceSchema = z.object({
 		.max(255, 'Device name must be 255 characters or less'),
 	description: z.string().max(1024, 'Description must be 1024 characters or less').optional(),
 	cpu: z.string().max(255, 'CPU must be 255 characters or less').optional(),
+	gpu: z.string().max(255, 'GPU must be 255 characters or less').optional(),
 	memory: z.string().max(255, 'Memory must be 255 characters or less').optional(),
 	storage: z.string().max(255, 'Storage must be 255 characters or less').optional(),
 	os: z.string().max(255, 'OS must be 255 characters or less').optional(),

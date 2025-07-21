@@ -7,7 +7,7 @@
 	import type { tags, userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
-	import { Plus, Check, MoveLeft, MoveRight, RefreshCw } from '@lucide/svelte';
+	import { Plus, Check, MoveLeft, MoveRight, RefreshCw, Search } from '@lucide/svelte';
 
 	import DeviceCard from '$lib/components/DeviceCard.svelte';
 	import FilterPill from '$lib/components/FilterPill.svelte';
@@ -77,7 +77,7 @@
 	let page = $state(1);
 	let maxPages = $derived(Math.ceil(totalDevices / 10));
 
-	let currentSearch = '';
+	let currentSearch = $state('');
 	let search = $state('');
 
 	async function fetchDevices() {
@@ -238,6 +238,9 @@
 			tags: [...selectedFilters.tags]
 		};
 
+		currentSearch = urlParams.get('search') || '';
+		search = currentSearch;
+
 		refreshAll();
 	});
 
@@ -311,7 +314,7 @@
 			type="text"
 			id="search"
 			name="search"
-			class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+			class="flex w-full max-w-96 items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
 			bind:value={search}
 			placeholder="Search devices..."
 			onkeydown={(e) => {
@@ -324,6 +327,21 @@
 				}
 			}}
 		/>
+
+		{#if search.toLowerCase() !== currentSearch}
+			<button
+				class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
+				aria-label="Search for {search}"
+				onclick={() => {
+					currentSearch = search.trim().toLocaleLowerCase();
+					page = 1;
+					refreshAll();
+				}}
+			>
+				<Search size="20" />
+			</button>
+		{/if}
+
 		<button
 			class="flex min-w-40 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
 			onclick={() => (filtersVisible = !filtersVisible)}

@@ -76,7 +76,7 @@
 			});
 
 			if (data?.status) {
-				await goto('/auth/setup-2fa');
+				await goto('/dash/auth/setup-2fa');
 			} else {
 				toast.error('Failed to disable 2FA. Check your password is correct, then try again.');
 			}
@@ -365,7 +365,7 @@
 			{:else}
 				<a
 					class="flex w-fit items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
-					href="/auth/setup-2fa"
+					href="/dash/auth/setup-2fa"
 				>
 					<Shield size="20" />
 					Enable 2FA

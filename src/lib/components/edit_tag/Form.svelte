@@ -101,7 +101,7 @@
 				>
 			</div>
 
-			<form method="POST" class="flex flex-col" action="/tags?/editTag" use:enhance>
+			<form method="POST" class="flex flex-col" action="/dash/tags?/editTag" use:enhance>
 				<input type="hidden" name="__superform_id" bind:value={$formId} />
 				<div class="flex flex-col gap-4 p-6">
 					<label for="tagName" class="text-sm font-medium">Tag Name</label>

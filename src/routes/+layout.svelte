@@ -1,18 +1,33 @@
 <script lang="ts">
 	import '../app.css';
+	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 
 	import { Toaster } from 'svelte-sonner';
 	import Header from '$lib/components/Header.svelte';
 
 	let { data, children } = $props();
+
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+
+		if (!navigation.to || !navigation.from) return;
+		if (navigation.to.url.href === navigation.from.url.href) return;
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 </script>
 
 <svelte:head>
 	<title>DeviceGalaxy</title>
 	<meta content="#6463FF" data-react-helmet="true" name="theme-color" />
 
-	{#if !page.url.pathname.startsWith('/share') && !page.url.pathname.startsWith('/device/')}
+	{#if !page.url.pathname.startsWith('/share')}
 		<meta property="og:title" content="DeviceGalaxy" />
 		<meta name="og:description" content="Manage and share your galaxy of devices." />
 		<meta content="https://devices.restartb.xyz/favicon.png" property="og:image" />
@@ -23,14 +38,55 @@
 	<Header {data} />
 	<div
 		class="box-border h-full max-h-full flex-1 overflow-y-auto p-4 pt-16"
-		class:p-4={!page.url.pathname.startsWith('/device/') &&
-			!page.url.pathname.startsWith('/share/')}
-		class:pt-12={page.url.pathname.startsWith('/device/') ||
-			page.url.pathname.startsWith('/share/')}
-		class:pt-16={!page.url.pathname.startsWith('/device/') &&
-			!page.url.pathname.startsWith('/share/')}
+		class:p-4={!page.url.pathname.startsWith('/dash/device/') &&
+			!page.url.pathname.startsWith('/share/') &&
+			page.url.pathname !== '/'}
+		class:pt-12={page.url.pathname.startsWith('/dash/device/') ||
+			page.url.pathname.startsWith('/share/') ||
+			page.url.pathname === '/'}
+		class:pt-16={!page.url.pathname.startsWith('/dash/device/') &&
+			!page.url.pathname.startsWith('/share/') &&
+			page.url.pathname !== '/'}
 	>
 		<Toaster position="top-center" richColors closeButton />
 		{@render children()}
 	</div>
 </div>
+
+<style>
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+	}
+
+	@keyframes fade-out {
+		to {
+			opacity: 0;
+		}
+	}
+
+	@keyframes slide-from-bottom {
+		from {
+			transform: translateY(30px);
+		}
+	}
+
+	@keyframes slide-to-bottom {
+		to {
+			transform: translateY(30px);
+		}
+	}
+
+	:root::view-transition-old(root) {
+		animation:
+			90ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+			300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-bottom;
+	}
+
+	:root::view-transition-new(root) {
+		animation:
+			210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+			300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-bottom;
+	}
+</style>

@@ -195,7 +195,7 @@
 						style="background-color: {tag.tagColour}; color: {tag.tagTextColour};"
 					>
 						<p>{tag.tagName}</p>
-						<a href="/devices?tags={tag.id}" class="cursor-pointer">
+						<a href="/dash/devices?tags={tag.id}" class="cursor-pointer">
 							<Eye size="20" />
 						</a>
 						<button

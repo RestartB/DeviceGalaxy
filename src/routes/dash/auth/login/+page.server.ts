@@ -38,7 +38,7 @@ export const actions = {
 			}
 		} else {
 			if (json.twoFactorRedirect) {
-				return redirect(302, '/auth/verify-2fa');
+				return redirect(302, '/dash/auth/verify-2fa');
 			}
 
 			return message(form, 'User logged in successfully');

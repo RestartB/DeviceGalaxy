@@ -39,7 +39,7 @@
 	if (shareID && shareID !== '') {
 		href = `/share/${shareID}/${device.id}`;
 	} else {
-		href = `/device/${device.id}`;
+		href = `/dash/device/${device.id}`;
 	}
 
 	async function shareDevice() {

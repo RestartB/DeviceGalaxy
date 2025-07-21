@@ -53,7 +53,7 @@
 				return;
 			}
 
-			goto('/', { invalidateAll: true, replaceState: true, state: {} });
+			goto('/dash', { invalidateAll: true, replaceState: true, state: {} });
 		} catch (err) {
 			error = 'An unexpected error occurred. Please try again.';
 		} finally {
@@ -144,7 +144,7 @@
 				</button>
 				<a
 					class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
-					href="/"
+					href="/dash"
 				>
 					Skip
 				</a>

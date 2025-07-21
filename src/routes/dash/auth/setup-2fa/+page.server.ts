@@ -8,7 +8,7 @@ export const load: PageServerLoad = async (event) => {
 	});
 
 	if (session === null) {
-		return redirect(302, '/auth/login');
+		return redirect(302, '/dash/auth/login');
 	}
 
 	return session;

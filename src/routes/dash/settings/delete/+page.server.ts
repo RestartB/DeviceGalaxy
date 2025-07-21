@@ -42,7 +42,15 @@ export const actions = {
 		} catch (err) {
 			console.error('Error deleting account:', err);
 
-			if (err.body.code === 'INVALID_PASSWORD') {
+			if (
+				err &&
+				typeof err === 'object' &&
+				'body' in err &&
+				err.body &&
+				typeof err.body === 'object' &&
+				'code' in err.body &&
+				err.body.code === 'INVALID_PASSWORD'
+			) {
 				console.error('Invalid password provided for account deletion');
 				return setError(form, 'password', 'Invalid password provided');
 			}

@@ -23,6 +23,18 @@
 	);
 </script>
 
+<svelte:body
+	onkeypress={(event) => {
+		if (event && event.key === 'Escape') {
+			imageOpen = false;
+		} else if (event && event.key === 'ArrowLeft' && imageOpen) {
+			imageIndex = Math.max(0, imageIndex - 1);
+		} else if (event && event.key === 'ArrowRight' && imageOpen) {
+			imageIndex = Math.min(device.internalImages.length - 1, imageIndex + 1);
+		}
+	}}
+/>
+
 {#if !data.share || data.share.type === 0}
 	<div
 		class:fixed={(device.externalImages && device.externalImages.length > 0) ||

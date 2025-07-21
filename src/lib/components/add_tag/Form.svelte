@@ -89,7 +89,7 @@
 				>
 			</div>
 
-			<form method="POST" class="flex flex-col" action="/tags?/newTag" use:enhance>
+			<form method="POST" class="flex flex-col" action="/dash/tags?/newTag" use:enhance>
 				<div class="flex flex-col gap-4 p-6">
 					<label for="tagName" class="text-sm font-medium">Tag Name</label>
 					<input

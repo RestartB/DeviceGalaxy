@@ -1,9 +1,9 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { twoFactor } from 'better-auth/plugins';
+import { sveltekitCookies } from 'better-auth/svelte-kit';
+import { getRequestEvent } from '$app/server';
 import { BETTER_AUTH_SECRET } from '$env/static/private';
-
-import { svelteCookies } from './svelte-cookies';
 
 import { existsSync } from 'fs';
 import { unlink, rm } from 'fs/promises';
@@ -20,7 +20,7 @@ export const auth = betterAuth({
 		provider: 'sqlite'
 	}),
 
-	plugins: [twoFactor(), svelteCookies()],
+	plugins: [twoFactor(), sveltekitCookies(async () => getRequestEvent())],
 
 	emailAndPassword: {
 		enabled: true

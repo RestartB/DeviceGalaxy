@@ -8,6 +8,7 @@ export const userDevices = sqliteTable('devices', {
 	deviceName: text('name', { length: 255 }).notNull(),
 	description: text('description', { length: 1024 }).default(''),
 	cpu: integer('cpu'),
+	gpu: integer('gpu'),
 	memory: integer('memory'),
 	storage: integer('storage'),
 	os: integer('os'),
@@ -38,6 +39,15 @@ export const tags = sqliteTable('tags', {
 });
 
 export const cpus = sqliteTable('cpus', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	userID: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	value: text('name', { length: 255 }).notNull(),
+	displayName: text('display_name', { length: 255 }).notNull()
+});
+
+export const gpus = sqliteTable('gpus', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	userID: text('user_id')
 		.notNull()
@@ -134,8 +144,12 @@ export const account = sqliteTable('account', {
 	accessToken: text('access_token'),
 	refreshToken: text('refresh_token'),
 	idToken: text('id_token'),
-	accessTokenExpiresAt: integer('access_token_expires_at', { mode: 'timestamp' }),
-	refreshTokenExpiresAt: integer('refresh_token_expires_at', { mode: 'timestamp' }),
+	accessTokenExpiresAt: integer('access_token_expires_at', {
+		mode: 'timestamp'
+	}),
+	refreshTokenExpiresAt: integer('refresh_token_expires_at', {
+		mode: 'timestamp'
+	}),
 	scope: text('scope'),
 	password: text('password'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),

@@ -22,7 +22,7 @@
 				return;
 			}
 
-			await goto('/');
+			await goto('/dash');
 		} catch (err) {
 			error = 'An unexpected error occurred. Please try again.';
 		} finally {

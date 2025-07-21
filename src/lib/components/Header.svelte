@@ -20,31 +20,35 @@
 
 <header
 	class="fixed z-1000 box-border flex h-12 w-full items-center justify-center gap-4 border-b-4 border-zinc-300 bg-zinc-200 px-4 dark:border-zinc-700 dark:bg-zinc-800"
+	style="view-transition-name: header"
 >
-	<h1 class="p-2 pr-0 text-xl font-bold">DeviceGalaxy</h1>
+	<div class="flex items-center gap-2">
+		<enhanced:img src="$lib/images/logo_square.svg" alt="DeviceGalaxy Logo" class="h-8 w-8" />
+		<h1 class=" text-xl font-bold">DeviceGalaxy</h1>
+	</div>
 	{#if data.user}
 		<nav class="hidden h-full items-center justify-center sm:flex">
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-				href="/"
+				href="/dash"
 			>
 				Home
 			</a>
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-				href="/devices"
+				href="/dash/devices"
 			>
 				Devices
 			</a>
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-				href="/tags"
+				href="/dash/tags"
 			>
 				Tags
 			</a>
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-				href="/shares"
+				href="/dash/shares"
 			>
 				Shared
 			</a>
@@ -63,7 +67,7 @@
 				<div class="hidden h-full sm:flex">
 					<a
 						class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-						href="/settings/account"
+						href="/dash/settings/account"
 						title="Settings"
 					>
 						<Cog size="20" />
@@ -73,7 +77,7 @@
 						title="Sign Out"
 						onclick={() => {
 							authClient.signOut();
-							goto('/auth/login');
+							goto('/dash/auth/login');
 						}}
 					>
 						<LogOut size="20" />
@@ -110,28 +114,28 @@
 				<nav class="flex h-full w-full flex-col items-center justify-start gap-2">
 					<a
 						class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-						href="/"
+						href="/dash"
 					>
 						<House size="30" />
 						Home
 					</a>
 					<a
 						class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-						href="/devices"
+						href="/dash/devices"
 					>
 						<Monitor size="30" />
 						Devices
 					</a>
 					<a
 						class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-						href="/tags"
+						href="/dash/tags"
 					>
 						<Tag size="30" />
 						Tags
 					</a>
 					<a
 						class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-						href="/shares"
+						href="/dash/shares"
 					>
 						<Share size="30" />
 						Shared
@@ -152,7 +156,7 @@
 					<div class="flex w-full items-center justify-center gap-2">
 						<a
 							class="flex h-full flex-1 items-center justify-center gap-2 rounded-lg border-2 border-zinc-400 bg-zinc-300 p-2 font-semibold dark:bg-zinc-700"
-							href="/settings/account"
+							href="/dash/settings/account"
 						>
 							<Cog size="20" />
 							Settings
@@ -161,7 +165,7 @@
 							class="flex h-full flex-1 items-center justify-center gap-2 rounded-lg border-2 border-zinc-400 bg-zinc-300 p-2 font-semibold dark:bg-zinc-700"
 							onclick={() => {
 								authClient.signOut();
-								goto('/auth/login');
+								goto('/dash/auth/login');
 							}}
 						>
 							<LogOut size="20" />

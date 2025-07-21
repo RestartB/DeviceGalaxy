@@ -9,13 +9,13 @@ export const load: LayoutServerLoad = async (event) => {
 
 	if (session) {
 		// Allow access to 2FA setup
-		if (event.url.pathname === '/auth/setup-2fa' && !session.user.twoFactorEnabled) {
+		if (event.url.pathname === '/dash/auth/setup-2fa' && !session.user.twoFactorEnabled) {
 			return;
 		}
 
 		// No need to be here if you're already authed
-		redirect(302, '/');
-	} else if (event.url.pathname === '/auth/setup-2fa') {
+		redirect(302, '/dash');
+	} else if (event.url.pathname === '/dash/auth/setup-2fa') {
 		return;
 	}
 };
