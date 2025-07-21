@@ -23,7 +23,7 @@
 	style="view-transition-name: header"
 >
 	<div class="flex items-center gap-2">
-		<enhanced:img src="$lib/images/logo_square.svg" alt="DeviceGalaxy Logo" class="h-8 w-8" />
+		<enhanced:img src="$lib/images/logo/logo_square.svg" alt="DeviceGalaxy Logo" class="h-8 w-8" />
 		<h1 class=" text-xl font-bold">DeviceGalaxy</h1>
 	</div>
 	{#if data.user}
