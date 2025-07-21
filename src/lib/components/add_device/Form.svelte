@@ -9,7 +9,7 @@
 	import { newTagSchema } from '$lib/schema/newTag';
 
 	import type { InferSelectModel } from 'drizzle-orm';
-	import type { cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
+	import type { cpus, gpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
 	import { X, Plus, Trash } from '@lucide/svelte';
@@ -18,6 +18,7 @@
 	import NewTagForm from '$lib/components/add_tag/Form.svelte';
 
 	type CPU = InferSelectModel<typeof cpus>;
+	type GPU = InferSelectModel<typeof gpus>;
 	type Memory = InferSelectModel<typeof memory>;
 	type Storage = InferSelectModel<typeof storage>;
 	type OS = InferSelectModel<typeof os>;
@@ -26,6 +27,7 @@
 
 	export type AttributeLists = {
 		cpus: CPU[];
+		gpus: GPU[];
 		memory: Memory[];
 		storage: Storage[];
 		os: OS[];
@@ -251,6 +253,12 @@
 							errors={$errors.cpu}
 							attributes={attributeLists.cpus}
 							bind:value={$form.cpu}
+						/>
+						<Field
+							name="GPU"
+							errors={$errors.gpu}
+							attributes={attributeLists.gpus}
+							bind:value={$form.gpu}
 						/>
 						<Field
 							name="Memory"

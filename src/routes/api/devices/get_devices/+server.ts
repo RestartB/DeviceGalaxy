@@ -5,6 +5,7 @@ import { eq, asc, desc, count, and, inArray, like, sql } from 'drizzle-orm';
 import {
 	userDevices,
 	cpus,
+	gpus,
 	memory,
 	storage,
 	os,
@@ -50,6 +51,10 @@ export async function GET(event) {
 			?.split(',')
 			.map((id) => parseInt(id))
 			.filter((id) => !isNaN(id)),
+		gpu: event.url.searchParams
+			.get('gpu')
+			?.split(',')
+			.map((id) => parseInt(id)),
 		memory: event.url.searchParams
 			.get('memory')
 			?.split(',')
@@ -110,6 +115,9 @@ export async function GET(event) {
 		if ((selectedFilters.cpu ?? []).length > 0) {
 			conditions.push(inArray(userDevices.cpu, selectedFilters.cpu ?? []));
 		}
+		if ((selectedFilters.gpu ?? []).length > 0) {
+			conditions.push(inArray(userDevices.gpu, selectedFilters.gpu ?? []));
+		}
 		if ((selectedFilters.memory ?? []).length > 0) {
 			conditions.push(inArray(userDevices.memory, selectedFilters.memory ?? []));
 		}
@@ -149,6 +157,11 @@ export async function GET(event) {
 			.select({ id: cpus.id, value: cpus.value, displayName: cpus.displayName })
 			.from(cpus)
 			.where(eq(cpus.userID, userId));
+
+		const gpuData = await db
+			.select({ id: gpus.id, value: gpus.value, displayName: gpus.displayName })
+			.from(gpus)
+			.where(eq(gpus.userID, userId));
 
 		const memoryData = await db
 			.select({ id: memory.id, value: memory.value, displayName: memory.displayName })
@@ -190,6 +203,7 @@ export async function GET(event) {
 			return {
 				...device,
 				cpu: cpuData.find((cpu) => cpu.id === device.cpu)?.displayName,
+				gpu: gpuData.find((gpu) => gpu.id === device.gpu)?.displayName,
 				memory: memoryData.find((mem) => mem.id === device.memory)?.displayName,
 				storage: storageData.find((stor) => stor.id === device.storage)?.displayName,
 				os: osData.find((osItem) => osItem.id === device.os)?.displayName,

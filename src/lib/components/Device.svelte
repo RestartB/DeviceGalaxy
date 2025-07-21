@@ -3,6 +3,7 @@
 	import {
 		MoveLeft,
 		Cpu,
+		Gpu,
 		MemoryStick,
 		HardDrive,
 		Cog,
@@ -122,6 +123,16 @@
 					<h2 class="text-xl font-bold">CPU</h2>
 				</div>
 				<p>{device.cpu}</p>
+			</div>
+		{/if}
+
+		{#if device.gpu}
+			<div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
+				<div class="flex items-center gap-2">
+					<Gpu />
+					<h2 class="text-xl font-bold">GPU</h2>
+				</div>
+				<p>{device.gpu}</p>
 			</div>
 		{/if}
 

@@ -4,15 +4,15 @@
 	import Fuse from 'fuse.js';
 
 	import type { InferSelectModel } from 'drizzle-orm';
-	import type { cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+	import type { cpus, gpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
-	import { X, Cpu, MemoryStick, HardDrive, Cog, Funnel } from '@lucide/svelte';
+	import { X, Cpu, Gpu, MemoryStick, HardDrive, Cog, Funnel } from '@lucide/svelte';
 
 	let selected = $state<number[]>([]);
 	let dropdownOpen = $state(false);
 
 	let search = $state('');
-	let searchedOptions: Array<CPU | Memory | Storage | OS | Brand> = $state([]);
+	let searchedOptions: Array<CPU | GPU | Memory | Storage | OS | Brand> = $state([]);
 
 	let {
 		name,
@@ -20,11 +20,12 @@
 		selectedItems = $bindable(selected)
 	}: {
 		name: string;
-		options: Array<CPU | Memory | Storage | OS | Brand>;
+		options: Array<CPU | GPU | Memory | Storage | OS | Brand>;
 		selectedItems?: number[];
 	} = $props();
 
 	type CPU = InferSelectModel<typeof cpus>;
+	type GPU = InferSelectModel<typeof gpus>;
 	type Memory = InferSelectModel<typeof memory>;
 	type Storage = InferSelectModel<typeof storage>;
 	type OS = InferSelectModel<typeof os>;
@@ -76,6 +77,8 @@
 	>
 		{#if name === 'CPU'}
 			<Cpu />
+		{:else if name === 'GPU'}
+			<Gpu />
 		{:else if name === 'Memory'}
 			<MemoryStick />
 		{:else if name === 'Storage'}

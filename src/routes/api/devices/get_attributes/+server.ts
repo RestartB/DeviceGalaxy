@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
-import { cpus, memory, storage, os, brands, shares } from '$lib/server/db/schema';
+import { cpus, gpus, memory, storage, os, brands, shares } from '$lib/server/db/schema';
 
 export async function GET(event) {
 	// Check if the user is authenticated
@@ -45,6 +45,11 @@ export async function GET(event) {
 			.from(cpus)
 			.where(eq(cpus.userID, userId));
 
+		const gpuData = await db
+			.select({ id: gpus.id, value: gpus.value, displayName: gpus.displayName })
+			.from(gpus)
+			.where(eq(gpus.userID, userId));
+
 		const memoryData = await db
 			.select({ id: memory.id, value: memory.value, displayName: memory.displayName })
 			.from(memory)
@@ -67,6 +72,7 @@ export async function GET(event) {
 
 		return json({
 			cpus: cpuData,
+			gpus: gpuData,
 			memory: memoryData,
 			storage: storageData,
 			os: osData,

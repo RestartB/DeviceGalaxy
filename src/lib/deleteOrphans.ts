@@ -1,8 +1,14 @@
 import { and, eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
-import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+import { userDevices, cpus, gpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
-type TableWithUserField = typeof cpus | typeof memory | typeof storage | typeof os | typeof brands;
+type TableWithUserField =
+	| typeof cpus
+	| typeof gpus
+	| typeof memory
+	| typeof storage
+	| typeof os
+	| typeof brands;
 type DatabaseType = typeof db;
 type TransactionType = Parameters<Parameters<DatabaseType['transaction']>[0]>[0];
 
@@ -17,7 +23,7 @@ export default async function deleteOrphans(
 
 	// brands use a different name
 	let userFieldCondition;
-	if (table === cpus || table === memory || table === storage || table === os) {
+	if (table === cpus || table === gpus || table === memory || table === storage || table === os) {
 		userFieldCondition = eq((table as typeof cpus).userID, userId);
 	} else {
 		userFieldCondition = eq((table as typeof brands).userId, userId);

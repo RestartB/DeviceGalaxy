@@ -11,7 +11,7 @@ import { auth } from '$lib/server/auth';
 import { eq, and } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import type { InferSelectModel } from 'drizzle-orm';
-import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+import { userDevices, cpus, gpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 import deleteOrphans from '$lib/deleteOrphans.js';
 
@@ -64,6 +64,7 @@ export const actions = {
 
 		try {
 			let newCPU: InferSelectModel<typeof cpus> | undefined;
+			let newGPU: InferSelectModel<typeof gpus> | undefined;
 			let newMemory: InferSelectModel<typeof memory> | undefined;
 			let newStorage: InferSelectModel<typeof storage> | undefined;
 			let newOS: InferSelectModel<typeof os> | undefined;
@@ -90,6 +91,29 @@ export const actions = {
 							.then((rows) => rows[0]);
 					} else {
 						newCPU = existingCpu;
+					}
+				}
+
+				// GPU
+				if (form.data.gpu) {
+					const gpuValue = form.data.gpu.trim().toLowerCase();
+					const existingGpu = await tx.query.gpus.findFirst({
+						where: and(eq(gpus.value, gpuValue), eq(gpus.userID, session.user.id))
+					});
+
+					if (!existingGpu) {
+						// Insert into table, get the ID
+						newGPU = await tx
+							.insert(gpus)
+							.values({
+								userID: session.user.id,
+								value: gpuValue,
+								displayName: form.data.gpu
+							})
+							.returning()
+							.then((rows) => rows[0]);
+					} else {
+						newGPU = existingGpu;
 					}
 				}
 
@@ -193,6 +217,7 @@ export const actions = {
 						deviceName: form.data.deviceName,
 						description: form.data.description,
 						cpu: newCPU?.id,
+						gpu: newGPU?.id,
 						memory: newMemory?.id,
 						storage: newStorage?.id,
 						os: newOS?.id,
@@ -271,6 +296,7 @@ export const actions = {
 
 		try {
 			let newCPU: InferSelectModel<typeof cpus> | undefined;
+			let newGPU: InferSelectModel<typeof gpus> | undefined;
 			let newMemory: InferSelectModel<typeof memory> | undefined;
 			let newStorage: InferSelectModel<typeof storage> | undefined;
 			let newOS: InferSelectModel<typeof os> | undefined;
@@ -322,6 +348,29 @@ export const actions = {
 							.then((rows) => rows[0]);
 					} else {
 						newCPU = existingCpu;
+					}
+				}
+
+				// GPU
+				if (form.data.gpu) {
+					const gpuValue = form.data.gpu.trim().toLowerCase();
+					const existingGpu = await tx.query.gpus.findFirst({
+						where: and(eq(gpus.value, gpuValue), eq(gpus.userID, session.user.id))
+					});
+
+					if (!existingGpu) {
+						// Insert into table, get the ID
+						newGPU = await tx
+							.insert(gpus)
+							.values({
+								userID: session.user.id,
+								value: gpuValue,
+								displayName: form.data.gpu
+							})
+							.returning()
+							.then((rows) => rows[0]);
+					} else {
+						newGPU = existingGpu;
 					}
 				}
 
@@ -487,6 +536,7 @@ export const actions = {
 						deviceName: form.data.deviceName,
 						description: form.data.description,
 						cpu: newCPU?.id,
+						gpu: newGPU?.id,
 						memory: newMemory?.id,
 						storage: newStorage?.id,
 						os: newOS?.id,
@@ -501,6 +551,10 @@ export const actions = {
 				// Delete orphans
 				if (existingDevice.cpu !== null && existingDevice.cpu !== undefined) {
 					await deleteOrphans(tx, cpus, existingDevice.cpu, session.user.id, 'cpu');
+				}
+
+				if (existingDevice.gpu !== null && existingDevice.gpu !== undefined) {
+					await deleteOrphans(tx, gpus, existingDevice.gpu, session.user.id, 'gpu');
 				}
 
 				if (existingDevice.memory !== null && existingDevice.memory !== undefined) {

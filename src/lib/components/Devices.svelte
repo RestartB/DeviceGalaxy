@@ -4,7 +4,16 @@
 	import { prefersReducedMotion } from 'svelte/motion';
 
 	import type { InferSelectModel } from 'drizzle-orm';
-	import type { tags, userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+	import type {
+		tags,
+		userDevices,
+		cpus,
+		gpus,
+		memory,
+		storage,
+		os,
+		brands
+	} from '$lib/server/db/schema';
 
 	import { toast } from 'svelte-sonner';
 	import { Plus, Check, MoveLeft, MoveRight, RefreshCw, Search } from '@lucide/svelte';
@@ -19,6 +28,7 @@
 
 	type Device = InferSelectModel<typeof userDevices>;
 	type CPU = InferSelectModel<typeof cpus>;
+	type GPU = InferSelectModel<typeof gpus>;
 	type Memory = InferSelectModel<typeof memory>;
 	type Storage = InferSelectModel<typeof storage>;
 	type OS = InferSelectModel<typeof os>;
@@ -39,6 +49,7 @@
 
 	let attributeLists: AttributeLists = $state({
 		cpus: [],
+		gpus: [],
 		memory: [],
 		storage: [],
 		os: [],
@@ -57,6 +68,7 @@
 	let activeFilters = $state({
 		brand: [] as number[],
 		cpu: [] as number[],
+		gpu: [] as number[],
 		memory: [] as number[],
 		storage: [] as number[],
 		os: [] as number[],
@@ -65,6 +77,7 @@
 	let selectedFilters = $state({
 		brand: [] as number[],
 		cpu: [] as number[],
+		gpu: [] as number[],
 		memory: [] as number[],
 		storage: [] as number[],
 		os: [] as number[],
@@ -92,6 +105,7 @@
 
 			if (hasActiveFilters) {
 				if (activeFilters.cpu.length > 0) url += `&cpu=${activeFilters.cpu.join(',')}`;
+				if (activeFilters.gpu.length > 0) url += `&gpu=${activeFilters.gpu.join(',')}`;
 				if (activeFilters.memory.length > 0) url += `&memory=${activeFilters.memory.join(',')}`;
 				if (activeFilters.storage.length > 0) url += `&storage=${activeFilters.storage.join(',')}`;
 				if (activeFilters.os.length > 0) url += `&os=${activeFilters.os.join(',')}`;
@@ -136,6 +150,7 @@
 			const data = await response.json();
 
 			attributeLists.cpus = data.cpus as CPU[];
+			attributeLists.gpus = data.gpus as GPU[];
 			attributeLists.memory = data.memory as Memory[];
 			attributeLists.storage = data.storage as Storage[];
 			attributeLists.os = data.os as OS[];
@@ -215,6 +230,7 @@
 		const filterParams = {
 			brand: urlParams.get('brand')?.split(',').map(Number) || [],
 			cpu: urlParams.get('cpu')?.split(',').map(Number) || [],
+			gpu: urlParams.get('gpu')?.split(',').map(Number) || [],
 			memory: urlParams.get('memory')?.split(',').map(Number) || [],
 			storage: urlParams.get('storage')?.split(',').map(Number) || [],
 			os: urlParams.get('os')?.split(',').map(Number) || [],
@@ -224,6 +240,7 @@
 		selectedFilters = {
 			brand: filterParams.brand,
 			cpu: filterParams.cpu,
+			gpu: filterParams.gpu,
 			memory: filterParams.memory,
 			storage: filterParams.storage,
 			os: filterParams.os,
@@ -232,6 +249,7 @@
 		activeFilters = {
 			brand: [...selectedFilters.brand],
 			cpu: [...selectedFilters.cpu],
+			gpu: [...selectedFilters.gpu],
 			memory: [...selectedFilters.memory],
 			storage: [...selectedFilters.storage],
 			os: [...selectedFilters.os],
@@ -354,12 +372,12 @@
 		{#if showApplyFilters}
 			<button
 				class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-500 px-4 py-2 text-white"
-				transition:fly={{ x: prefersReducedMotion.current ? 0 : -20, duration: 300 }}
 				onclick={() => {
 					showApplyFilters = false;
 					activeFilters = {
 						brand: [...selectedFilters.brand],
 						cpu: [...selectedFilters.cpu],
+						gpu: [...selectedFilters.gpu],
 						memory: [...selectedFilters.memory],
 						storage: [...selectedFilters.storage],
 						os: [...selectedFilters.os],
@@ -375,11 +393,11 @@
 		{#if showResetFilters}
 			<button
 				class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-red-500 px-4 py-2 text-white"
-				transition:fly={{ x: prefersReducedMotion.current ? 0 : -20, duration: 300 }}
 				onclick={() => {
 					activeFilters = {
 						brand: [],
 						cpu: [],
+						gpu: [],
 						memory: [],
 						storage: [],
 						os: [],
@@ -388,6 +406,7 @@
 					selectedFilters = {
 						brand: [],
 						cpu: [],
+						gpu: [],
 						memory: [],
 						storage: [],
 						os: [],
@@ -410,6 +429,11 @@
 				name="CPU"
 				options={attributeLists.cpus}
 				bind:selectedItems={selectedFilters.cpu}
+			/>
+			<FilterPill
+				name="GPU"
+				options={attributeLists.gpus}
+				bind:selectedItems={selectedFilters.gpu}
 			/>
 			<FilterPill
 				name="Memory"

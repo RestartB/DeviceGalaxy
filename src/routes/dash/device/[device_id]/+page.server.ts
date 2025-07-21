@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
-import { userDevices, cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
+import { userDevices, cpus, gpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
 import { eq, and } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
@@ -25,6 +25,11 @@ export const load: PageServerLoad = async (event) => {
 		.select({ id: cpus.id, value: cpus.value, displayName: cpus.displayName })
 		.from(cpus)
 		.where(and(eq(cpus.userID, session.user.id), eq(cpus.id, device[0].cpu as number)));
+	
+	const gpuData = await db
+		.select({ id: gpus.id, value: gpus.value, displayName: gpus.displayName })
+		.from(gpus)
+		.where(and(eq(gpus.userID, session.user.id), eq(gpus.id, device[0].gpu as number)));
 
 	const memoryData = await db
 		.select({ id: memory.id, value: memory.value, displayName: memory.displayName })
@@ -63,6 +68,7 @@ export const load: PageServerLoad = async (event) => {
 	const processedDevice = {
 		...device[0],
 		cpu: cpuData[0]?.displayName ?? null,
+		gpu: gpuData[0]?.displayName ?? null,
 		memory: memoryData[0]?.displayName ?? null,
 		storage: storageData[0]?.displayName ?? null,
 		os: osData[0]?.displayName ?? null,

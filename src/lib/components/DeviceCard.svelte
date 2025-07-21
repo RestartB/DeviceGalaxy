@@ -2,6 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import {
 		Cpu,
+		Gpu,
 		MemoryStick,
 		HardDrive,
 		Cog,
@@ -97,6 +98,14 @@
 				>
 					<Cpu size="20" />
 					<p>{device.cpu}</p>
+				</div>
+			{/if}
+			{#if device.gpu}
+				<div
+					class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
+				>
+					<Gpu size="20" />
+					<p>{device.gpu}</p>
 				</div>
 			{/if}
 			{#if device.memory}

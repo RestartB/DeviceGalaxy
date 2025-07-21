@@ -40,11 +40,11 @@
 	<div
 		class="box-border min-h-screen flex-1 overflow-y-auto p-4 pt-16"
 		class:p-4={page.url.pathname.startsWith('/dash') &&
-			!page.url.pathname.startsWith('/dash/device')}
+			!page.url.pathname.startsWith('/dash/device/')}
 		class:pt-12={!page.url.pathname.startsWith('/dash') ||
-			page.url.pathname.startsWith('/dash/device')}
+			page.url.pathname.startsWith('/dash/device/')}
 		class:pt-16={page.url.pathname.startsWith('/dash') &&
-			!page.url.pathname.startsWith('/dash/device')}
+			!page.url.pathname.startsWith('/dash/device/')}
 	>
 		<Toaster position="top-center" richColors closeButton />
 		{@render children()}

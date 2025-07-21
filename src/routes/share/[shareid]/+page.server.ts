@@ -3,6 +3,7 @@ import { db } from '$lib/server/db';
 import {
 	userDevices,
 	cpus,
+	gpus,
 	memory,
 	storage,
 	os,
@@ -46,6 +47,11 @@ export const load = async (event) => {
 			.from(cpus)
 			.where(eq(cpus.id, device[0].cpu as number));
 
+		const gpuData = await db
+			.select({ id: gpus.id, value: gpus.value, displayName: gpus.displayName })
+			.from(gpus)
+			.where(eq(gpus.id, device[0].gpu as number));
+
 		const memoryData = await db
 			.select({ id: memory.id, value: memory.value, displayName: memory.displayName })
 			.from(memory)
@@ -82,6 +88,7 @@ export const load = async (event) => {
 		const processedDevice = {
 			...device[0],
 			cpu: cpuData[0]?.displayName ?? null,
+			gpu: gpuData[0]?.displayName ?? null,
 			memory: memoryData[0]?.displayName ?? null,
 			storage: storageData[0]?.displayName ?? null,
 			os: osData[0]?.displayName ?? null,

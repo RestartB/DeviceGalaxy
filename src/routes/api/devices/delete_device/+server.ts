@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
-import { userDevices, cpus, memory, storage, os, brands } from '$lib/server/db/schema';
+import { userDevices, cpus, gpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 import deleteOrphans from '$lib/deleteOrphans';
 
@@ -42,6 +42,10 @@ export async function DELETE(event) {
 			// Check if any other devices exist for each parameter
 			if (device.cpu !== null && device.cpu !== undefined) {
 				await deleteOrphans(tx, cpus, device.cpu, session.user.id, 'cpu');
+			}
+
+			if (device.gpu !== null && device.gpu !== undefined) {
+				await deleteOrphans(tx, gpus, device.gpu, session.user.id, 'gpu');
 			}
 
 			if (device.memory !== null && device.memory !== undefined) {
