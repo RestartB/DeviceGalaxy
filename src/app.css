@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 @theme {
-    --font-family: "Figtree", sans-serif;
-    --breakpoint-xs: 35rem;
-    --breakpoint-xxs: 22rem
+  --font-family: 'Figtree', sans-serif;
+  --breakpoint-xs: 35rem;
+  --breakpoint-xxs: 22rem;
 }

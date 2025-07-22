@@ -6,110 +6,110 @@ import { userDevices, shares } from '$lib/server/db/schema';
 import crypto from 'crypto';
 
 async function generateShareId() {
-	let trying = true;
-	let shareId;
+  let trying = true;
+  let shareId;
 
-	while (trying) {
-		shareId = crypto.randomBytes(4).toString('hex');
-		const existingShare = await db.select().from(shares).where(eq(shares.id, shareId)).get();
+  while (trying) {
+    shareId = crypto.randomBytes(4).toString('hex');
+    const existingShare = await db.select().from(shares).where(eq(shares.id, shareId)).get();
 
-		if (!existingShare) {
-			trying = false;
-		}
-	}
+    if (!existingShare) {
+      trying = false;
+    }
+  }
 
-	return shareId;
+  return shareId;
 }
 
 export async function POST(event) {
-	// Check if the user is authenticated
-	const session = await auth.api.getSession({
-		headers: event.request.headers
-	});
+  // Check if the user is authenticated
+  const session = await auth.api.getSession({
+    headers: event.request.headers
+  });
 
-	if (!session) {
-		return json({ error: 'Unauthorized' }, { status: 401 });
-	}
+  if (!session) {
+    return json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-	// Get data
-	const { type, deviceID } = await event.request.json();
+  // Get data
+  const { type, deviceID } = await event.request.json();
 
-	if (type === undefined || type === null) {
-		return json({ error: 'Share type is required' }, { status: 400 });
-	}
+  if (type === undefined || type === null) {
+    return json({ error: 'Share type is required' }, { status: 400 });
+  }
 
-	const typeInt = parseInt(type, 10);
-	if (isNaN(typeInt) || typeInt < 0 || typeInt > 2) {
-		return json({ error: 'Invalid share type' }, { status: 400 });
-	}
+  const typeInt = parseInt(type, 10);
+  if (isNaN(typeInt) || typeInt < 0 || typeInt > 2) {
+    return json({ error: 'Invalid share type' }, { status: 400 });
+  }
 
-	if (typeInt === 0) {
-		// Share all devices
-		try {
-			const shareId = await generateShareId();
+  if (typeInt === 0) {
+    // Share all devices
+    try {
+      const shareId = await generateShareId();
 
-			const share = await db
-				.insert(shares)
-				.values({
-					id: shareId,
-					userId: session.user.id,
-					type: typeInt,
-					sharedDevice: null,
-					sharedTags: null
-				})
-				.returning();
+      const share = await db
+        .insert(shares)
+        .values({
+          id: shareId,
+          userId: session.user.id,
+          type: typeInt,
+          sharedDevice: null,
+          sharedTags: null
+        })
+        .returning();
 
-			return json({ share: share[0] });
-		} catch (error) {
-			console.error('Error creating share:', error);
-			return json({ error: 'Failed to create share' }, { status: 500 });
-		}
-	} else if (typeInt === 1) {
-		// Currently inimplemented
-		return json({ error: 'Sharing tags is not implemented yet' }, { status: 501 });
-	} else if (typeInt === 2) {
-		// Share specific device
-		if (!deviceID) {
-			return json({ error: 'Device ID is required' }, { status: 400 });
-		}
+      return json({ share: share[0] });
+    } catch (error) {
+      console.error('Error creating share:', error);
+      return json({ error: 'Failed to create share' }, { status: 500 });
+    }
+  } else if (typeInt === 1) {
+    // Currently inimplemented
+    return json({ error: 'Sharing tags is not implemented yet' }, { status: 501 });
+  } else if (typeInt === 2) {
+    // Share specific device
+    if (!deviceID) {
+      return json({ error: 'Device ID is required' }, { status: 400 });
+    }
 
-		// Validate deviceID
-		const deviceIDInt = parseInt(deviceID, 10);
+    // Validate deviceID
+    const deviceIDInt = parseInt(deviceID, 10);
 
-		if (isNaN(deviceIDInt)) {
-			return json({ error: 'Invalid device ID' }, { status: 400 });
-		}
+    if (isNaN(deviceIDInt)) {
+      return json({ error: 'Invalid device ID' }, { status: 400 });
+    }
 
-		// Check if user owns the device
-		const device = await db
-			.select()
-			.from(userDevices)
-			.where(and(eq(userDevices.id, deviceIDInt), eq(userDevices.userId, session.user.id)))
-			.limit(1);
-		if (device.length === 0) {
-			return json({ error: 'Device not found' }, { status: 404 });
-		}
+    // Check if user owns the device
+    const device = await db
+      .select()
+      .from(userDevices)
+      .where(and(eq(userDevices.id, deviceIDInt), eq(userDevices.userId, session.user.id)))
+      .limit(1);
+    if (device.length === 0) {
+      return json({ error: 'Device not found' }, { status: 404 });
+    }
 
-		try {
-			const shareId = await generateShareId();
+    try {
+      const shareId = await generateShareId();
 
-			const share = await db
-				.insert(shares)
-				.values({
-					id: shareId,
-					userId: session.user.id,
-					type: typeInt,
-					sharedDevice: deviceIDInt,
-					sharedTags: null
-				})
-				.returning();
+      const share = await db
+        .insert(shares)
+        .values({
+          id: shareId,
+          userId: session.user.id,
+          type: typeInt,
+          sharedDevice: deviceIDInt,
+          sharedTags: null
+        })
+        .returning();
 
-			return json({ share: share[0] });
-		} catch (error) {
-			console.error('Error creating share:', error);
-			return json({ error: 'Failed to create share' }, { status: 500 });
-		}
-	} else {
-		return json({ error: 'Invalid share type' }, { status: 400 });
-	}
+      return json({ share: share[0] });
+    } catch (error) {
+      console.error('Error creating share:', error);
+      return json({ error: 'Failed to create share' }, { status: 500 });
+    }
+  } else {
+    return json({ error: 'Invalid share type' }, { status: 400 });
+  }
 }
