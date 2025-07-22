@@ -1,7 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { fly } from 'svelte/transition';
-  import { prefersReducedMotion } from 'svelte/motion';
 
   import type { InferSelectModel } from 'drizzle-orm';
   import type {
@@ -22,9 +20,9 @@
   import FilterPill from '$lib/components/FilterPill.svelte';
   import TagFilterPill from '$lib/components/TagFilterPill.svelte';
 
-  import AddDeviceForm from '$lib/components/add_device/Form.svelte';
-  import EditDeviceForm from '$lib/components/edit_device/Form.svelte';
-  import type { AttributeLists } from '$lib/components/add_device/Form.svelte';
+  import AddDeviceForm from '$lib/components/forms/add_device/Form.svelte';
+  import EditDeviceForm from '$lib/components/forms/edit_device/Form.svelte';
+  import type { AttributeLists } from '$lib/components/forms/add_device/Form.svelte';
 
   type Device = InferSelectModel<typeof userDevices>;
   type CPU = InferSelectModel<typeof cpus>;

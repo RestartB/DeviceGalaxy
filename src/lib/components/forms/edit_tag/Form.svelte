@@ -6,30 +6,49 @@
   import { zod4Client } from 'sveltekit-superforms/adapters';
   import { newTagSchema } from '$lib/schema/newTag';
 
+  import type { InferSelectModel } from 'drizzle-orm';
+  import type { tags } from '$lib/server/db/schema';
+
   import { toast } from 'svelte-sonner';
   import { X } from '@lucide/svelte';
+  import Submit from '$lib/components/forms/Submit.svelte';
 
   type schemaType = typeof newTagSchema;
 
   let {
     sourceForm,
-    createPopupOpen = $bindable(),
-    refreshAll
+    editPopupOpen = $bindable(),
+    refreshAll,
+    tag
   }: {
     sourceForm: SuperValidated<Infer<schemaType>>;
-    createPopupOpen: boolean;
+    editPopupOpen: boolean;
     refreshAll: any;
+    tag: InferSelectModel<typeof tags> | undefined;
   } = $props();
 
-  const { form, errors, message, enhance } = superForm(sourceForm, {
-    validators: zod4Client(newTagSchema),
-    customValidity: false,
-    validationMethod: 'auto',
-    id: 'newTagForm',
+  const { form, errors, message, submitting, delayed, timeout, formId, enhance } = superForm(
+    sourceForm,
+    {
+      validators: zod4Client(newTagSchema),
+      customValidity: false,
+      validationMethod: 'auto',
+      delayMs: 1000,
+      timeoutMs: 10000,
 
-    onError: (error) => {
-      console.error('Form submission error:', error);
-      toast.error('Failed to create tag. Try again later.');
+      onError: (error) => {
+        console.error('Form submission error:', error);
+        toast.error('Failed to edit tag. Try again later.');
+      }
+    }
+  );
+
+  $effect(() => {
+    if (editPopupOpen && tag) {
+      $form.tagName = tag.tagName;
+      $form.colourEnabled = !!tag.tagColour;
+      $form.colour = tag.tagColour ? tag.tagColour : '#ffffff';
+      $formId = tag.id.toString();
     }
   });
 
@@ -45,51 +64,57 @@
 
   $effect(() => {
     if ($message) {
-      console.debug('Message from form:', $message);
-      if ($message === 'Tag created successfully!') {
+      if ($message === 'Tag updated successfully!') {
         toast.success($message as string);
         refreshAll();
-        createPopupOpen = false;
+        editPopupOpen = false;
       } else if (typeof $message === 'string' && $message) {
         toast.warning($message);
       }
     }
     $message = null;
   });
+
+  $effect(() => {
+    if ($timeout) {
+      toast.error('Timed out while editing tag. Please try again.');
+    }
+  });
 </script>
 
 <svelte:window
   onkeydown={(event) => {
     if (event.key === 'Escape') {
-      createPopupOpen = false;
+      editPopupOpen = false;
     }
   }}
 />
 
-{#if createPopupOpen}
+{#if editPopupOpen}
   <div
-    class="fixed inset-0 z-90 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+    class="fixed inset-0 z-60 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
     transition:fade={{ duration: 100 }}
   >
     <div
-      class="absolute inset-0 z-100"
-      onclick={() => (createPopupOpen = false)}
+      class="absolute inset-0 z-70"
+      onclick={() => (editPopupOpen = false)}
       aria-hidden="true"
     ></div>
 
     <div
-      class="z-110 flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
+      class="z-80 flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
     >
       <div class="flex items-center justify-between border-b p-4">
-        <h2 class="text-xl font-bold">Create New Tag</h2>
+        <h2 class="text-xl font-bold">Edit Tag</h2>
         <button
-          onclick={() => (createPopupOpen = false)}
+          onclick={() => (editPopupOpen = false)}
           class="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-400"
           aria-label="Close"><X /></button
         >
       </div>
 
-      <form method="POST" class="flex flex-col" action="/dash/tags?/newTag" use:enhance>
+      <form method="POST" class="flex flex-col" action="/dash/tags?/editTag" use:enhance>
+        <input type="hidden" name="__superform_id" bind:value={$formId} />
         <div class="flex flex-col gap-4 p-6">
           <label for="tagName" class="text-sm font-medium">Tag Name</label>
           <input
@@ -137,11 +162,7 @@
           {/if}
         </div>
         <div class="border-t p-6">
-          <button
-            type="submit"
-            class="w-full cursor-pointer rounded-md bg-green-500 px-4 py-2 font-bold text-white transition-colors hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-green-500"
-            disabled={hasErrors}>Create Tag</button
-          >
+          <Submit text="Update Tag" {hasErrors} submitting={$submitting} delayed={$delayed} />
         </div>
       </form>
     </div>

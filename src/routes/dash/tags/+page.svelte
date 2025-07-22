@@ -6,8 +6,8 @@
   import type { InferSelectModel } from 'drizzle-orm';
   import type { tags } from '$lib/server/db/schema';
 
-  import CreateTagForm from '$lib/components/add_tag/Form.svelte';
-  import EditTagForm from '$lib/components/edit_tag/Form.svelte';
+  import CreateTagForm from '$lib/components/forms/add_tag/Form.svelte';
+  import EditTagForm from '$lib/components/forms/edit_tag/Form.svelte';
   import { Plus, RefreshCw, X, Eye, Pencil, Trash } from '@lucide/svelte';
   import { toast } from 'svelte-sonner';
 
