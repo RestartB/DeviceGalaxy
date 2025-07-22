@@ -67,14 +67,14 @@
 				</a>
 			{:else}
 				<a
-					href="/auth/login"
+					href="/dash/auth/login"
 					class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				>
 					<LogIn size="20" class="flex-shrink-0" />
 					Log in
 				</a>
 				<a
-					href="/auth/signup"
+					href="/dash/auth/signup"
 					class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				>
 					<UserPlus size="20" class="flex-shrink-0" />
@@ -319,14 +319,14 @@
 				</a>
 			{:else}
 				<a
-					href="/auth/login"
+					href="/dash/auth/login"
 					class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				>
 					<LogIn size="20" class="flex-shrink-0" />
 					Log in
 				</a>
 				<a
-					href="/auth/signup"
+					href="/dash/auth/signup"
 					class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				>
 					<UserPlus size="20" class="flex-shrink-0" />

@@ -8,7 +8,7 @@ export const load: LayoutServerLoad = async (event) => {
 	});
 
 	if (session === null) {
-		if (!event.url.pathname.startsWith('/dash/auth/') && !event.url.pathname.startsWith('/share/')) {
+		if (event.url.pathname.startsWith('/dash') && !event.url.pathname.startsWith('/dash/auth/')) {
 			console.debug('No session found, redirecting to login');
 			return redirect(302, '/dash/auth/login');
 		}

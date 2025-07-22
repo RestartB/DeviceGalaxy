@@ -7,7 +7,7 @@
 	import { authClient } from '$lib/client';
 
 	import Avatar from '$lib/components/Avatar.svelte';
-	import { House, Monitor, Tag, Share, Cog, LogOut, Menu } from '@lucide/svelte';
+	import { House, Monitor, Tag, Share, Cog, LogOut, Menu, LogIn } from '@lucide/svelte';
 
 	// Get session from props
 	let { data }: { data: LayoutData } = $props();
@@ -98,6 +98,14 @@
 				<Menu size="20" />
 			</button>
 		</div>
+	{:else}
+		<a
+			class="ml-auto flex w-fit items-center justify-center gap-2 rounded-lg p-2 font-semibold"
+			href="/dash/auth/login"
+		>
+			<LogIn size="20" />
+			Log in
+		</a>
 	{/if}
 
 	{#if menuOpen && data.user}
