@@ -7,7 +7,7 @@ export const authClient = createAuthClient({
 	plugins: [
 		twoFactorClient({
 			onTwoFactorRedirect() {
-				goto('/auth/verify-2fa');
+				goto('/dash/auth/verify-2fa');
 			}
 		})
 	]

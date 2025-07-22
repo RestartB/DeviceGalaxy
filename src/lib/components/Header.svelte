@@ -22,33 +22,37 @@
 	class="fixed z-1000 box-border flex h-12 w-full items-center justify-center gap-4 border-b-4 border-zinc-300 bg-zinc-200 px-4 dark:border-zinc-700 dark:bg-zinc-800"
 	style="view-transition-name: header"
 >
-	<div class="flex items-center gap-2">
-		<enhanced:img src="$lib/images/logo/logo_square.svg" alt="DeviceGalaxy Logo" class="h-8 w-8" />
+	<a class="flex h-full items-center gap-2" href="/" title="DeviceGalaxy">
+		<enhanced:img src="$lib/images/logo/logo_square.svg" alt="DeviceGalaxy Logo" class="h-6 w-6" />
 		<h1 class=" text-xl font-bold">DeviceGalaxy</h1>
-	</div>
+	</a>
 	{#if data.user}
 		<nav class="hidden h-full items-center justify-center sm:flex">
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				href="/dash"
+				title="Home"
 			>
 				Home
 			</a>
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				href="/dash/devices"
+				title="Devices"
 			>
 				Devices
 			</a>
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				href="/dash/tags"
+				title="Tags"
 			>
 				Tags
 			</a>
 			<a
 				class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
 				href="/dash/shares"
+				title="Shared"
 			>
 				Shared
 			</a>

@@ -277,7 +277,7 @@
 				<User size="40" class="flex-shrink-0" />
 				<div>
 					<h3 class="text-2xl font-bold">Users <span class="font-normal">joined.</span></h3>
-					<code class="text-xl">00000</code>
+					<code class="text-xl">{data.totalUsers}</code>
 				</div>
 			</div>
 			<div
@@ -286,7 +286,7 @@
 				<Monitor size="40" class="flex-shrink-0" />
 				<div>
 					<h3 class="text-2xl font-bold">Devices <span class="font-normal">created.</span></h3>
-					<code class="text-xl">00000</code>
+					<code class="text-xl">{data.totalDevices}</code>
 				</div>
 			</div>
 			<div
@@ -295,7 +295,7 @@
 				<Image size="40" class="flex-shrink-0" />
 				<div>
 					<h3 class="text-2xl font-bold">Images <span class="font-normal">uploaded.</span></h3>
-					<code class="text-xl">00000</code>
+					<code class="text-xl">{data.totalImages}</code>
 				</div>
 			</div>
 		</div>

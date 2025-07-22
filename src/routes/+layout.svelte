@@ -1,13 +1,16 @@
 <script lang="ts">
 	import '../app.css';
 	import { onNavigate } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 
 	import { Toaster } from 'svelte-sonner';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import OldUrlAlert from '$lib/components/OldURLAlert.svelte';
 
 	let { data, children } = $props();
+	let alertPopupOpen = $state(false);
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -21,6 +24,12 @@
 				await navigation.complete;
 			});
 		});
+	});
+
+	onMount(() => {
+		if (page.url.host === 'devices.restartb.xyz' && !localStorage.getItem('oldURLAlertDismissed')) {
+			alertPopupOpen = true;
+		}
 	});
 </script>
 
@@ -36,7 +45,9 @@
 </svelte:head>
 
 <div class="font-family font-lg h-screen max-h-screen w-full dark:text-white">
+	<OldUrlAlert popupOpen={alertPopupOpen} />
 	<Header {data} />
+
 	<div
 		class="box-border min-h-screen flex-1 overflow-y-auto p-4 pt-16"
 		class:p-4={page.url.pathname.startsWith('/dash') &&
@@ -49,6 +60,7 @@
 		<Toaster position="top-center" richColors closeButton />
 		{@render children()}
 	</div>
+
 	<Footer />
 </div>
 
