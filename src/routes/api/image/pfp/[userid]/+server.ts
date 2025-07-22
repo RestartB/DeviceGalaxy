@@ -2,11 +2,11 @@ import { json } from '@sveltejs/kit';
 
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { join } from 'path';
+// import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
@@ -25,18 +25,7 @@ export async function GET(event) {
     return json({ error: 'User not found' }, { status: 404 });
   }
 
-  const imagePath = join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    '..',
-    '..',
-    '..',
-    'user_uploads',
-    'pfp',
-    userData.id + '.webp'
-  );
+  const imagePath = join(process.cwd(), 'user_uploads', 'pfp', userData.id + '.webp');
   if (!existsSync(imagePath)) {
     return json({ error: 'Image not found' }, { status: 404 });
   }

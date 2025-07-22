@@ -3,11 +3,11 @@ import { auth } from '$lib/server/auth';
 
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { join } from 'path';
+// import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
@@ -76,20 +76,7 @@ export async function GET(event) {
   }
 
   // src/routes/api/image/device/[deviceid]/[imageid]/+server.ts
-  const imagePath = join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    '..',
-    '..',
-    '..',
-    '..',
-    'user_uploads',
-    'device',
-    deviceId,
-    imageId + '.webp'
-  );
+  const imagePath = join(process.cwd(), 'user_uploads', 'device', deviceId, imageId + '.webp');
   if (!existsSync(imagePath)) {
     return json({ error: 'Image not found' }, { status: 404 });
   }
