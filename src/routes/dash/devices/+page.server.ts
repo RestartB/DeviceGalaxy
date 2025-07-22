@@ -18,7 +18,11 @@ import deleteOrphans from '$lib/deleteOrphans.js';
 import sharp from 'sharp';
 import { existsSync } from 'fs';
 import { writeFile, unlink, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export const load = async () => {
   const newDeviceForm = await superValidate(zod4(newDeviceSchema));

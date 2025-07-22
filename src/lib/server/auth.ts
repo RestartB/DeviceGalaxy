@@ -7,7 +7,11 @@ import { BETTER_AUTH_SECRET } from '$env/static/private';
 
 import { existsSync } from 'fs';
 import { unlink, rm } from 'fs/promises';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 import { db } from './db';
 import { userDevices } from './db/schema';

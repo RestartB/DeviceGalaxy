@@ -3,7 +3,11 @@ import { auth } from '$lib/server/auth';
 
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';

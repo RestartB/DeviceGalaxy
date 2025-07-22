@@ -9,7 +9,11 @@ import { profilePictureSchema } from '$lib/schema/profilePicture';
 
 import sharp from 'sharp';
 import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export const load = async () => {
   const profilePictureForm = await superValidate(zod4(profilePictureSchema));
