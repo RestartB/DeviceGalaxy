@@ -1,7 +1,7 @@
 import type { PageServerLoad } from '../$types';
 
 import { db } from '$lib/server/db';
-import { userDevices, cpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
+import { userDevices, cpus, gpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';
 import { eq, count, desc } from 'drizzle-orm';
 
 import { superValidate } from 'sveltekit-superforms';
@@ -22,6 +22,7 @@ export const load: PageServerLoad = async ({ parent }) => {
       randomGreeting: '',
       attributeLists: {
         cpus: [],
+        gpus: [],
         memory: [],
         storage: [],
         os: [],
@@ -35,6 +36,8 @@ export const load: PageServerLoad = async ({ parent }) => {
 
   // Fetch attributes for devices
   const cpuData = await db.select().from(cpus).where(eq(cpus.userID, user.id));
+
+  const gpuData = await db.select().from(gpus).where(eq(gpus.userID, user.id));
 
   const memoryData = await db.select().from(memory).where(eq(memory.userID, user.id));
 
@@ -63,6 +66,7 @@ export const load: PageServerLoad = async ({ parent }) => {
     return {
       ...device,
       cpu: cpuData.find((cpu) => cpu.id === device.cpu)?.displayName,
+      gpu: gpuData.find((gpu) => gpu.id === device.gpu)?.displayName,
       memory: memoryData.find((mem) => mem.id === device.memory)?.displayName,
       storage: storageData.find((stor) => stor.id === device.storage)?.displayName,
       os: osData.find((osItem) => osItem.id === device.os)?.displayName,
@@ -88,6 +92,7 @@ export const load: PageServerLoad = async ({ parent }) => {
     return {
       ...device,
       cpu: cpuData.find((cpu) => cpu.id === device.cpu)?.displayName,
+      gpu: gpuData.find((gpu) => gpu.id === device.gpu)?.displayName,
       memory: memoryData.find((mem) => mem.id === device.memory)?.displayName,
       storage: storageData.find((stor) => stor.id === device.storage)?.displayName,
       os: osData.find((osItem) => osItem.id === device.os)?.displayName,
@@ -119,6 +124,7 @@ export const load: PageServerLoad = async ({ parent }) => {
     recentlyUpdated: updatedAtMatchedDevices,
     attributeLists: {
       cpus: cpuData,
+      gpus: gpuData,
       memory: memoryData,
       storage: storageData,
       os: osData,

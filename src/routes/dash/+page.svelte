@@ -4,11 +4,11 @@
 
   import { goto } from '$app/navigation';
 
-  import AddDeviceForm from '$lib/components/add_device/Form.svelte';
-  import CreateTagForm from '$lib/components/add_tag/Form.svelte';
+  import AddDeviceForm from '$lib/components/forms/add_device/Form.svelte';
+  import CreateTagForm from '$lib/components/forms/add_tag/Form.svelte';
   import Avatar from '$lib/components/Avatar.svelte';
   import DeviceCard from '$lib/components/DeviceCard.svelte';
-  import { Plus, Shield, Monitor, Tag } from '@lucide/svelte';
+  import { Shield, Monitor, Tag } from '@lucide/svelte';
 
   let createDevicePopupOpen = $state(false);
   let createTagPopupOpen = $state(false);
