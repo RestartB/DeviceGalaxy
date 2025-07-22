@@ -8,7 +8,7 @@ To use DeviceGalaxy, you have 2 options.
 
 ### Using the hosted instance
 
-If you don't want to self host, you can use the instance that I host at https://devices.restartb.xyz
+If you don't want to self host, you can use the instance that I host at https://devicegalaxy.me
 
 ### Self hosting
 

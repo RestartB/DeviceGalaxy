@@ -478,13 +478,15 @@
       <div class="flex items-center justify-center gap-4">
         <button
           onclick={previousPage}
-          class="rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
+          class="cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
+          aria-label="Previous Page"
           disabled={page <= 1}><MoveLeft size="20" /></button
         >
         <span>Page {page} of {maxPages}</span>
         <button
           onclick={nextPage}
-          class="rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
+          class="cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
+          aria-label="Next Page"
           disabled={page >= maxPages}><MoveRight size="20" /></button
         >
       </div>

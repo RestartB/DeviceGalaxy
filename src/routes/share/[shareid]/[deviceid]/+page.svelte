@@ -23,7 +23,7 @@
     <meta content="summary_large_image" name="twitter:card" />
     <meta property="og:image" content={data.device.externalImages[0]} />
   {:else}
-    <meta property="og:image" content="https://devices.restartb.xyz/favicon.png" />
+    <meta property="og:image" content="https://devicegalaxy.me/favicon.png" />
   {/if}
 </svelte:head>
 

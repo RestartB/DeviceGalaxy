@@ -19,7 +19,7 @@
       {#if data.shareUser.image}
         <meta property="og:image" content={data.shareUser.image} />
       {:else}
-        <meta property="og:image" content="https://devices.restartb.xyz/favicon.png" />
+        <meta property="og:image" content="https://devicegalaxy.me/favicon.png" />
       {/if}
     {:else if data.share.type === 2}
       <title>DeviceGalaxy - {data.device?.deviceName}</title>
@@ -41,7 +41,7 @@
         <meta content="summary_large_image" name="twitter:card" />
         <meta property="og:image" content={data.device.externalImages[0]} />
       {:else}
-        <meta property="og:image" content="https://devices.restartb.xyz/favicon.png" />
+        <meta property="og:image" content="https://devicegalaxy.me/favicon.png" />
       {/if}
     {:else}
       <title>DeviceGalaxy - Share</title>
@@ -51,7 +51,7 @@
         content="View {data.shareUser.name}'s shared devices on DeviceGalaxy."
       />
       <meta content="DeviceGalaxy" property="og:site_name" />
-      <meta property="og:image" content="https://devices.restartb.xyz/favicon.png" />
+      <meta property="og:image" content="https://devicegalaxy.me/favicon.png" />
     {/if}
   {/if}
 </svelte:head>
