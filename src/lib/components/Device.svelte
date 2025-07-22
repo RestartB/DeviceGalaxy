@@ -12,9 +12,13 @@
     MoveRightIcon
   } from '@lucide/svelte';
   import Avatar from '$lib/components/Avatar.svelte';
+  import AttributePill from '$lib/components/AttributePill.svelte';
 
   const { data, shareID } = $props();
   const device = data.device;
+
+  const hasExternalImages = device.externalImages?.length > 0;
+  const hasInternalImages = device.internalImages?.length > 0;
 
   let imageOpen = $state(false);
   let imageIndex = $state(0);
@@ -26,35 +30,20 @@
 
 <svelte:body
   onkeypress={(event) => {
-    if (event && event.key === 'Escape') {
-      imageOpen = false;
-    } else if (event && event.key === 'ArrowLeft' && imageOpen) {
-      imageIndex = Math.max(0, imageIndex - 1);
-    } else if (event && event.key === 'ArrowRight' && imageOpen) {
-      imageIndex = Math.min(device.internalImages.length - 1, imageIndex + 1);
+    if (event) {
+      if (event.key === 'Escape') {
+        imageOpen = false;
+      } else if (event.key === 'ArrowLeft' && imageOpen) {
+        imageIndex = Math.max(0, imageIndex - 1);
+      } else if (event.key === 'ArrowRight' && imageOpen) {
+        imageIndex = Math.min(device.internalImages.length - 1, imageIndex + 1);
+      }
     }
   }}
 />
 
 {#if !data.share || data.share.type === 0}
-  <div
-    class:fixed={(device.externalImages && device.externalImages.length > 0) ||
-      (device.internalImages && device.internalImages.length > 0)}
-    class:top-16={(device.externalImages && device.externalImages.length > 0) ||
-      (device.internalImages && device.internalImages.length > 0)}
-    class:left-4={(device.externalImages && device.externalImages.length > 0) ||
-      (device.internalImages && device.internalImages.length > 0)}
-    class:z-20={(device.externalImages && device.externalImages.length > 0) ||
-      (device.internalImages && device.internalImages.length > 0)}
-    class:p-4={!device.externalImages ||
-      device.externalImages.length === 0 ||
-      !device.internalImages ||
-      device.internalImages.length === 0}
-    class:pb-0={!device.externalImages ||
-      device.externalImages.length === 0 ||
-      !device.internalImages ||
-      device.internalImages.length === 0}
-  >
+  <div class={hasExternalImages || hasInternalImages ? 'fixed top-16 left-4 z-20' : 'p-4 pb-0'}>
     <button
       onclick={() => history.back()}
       class="flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 shadow-md transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800 dark:hover:bg-zinc-600"
@@ -65,19 +54,13 @@
   </div>
 {/if}
 
-{#if device.externalImages && device.externalImages.length > 0}
-  <img
-    src={device.externalImages[0]}
-    alt={device.deviceName}
-    class="h-[50vh] w-full mask-b-from-70% object-cover"
-  />
-{:else if device.internalImages && device.internalImages.length > 0}
-  <img
-    src={`/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID}`}
-    alt={device.deviceName}
-    class="h-[50vh] w-full mask-b-from-70% object-cover"
-  />
-{/if}
+<img
+  src={hasExternalImages
+    ? device.externalImages[0]
+    : `/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID}`}
+  alt={device.deviceName}
+  class="h-[50vh] w-full mask-b-from-70% object-cover"
+/>
 
 <div class="z-10 flex flex-col gap-4 p-4">
   <div>
@@ -88,7 +71,7 @@
     <p>{device.description || 'No description.'}</p>
   </div>
 
-  {#if device.tags && device.tags.length > 0}
+  {#if device.tags?.length > 0}
     <div class="flex w-fit flex-wrap items-center justify-center gap-2">
       {#each device.tags as tag}
         <span
@@ -117,58 +100,38 @@
 
   <div class="flex w-fit flex-wrap items-center justify-center gap-2">
     {#if device.cpu}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <Cpu />
-          <h2 class="text-xl font-bold">CPU</h2>
-        </div>
-        <p>{device.cpu}</p>
-      </div>
+      <AttributePill name="CPU" icon={Cpu}>
+        {device.cpu}
+      </AttributePill>
     {/if}
 
     {#if device.gpu}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <Gpu />
-          <h2 class="text-xl font-bold">GPU</h2>
-        </div>
-        <p>{device.gpu}</p>
-      </div>
+      <AttributePill name="GPU" icon={Gpu}>
+        {device.gpu}
+      </AttributePill>
     {/if}
 
     {#if device.memory}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <MemoryStick />
-          <h2 class="text-xl font-bold">Memory</h2>
-        </div>
-        <p>{device.memory}</p>
-      </div>
+      <AttributePill name="Memory" icon={MemoryStick}>
+        {device.memory}
+      </AttributePill>
     {/if}
 
     {#if device.storage}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <HardDrive />
-          <h2 class="text-xl font-bold">Storage</h2>
-        </div>
-        <p>{device.storage}</p>
-      </div>
+      <AttributePill name="Storage" icon={HardDrive}>
+        {device.storage}
+      </AttributePill>
     {/if}
 
     {#if device.os}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <Cog />
-          <h2 class="text-xl font-bold">Operating System</h2>
-        </div>
-        <p>{device.os}</p>
-      </div>
+      <AttributePill name="Operating System" icon={Cog}>
+        {device.os}
+      </AttributePill>
     {/if}
   </div>
 </div>
 
-{#if device.internalImages && device.internalImages.length > 0}
+{#if hasInternalImages}
   <div class="flex flex-col gap-4 p-4">
     <h2 class="text-2xl font-bold">Images</h2>
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -201,8 +164,8 @@
         >
           <X size="24" />
         </button>
-
-        {#if device.internalImages && device.internalImages.length > 1}
+        <!-- We're now sure that device.internalImage is not null, so we dont check it -->
+        {#if device.internalImages.length > 1}
           <button
             class="ml-auto flex h-11 w-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 shadow-md transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800 dark:hover:bg-zinc-600"
             onclick={() => (imageIndex = Math.max(0, imageIndex - 1))}
