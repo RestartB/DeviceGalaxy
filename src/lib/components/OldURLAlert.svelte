@@ -43,7 +43,7 @@
 					to
 					<a href="https://devicegalaxy.me" class="underline" title="devicegalaxy.me"
 						>devicegalaxy.me</a
-					>, and old links will stop working soon. Please correct any links that you may have saved
+					>, and old links will not work properly. Please correct any links that you may have saved
 					to ensure a smooth migration.
 				</p>
 			</div>
