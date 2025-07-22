@@ -1,41 +1,41 @@
 import { z } from 'zod/v4';
 
 export const editDeviceSchema = z
-	.object({
-		deviceName: z
-			.string()
-			.min(1, 'Device name is required')
-			.max(255, 'Device name must be 255 characters or less'),
-		description: z.string().max(1024, 'Description must be 1024 characters or less').optional(),
-		cpu: z.string().max(255, 'CPU must be 255 characters or less').optional(),
-		gpu: z.string().max(255, 'GPU must be 255 characters or less').optional(),
-		memory: z.string().max(255, 'Memory must be 255 characters or less').optional(),
-		storage: z.string().max(255, 'Storage must be 255 characters or less').optional(),
-		os: z.string().max(255, 'OS must be 255 characters or less').optional(),
-		brand: z.string().max(255, 'Brand must be 255 characters or less').optional(),
+  .object({
+    deviceName: z
+      .string()
+      .min(1, 'Device name is required')
+      .max(255, 'Device name must be 255 characters or less'),
+    description: z.string().max(1024, 'Description must be 1024 characters or less').optional(),
+    cpu: z.string().max(255, 'CPU must be 255 characters or less').optional(),
+    gpu: z.string().max(255, 'GPU must be 255 characters or less').optional(),
+    memory: z.string().max(255, 'Memory must be 255 characters or less').optional(),
+    storage: z.string().max(255, 'Storage must be 255 characters or less').optional(),
+    os: z.string().max(255, 'OS must be 255 characters or less').optional(),
+    brand: z.string().max(255, 'Brand must be 255 characters or less').optional(),
 
-		newImages: z
-			.instanceof(File, { message: 'Please upload a file.' })
-			.refine((f) => f.size < 5_000_000, 'A file is too big. The max size per file is 5MB.')
-			.refine(
-				(f) => f.type === 'image/png' || f.type === 'image/jpeg' || f.type === 'image/webp',
-				'Only PNG, JPEG and WEBP images are allowed.'
-			)
-			.array()
-			.min(0)
-			.max(5, 'You can only select up to 5 new images'),
-		oldImages: z.string().array().min(0),
-		imageURLs: z.url().array().min(0).max(5, 'You can only add up to 5 image URLs'),
+    newImages: z
+      .instanceof(File, { message: 'Please upload a file.' })
+      .refine((f) => f.size < 5_000_000, 'A file is too big. The max size per file is 5MB.')
+      .refine(
+        (f) => f.type === 'image/png' || f.type === 'image/jpeg' || f.type === 'image/webp',
+        'Only PNG, JPEG and WEBP images are allowed.'
+      )
+      .array()
+      .min(0)
+      .max(5, 'You can only select up to 5 new images'),
+    oldImages: z.string().array().min(0),
+    imageURLs: z.url().array().min(0).max(5, 'You can only add up to 5 image URLs'),
 
-		tags: z.number().array().min(0)
-	})
-	.refine(
-		(data) => {
-			const totalImages = (data.newImages?.length || 0) + (data.oldImages?.length || 0);
-			return totalImages <= 5;
-		},
-		{
-			message: 'Total images (existing + new) cannot exceed 5',
-			path: ['_errors']
-		}
-	);
+    tags: z.number().array().min(0)
+  })
+  .refine(
+    (data) => {
+      const totalImages = (data.newImages?.length || 0) + (data.oldImages?.length || 0);
+      return totalImages <= 5;
+    },
+    {
+      message: 'Total images (existing + new) cannot exceed 5',
+      path: ['_errors']
+    }
+  );
