@@ -54,13 +54,15 @@
   </div>
 {/if}
 
-<img
-  src={hasExternalImages
-    ? device.externalImages[0]
-    : `/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID}`}
-  alt={device.deviceName}
-  class="h-[50vh] w-full mask-b-from-70% object-cover"
-/>
+{#if hasInternalImages || hasExternalImages}
+  <img
+    src={hasExternalImages
+      ? device.externalImages[0]
+      : `/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID}`}
+    alt={device.deviceName}
+    class="h-[50vh] w-full mask-b-from-70% object-cover"
+  />
+{/if}
 
 <div class="z-10 flex flex-col gap-4 p-4">
   <div>
@@ -100,53 +102,33 @@
 
   <div class="flex w-fit flex-wrap items-center justify-center gap-2">
     {#if device.cpu}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <Cpu />
-          <h2 class="text-xl font-bold">CPU</h2>
-        </div>
-        <p>{device.cpu}</p>
-      </div>
+      <AttributePill name="CPU" icon={Cpu}>
+        {device.cpu}
+      </AttributePill>
     {/if}
-    
+
     {#if device.gpu}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <Gpu />
-          <h2 class="text-xl font-bold">GPU</h2>
-        </div>
-          <p>{device.gpu}</p>
-      </div>
+      <AttributePill name="GPU" icon={Gpu}>
+        {device.gpu}
+      </AttributePill>
     {/if}
-    
+
     {#if device.memory}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <MemoryStick />
-          <h2 class="text-xl font-bold">Memory</h2>
-        </div>
-        <p>{device.memory}</p>
-      </div>
+      <AttributePill name="Memory" icon={MemoryStick}>
+        {device.memory}
+      </AttributePill>
     {/if}
-    
+
     {#if device.storage}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <HardDrive />
-          <h2 class="text-xl font-bold">Storage</h2>
-        </div>
-        <p>{device.storage}</p>
-      </div>
+      <AttributePill name="Storage" icon={HardDrive}>
+        {device.storage}
+      </AttributePill>
     {/if}
-    
+
     {#if device.os}
-      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
-        <div class="flex items-center gap-2">
-          <Cog />
-          <h2 class="text-xl font-bold">Operating System</h2>
-        </div>
-        <p>{device.os}</p>
-      </div>
+      <AttributePill name="Operating System" icon={Cog}>
+        {device.os}
+      </AttributePill>
     {/if}
   </div>
 </div>
