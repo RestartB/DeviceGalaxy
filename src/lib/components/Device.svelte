@@ -100,36 +100,55 @@
 
   <div class="flex w-fit flex-wrap items-center justify-center gap-2">
     {#if device.cpu}
-      <AttributePill name="CPU" icon={Cpu}>
-        {device.cpu}
-      </AttributePill>
+      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
+        <div class="flex items-center gap-2">
+          <Cpu />
+          <h2 class="text-xl font-bold">CPU</h2>
+        </div>
+        <p>{device.cpu}</p>
+      </div>
     {/if}
-
+    
     {#if device.gpu}
-      <AttributePill name="GPU" icon={Gpu}>
-        {device.gpu}
-      </AttributePill>
+      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
+        <div class="flex items-center gap-2">
+          <Gpu />
+          <h2 class="text-xl font-bold">GPU</h2>
+        </div>
+          <p>{device.gpu}</p>
+      </div>
     {/if}
-
+    
     {#if device.memory}
-      <AttributePill name="Memory" icon={MemoryStick}>
-        {device.memory}
-      </AttributePill>
+      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
+        <div class="flex items-center gap-2">
+          <MemoryStick />
+          <h2 class="text-xl font-bold">Memory</h2>
+        </div>
+        <p>{device.memory}</p>
+      </div>
     {/if}
-
+    
     {#if device.storage}
-      <AttributePill name="Storage" icon={HardDrive}>
-        {device.storage}
-      </AttributePill>
+      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
+        <div class="flex items-center gap-2">
+          <HardDrive />
+          <h2 class="text-xl font-bold">Storage</h2>
+        </div>
+        <p>{device.storage}</p>
+      </div>
     {/if}
-
+    
     {#if device.os}
-      <AttributePill name="Operating System" icon={Cog}>
-        {device.os}
-      </AttributePill>
+      <div class="rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md dark:bg-zinc-700">
+        <div class="flex items-center gap-2">
+          <Cog />
+          <h2 class="text-xl font-bold">Operating System</h2>
+        </div>
+        <p>{device.os}</p>
+      </div>
     {/if}
   </div>
-</div>
 
 {#if hasInternalImages}
   <div class="flex flex-col gap-4 p-4">
