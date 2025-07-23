@@ -149,6 +149,7 @@
       </div>
     {/if}
   </div>
+</div>
 
 {#if hasInternalImages}
   <div class="flex flex-col gap-4 p-4">
