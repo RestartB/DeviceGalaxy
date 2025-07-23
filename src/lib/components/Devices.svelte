@@ -86,7 +86,7 @@
   let showResetFilters = $derived(Object.values(activeFilters).some((filter) => filter.length > 0));
 
   let page = $state(1);
-  let maxPages = $derived(Math.ceil(totalDevices / 10));
+  let maxPages = $derived(Math.ceil(totalDevices / 40));
 
   let currentSearch = $state('');
   let search = $state('');
@@ -97,7 +97,7 @@
 
     loadingDevices = true;
     try {
-      let url = `/api/devices/get_devices?offset=${(page - 1) * 10}&limit=10`;
+      let url = `/api/devices/get_devices?offset=${(page - 1) * 40}&limit=40`;
 
       const hasActiveFilters = Object.values(activeFilters).some((filter) => filter.length > 0);
 
