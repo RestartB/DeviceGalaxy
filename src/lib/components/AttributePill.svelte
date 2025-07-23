@@ -7,5 +7,5 @@
     {@render icon()}
     <h2 class="text-xl font-bold">{name}</h2>
   </div>
-  <p>{children()}</p>
+  <p>{@render children()}</p>
 </div>
