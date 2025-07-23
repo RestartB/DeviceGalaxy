@@ -219,7 +219,7 @@
       <form
         method="POST"
         class="flex flex-col"
-        action="?/newDevice"
+        action="/dash/devices?/newDevice"
         enctype="multipart/form-data"
         use:enhance
       >

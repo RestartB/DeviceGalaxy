@@ -238,7 +238,7 @@
       <form
         method="POST"
         class="flex flex-col"
-        action="?/editDevice"
+        action="/dash/devices?/editDevice"
         enctype="multipart/form-data"
         use:enhance
       >

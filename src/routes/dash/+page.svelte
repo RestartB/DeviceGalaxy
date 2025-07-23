@@ -71,17 +71,15 @@
         </a>
       {/if}
       <button
-        class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-600 px-4 py-2 font-bold text-nowrap text-white transition-colors hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-40"
+        class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-600 px-4 py-2 font-bold text-nowrap text-white transition-colors hover:bg-green-500"
         onclick={() => (createDevicePopupOpen = true)}
-        disabled
       >
         <Monitor size="20" />
         Add New Device
       </button>
       <button
-        class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-blue-600 px-4 py-2 font-bold text-nowrap text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
+        class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-blue-600 px-4 py-2 font-bold text-nowrap text-white transition-colors hover:bg-blue-500"
         onclick={() => (createTagPopupOpen = true)}
-        disabled
       >
         <Tag size="20" />
         Add New Tag
