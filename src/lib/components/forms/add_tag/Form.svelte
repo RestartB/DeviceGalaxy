@@ -25,6 +25,7 @@
   const { form, errors, message, submitting, delayed, timeout, enhance } = superForm(sourceForm, {
     validators: zod4Client(newTagSchema),
     customValidity: false,
+    invalidateAll: false,
     validationMethod: 'auto',
     id: 'newTagForm',
     delayMs: 1000,
