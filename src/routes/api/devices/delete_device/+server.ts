@@ -70,12 +70,7 @@ export async function DELETE(event) {
 
       // Delete device's image folder
       const deviceImagePath = join(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        '..',
-        '..',
+        process.cwd(),
         'user_uploads',
         'device',
         deviceId.toString()

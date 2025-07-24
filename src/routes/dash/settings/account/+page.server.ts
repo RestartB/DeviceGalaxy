@@ -40,7 +40,7 @@ export const actions = {
 
     // Create PFP folder if it doesn't exist
     try {
-      await mkdir(join(__dirname, '..', '..', '..', '..', '..', 'user_uploads', 'pfp'), {
+      await mkdir(join(process.cwd(), 'user_uploads', 'pfp'), {
         recursive: true
       });
     } catch (err) {
@@ -69,12 +69,7 @@ export const actions = {
     // Save processed image
     await writeFile(
       join(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        '..',
-        '..',
+        process.cwd(),
         'user_uploads',
         'pfp',
         session.user.id + '.webp'
