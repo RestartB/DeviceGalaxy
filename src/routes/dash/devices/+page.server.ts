@@ -240,11 +240,7 @@ export const actions = {
         if (form.data.images && form.data.images.length > 0) {
           for (const image of form.data.images) {
             const uploadDir = join(
-              __dirname,
-              '..',
-              '..',
-              '..',
-              '..',
+              process.cwd(),
               'user_uploads',
               'device',
               deviceID.toString()
@@ -491,11 +487,7 @@ export const actions = {
           if (imagesToDelete.length > 0) {
             for (const imageId of imagesToDelete) {
               const imagePath = join(
-                __dirname,
-                '..',
-                '..',
-                '..',
-                '..',
+                process.cwd(),
                 'user_uploads',
                 'device',
                 existingDevice.id.toString(),
@@ -516,11 +508,7 @@ export const actions = {
         if (form.data.newImages && form.data.newImages.length > 0) {
           for (const image of form.data.newImages) {
             const uploadDir = join(
-              __dirname,
-              '..',
-              '..',
-              '..',
-              '..',
+              process.cwd(),
               'user_uploads',
               'device',
               existingDevice.id.toString()

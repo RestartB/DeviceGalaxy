@@ -46,10 +46,7 @@ export const auth = betterAuth({
             if (
               existsSync(
                 join(
-                  __dirname,
-                  '..',
-                  '..',
-                  '..',
+                  process.cwd(),
                   'static',
                   'public',
                   'pfp',
@@ -59,10 +56,7 @@ export const auth = betterAuth({
             ) {
               await unlink(
                 join(
-                  __dirname,
-                  '..',
-                  '..',
-                  '..',
+                  process.cwd(),
                   'static',
                   'public',
                   'pfp',
@@ -80,11 +74,11 @@ export const auth = betterAuth({
             for (const device of devices) {
               if (
                 existsSync(
-                  join(__dirname, '..', '..', '..', 'user_uploads', 'device', device.id.toString())
+                  join(process.cwd(), 'user_uploads', 'device', device.id.toString())
                 )
               ) {
                 await rm(
-                  join(__dirname, '..', '..', '..', 'user_uploads', 'device', device.id.toString()),
+                  join(process.cwd(), 'user_uploads', 'device', device.id.toString()),
                   {
                     recursive: true,
                     force: true
