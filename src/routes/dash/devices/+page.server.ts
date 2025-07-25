@@ -220,6 +220,7 @@ export const actions = {
             userId: session.user.id,
             deviceName: form.data.deviceName,
             description: form.data.description,
+            additional: form.data.additional,
             cpu: newCPU?.id,
             gpu: newGPU?.id,
             memory: newMemory?.id,
@@ -544,6 +545,7 @@ export const actions = {
           .set({
             deviceName: form.data.deviceName,
             description: form.data.description,
+            additional: form.data.additional,
             cpu: newCPU?.id,
             gpu: newGPU?.id,
             memory: newMemory?.id,
