@@ -1,4 +1,5 @@
 import { error } from '@sveltejs/kit';
+import { DEVICE_LIMIT } from '$env/static/private';
 
 import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
@@ -8,7 +9,7 @@ import { newTagSchema } from '$lib/schema/newTag';
 
 import { auth } from '$lib/server/auth';
 
-import { eq, and } from 'drizzle-orm';
+import { eq, and, count } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import type { InferSelectModel } from 'drizzle-orm';
 import {
@@ -98,6 +99,17 @@ export const actions = {
     // } else {
     //   return error(400, 'Turnstile token is required.');
     // }
+
+    // Check device limit
+    const deviceCount = await db
+      .select({ count: count() })
+      .from(userDevices)
+      .where(eq(userDevices.userId, session.user.id))
+      .get();
+
+    if (deviceCount && deviceCount.count >= parseInt(DEVICE_LIMIT)) {
+      return error(403, `Device limit reached. You can only have up to ${DEVICE_LIMIT} devices.`);
+    }
 
     // Check that all provided tags exist
     if (form.data.tags && form.data.tags.length > 0) {
