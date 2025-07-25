@@ -366,6 +366,7 @@
                 multiple
                 name="images"
                 accept="image/png, image/jpeg, image/webp"
+                class="file:h-11 file:cursor-pointer file:rounded-full file:border-2 file:border-zinc-400 file:bg-zinc-100 file:px-4 file:py-2 file:text-center file:font-bold file:text-nowrap file:dark:bg-zinc-800"
                 bind:files={$files}
               />
 
@@ -525,6 +526,7 @@
             <div class="rounded-lg bg-zinc-200 p-4 text-sm dark:bg-zinc-700">
               <p class="break-words"><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
               <p class="break-words"><strong>Description:</strong> {$form.description || 'N/A'}</p>
+              <p class="break-words"><strong>Additional Notes:</strong> {$form.additional || 'N/A'}</p>
               <p class="break-words"><strong>Brand:</strong> {$form.brand || 'N/A'}</p>
               <p class="break-words"><strong>CPU:</strong> {$form.cpu || 'N/A'}</p>
               <p class="break-words"><strong>Memory:</strong> {$form.memory || 'N/A'}</p>
@@ -559,6 +561,9 @@
                   {/if}
                   {#if $errors.description}
                     <li class="text-red-600 dark:text-red-400">{$errors.description}</li>
+                  {/if}
+                  {#if $errors.additional}
+                    <li class="text-red-600 dark:text-red-400">{$errors.additional}</li>
                   {/if}
                   {#if $errors.brand}
                     <li class="text-red-600 dark:text-red-400">{$errors.brand}</li>
