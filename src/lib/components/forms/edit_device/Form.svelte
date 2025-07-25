@@ -612,7 +612,11 @@
               </div>
             {/if}
 
-            <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="auto"></div>
+            <div
+              class="cf-turnstile"
+              data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}
+              data-theme="auto"
+            ></div>
 
             <p class="mt-auto text-base text-zinc-500">
               Once you're happy with the details above, click below to create.

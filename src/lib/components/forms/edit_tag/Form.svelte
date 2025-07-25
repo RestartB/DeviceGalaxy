@@ -163,7 +163,11 @@
             {#if $errors.colour}<span class="text-red-600">{$errors.colour}</span>{/if}
           {/if}
 
-          <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="auto"></div>
+          <div
+            class="cf-turnstile"
+            data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}
+            data-theme="auto"
+          ></div>
         </div>
         <div class="border-t p-6">
           <Submit text="Update Tag" {hasErrors} submitting={$submitting} delayed={$delayed} />
