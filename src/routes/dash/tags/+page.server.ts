@@ -10,6 +10,8 @@ import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
 import { tags, lastActionTimes } from '$lib/server/db/schema';
 
+import { verifyTurnstile } from '$lib';
+
 // thank you https://stackoverflow.com/a/41491220
 function colorIsDarkSimple(bgColor: string) {
   const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
@@ -66,6 +68,19 @@ export const actions = {
 
     if (!form.valid) {
       return error(400, 'Invalid form');
+    }
+
+    if (form.data['cf-turnstile-response']) {
+      // Verify Turnstile token
+      const isValid = await verifyTurnstile(
+        form.data['cf-turnstile-response'],
+        request.headers.get('cf-connecting-ip') || ''
+      );
+      if (!isValid) {
+        return error(400, 'Invalid Turnstile token. Please try again.');
+      }
+    } else {
+      return error(400, 'Turnstile token is required.');
     }
 
     try {

@@ -22,7 +22,8 @@ import {
   lastActionTimes
 } from '$lib/server/db/schema';
 
-import deleteOrphans from '$lib/deleteOrphans.js';
+import deleteOrphans from '$lib/deleteOrphans';
+import { verifyTurnstile } from '$lib';
 
 import sharp from 'sharp';
 import { existsSync } from 'fs';
@@ -83,6 +84,19 @@ export const actions = {
 
     if (!form.valid) {
       return error(400, 'Invalid form');
+    }
+
+    if (form.data['cf-turnstile-response']) {
+      // Verify Turnstile token
+      const isValid = await verifyTurnstile(
+        form.data['cf-turnstile-response'],
+        request.headers.get('cf-connecting-ip') || ''
+      );
+      if (!isValid) {
+        return error(400, 'Invalid Turnstile token. Please try again.');
+      }
+    } else {
+      return error(400, 'Turnstile token is required.');
     }
 
     // Check that all provided tags exist
@@ -356,6 +370,19 @@ export const actions = {
 
     if (!form.valid) {
       return error(400, 'Invalid form');
+    }
+
+    if (form.data['cf-turnstile-response']) {
+      // Verify Turnstile token
+      const isValid = await verifyTurnstile(
+        form.data['cf-turnstile-response'],
+        request.headers.get('cf-connecting-ip') || ''
+      );
+      if (!isValid) {
+        return error(400, 'Invalid Turnstile token. Please try again.');
+      }
+    } else {
+      return error(400, 'Turnstile token is required.');
     }
 
     try {

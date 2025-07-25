@@ -28,7 +28,8 @@ export const editDeviceSchema = z
     oldImages: z.string().array().min(0),
     imageURLs: z.url().array().min(0).max(5, 'You can only add up to 5 image URLs'),
 
-    tags: z.number().array().min(0)
+    tags: z.number().array().min(0),
+    "cf-turnstile-response": z.string().nonempty()
   })
   .refine(
     (data) => {

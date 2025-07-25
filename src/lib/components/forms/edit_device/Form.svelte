@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+
   import { tick } from 'svelte';
   import { fade } from 'svelte/transition';
 
@@ -506,7 +508,10 @@
             <div class="rounded-lg bg-zinc-200 p-4 text-sm dark:bg-zinc-700">
               <p class="break-words"><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
               <p class="break-words"><strong>Description:</strong> {$form.description || 'N/A'}</p>
-              <p class="break-words"><strong>Additional Notes:</strong> {$form.additional || 'N/A'}</p>
+              <p class="break-words">
+                <strong>Additional Notes:</strong>
+                {$form.additional || 'N/A'}
+              </p>
               <p class="break-words"><strong>Brand:</strong> {$form.brand || 'N/A'}</p>
               <p class="break-words"><strong>CPU:</strong> {$form.cpu || 'N/A'}</p>
               <p class="break-words"><strong>Memory:</strong> {$form.memory || 'N/A'}</p>
@@ -606,6 +611,9 @@
                 </ul>
               </div>
             {/if}
+
+            <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="auto"></div>
+
             <p class="mt-auto text-base text-zinc-500">
               Once you're happy with the details above, click below to create.
             </p>

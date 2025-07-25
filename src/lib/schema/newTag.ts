@@ -9,5 +9,6 @@ export const newTagSchema = z.object({
   colour: z
     .string()
     .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, 'Invalid hex color code')
-    .optional()
+    .optional(),
+  "cf-turnstile-response": z.string().nonempty()
 });

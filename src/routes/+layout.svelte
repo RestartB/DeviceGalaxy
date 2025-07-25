@@ -25,6 +25,8 @@
 </script>
 
 <svelte:head>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  
   <title>DeviceGalaxy</title>
   <meta content="#6463FF" data-react-helmet="true" name="theme-color" />
 
