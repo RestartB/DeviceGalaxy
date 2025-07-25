@@ -1,4 +1,5 @@
 import { error } from '@sveltejs/kit';
+import { TAG_LIMIT } from '$env/static/private';
 
 import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
@@ -7,7 +8,7 @@ import { newTagSchema } from '$lib/schema/newTag';
 import { auth } from '$lib/server/auth';
 
 import { db } from '$lib/server/db';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, count } from 'drizzle-orm';
 import { tags, lastActionTimes } from '$lib/server/db/schema';
 
 import { verifyTurnstile } from '$lib';
@@ -82,6 +83,17 @@ export const actions = {
     // } else {
     //   return error(400, 'Turnstile token is required.');
     // }
+
+    // Check tag limit
+    const tagCount = await db
+      .select({ count: count() })
+      .from(tags)
+      .where(eq(tags.userId, session.user.id))
+      .get();
+
+    if (tagCount && tagCount.count >= parseInt(TAG_LIMIT)) {
+      return error(403, `Tag limit reached. You can only have up to ${TAG_LIMIT} tags.`);
+    }
 
     try {
       await db.insert(tags).values({
