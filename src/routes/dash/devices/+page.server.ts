@@ -86,18 +86,18 @@ export const actions = {
       return error(400, 'Invalid form');
     }
 
-    if (form.data['cf-turnstile-response']) {
-      // Verify Turnstile token
-      const isValid = await verifyTurnstile(
-        form.data['cf-turnstile-response'],
-        request.headers.get('cf-connecting-ip') || ''
-      );
-      if (!isValid) {
-        return error(400, 'Invalid Turnstile token. Please try again.');
-      }
-    } else {
-      return error(400, 'Turnstile token is required.');
-    }
+    // if (form.data['cf-turnstile-response']) {
+    //   // Verify Turnstile token
+    //   const isValid = await verifyTurnstile(
+    //     form.data['cf-turnstile-response'],
+    //     request.headers.get('cf-connecting-ip') || ''
+    //   );
+    //   if (!isValid) {
+    //     return error(400, 'Invalid Turnstile token. Please try again.');
+    //   }
+    // } else {
+    //   return error(400, 'Turnstile token is required.');
+    // }
 
     // Check that all provided tags exist
     if (form.data.tags && form.data.tags.length > 0) {
@@ -372,18 +372,18 @@ export const actions = {
       return error(400, 'Invalid form');
     }
 
-    if (form.data['cf-turnstile-response']) {
-      // Verify Turnstile token
-      const isValid = await verifyTurnstile(
-        form.data['cf-turnstile-response'],
-        request.headers.get('cf-connecting-ip') || ''
-      );
-      if (!isValid) {
-        return error(400, 'Invalid Turnstile token. Please try again.');
-      }
-    } else {
-      return error(400, 'Turnstile token is required.');
-    }
+    // if (form.data['cf-turnstile-response']) {
+    //   // Verify Turnstile token
+    //   const isValid = await verifyTurnstile(
+    //     form.data['cf-turnstile-response'],
+    //     request.headers.get('cf-connecting-ip') || ''
+    //   );
+    //   if (!isValid) {
+    //     return error(400, 'Invalid Turnstile token. Please try again.');
+    //   }
+    // } else {
+    //   return error(400, 'Turnstile token is required.');
+    // }
 
     try {
       let newCPU: InferSelectModel<typeof cpus> | undefined;

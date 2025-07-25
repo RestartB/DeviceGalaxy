@@ -26,5 +26,5 @@ export const newDeviceSchema = z.object({
     .max(5, 'You can only select up to 5 images'),
   imageURLs: z.url().array().min(0).max(5, 'You can only select up to 5 images'),
   tags: z.number().array().min(0),
-  "cf-turnstile-response": z.string().nonempty()
+  "cf-turnstile-response": z.string().optional()
 });
