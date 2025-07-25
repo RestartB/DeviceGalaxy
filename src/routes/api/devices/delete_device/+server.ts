@@ -2,7 +2,16 @@ import { json } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
-import { userDevices, cpus, gpus, memory, storage, os, brands } from '$lib/server/db/schema';
+import {
+  userDevices,
+  cpus,
+  gpus,
+  memory,
+  storage,
+  os,
+  brands,
+  lastActionTimes
+} from '$lib/server/db/schema';
 
 import deleteOrphans from '$lib/deleteOrphans';
 
@@ -23,6 +32,34 @@ export async function DELETE(event) {
   if (!session) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  // Get last deleted time
+  const lastDeletedTime = await db
+    .select({ lastDeletedTime: lastActionTimes.lastDeletedTime })
+    .from(lastActionTimes)
+    .where(eq(lastActionTimes.userId, session.user.id))
+    .get();
+
+  if (lastDeletedTime && lastDeletedTime.lastDeletedTime) {
+    const lastDeleted = new Date(lastDeletedTime.lastDeletedTime);
+    const currentTime = new Date();
+
+    // 10 second cooldown
+    if (currentTime.getTime() - lastDeleted.getTime() < 10000) {
+      return json({ error: 'Slow down! Please wait a few seconds before deleting a device.' }, { status: 429 });
+    }
+
+    // Update last deleted time
+    await db
+      .update(lastActionTimes)
+      .set({ lastDeletedTime: currentTime })
+      .where(eq(lastActionTimes.userId, session.user.id));
+  } else {
+      await db
+        .insert(lastActionTimes)
+        .values({ userId: session.user.id })
+        .onConflictDoNothing();
+    }
 
   const deviceId = event.url.searchParams.get('id');
   if (!deviceId) {
@@ -69,12 +106,7 @@ export async function DELETE(event) {
       }
 
       // Delete device's image folder
-      const deviceImagePath = join(
-        process.cwd(),
-        'user_uploads',
-        'device',
-        deviceId.toString()
-      );
+      const deviceImagePath = join(process.cwd(), 'user_uploads', 'device', deviceId.toString());
       if (existsSync(deviceImagePath)) {
         await rm(deviceImagePath, { recursive: true });
       }

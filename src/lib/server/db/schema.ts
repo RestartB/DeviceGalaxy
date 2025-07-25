@@ -105,6 +105,30 @@ export const shares = sqliteTable('shares', {
     .$defaultFn(() => [])
 });
 
+export const lastActionTimes = sqliteTable('last_action_times', {
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  lastCreatedTime: integer('last_created_time', { mode: 'timestamp' })
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  lastUpdatedTime: integer('last_updated_time', { mode: 'timestamp' })
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  lastDeletedTime: integer('last_deleted_time', { mode: 'timestamp' })
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  lastTagCreatedTime: integer('last_tag_created_time', { mode: 'timestamp' })
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  lastTagUpdatedTime: integer('last_tag_updated_time', { mode: 'timestamp' })
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  lastTagDeletedTime: integer('last_tag_deleted_time', { mode: 'timestamp' })
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull()
+});
+
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),

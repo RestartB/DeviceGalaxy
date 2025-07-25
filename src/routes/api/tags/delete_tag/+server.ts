@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and, sql } from 'drizzle-orm';
-import { userDevices, tags } from '$lib/server/db/schema';
+import { userDevices, tags, lastActionTimes } from '$lib/server/db/schema';
 
 export async function DELETE(event) {
   // Check if the user is authenticated
@@ -12,6 +12,34 @@ export async function DELETE(event) {
 
   if (!session) {
     return json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Get last deleted time
+  const lastTagDeletedTime = await db
+    .select({ lastTagDeletedTime: lastActionTimes.lastTagDeletedTime })
+    .from(lastActionTimes)
+    .where(eq(lastActionTimes.userId, session.user.id))
+    .get();
+
+  if (lastTagDeletedTime && lastTagDeletedTime.lastTagDeletedTime) {
+    const lastDeleted = new Date(lastTagDeletedTime.lastTagDeletedTime);
+    const currentTime = new Date();
+
+    // 10 second cooldown
+    if (currentTime.getTime() - lastDeleted.getTime() < 10000) {
+      return json(
+        { error: 'Slow down! Please wait a few seconds before deleting a tag.' },
+        { status: 429 }
+      );
+    }
+
+    // Update last deleted time
+    await db
+      .update(lastActionTimes)
+      .set({ lastTagDeletedTime: currentTime })
+      .where(eq(lastActionTimes.userId, session.user.id));
+  } else {
+    await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
   }
 
   const tagId = event.url.searchParams.get('id');

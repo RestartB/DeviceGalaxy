@@ -11,7 +11,16 @@ import { auth } from '$lib/server/auth';
 import { eq, and } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import type { InferSelectModel } from 'drizzle-orm';
-import { userDevices, cpus, gpus, memory, storage, os, brands } from '$lib/server/db/schema';
+import {
+  userDevices,
+  cpus,
+  gpus,
+  memory,
+  storage,
+  os,
+  brands,
+  lastActionTimes
+} from '$lib/server/db/schema';
 
 import deleteOrphans from '$lib/deleteOrphans.js';
 
@@ -43,6 +52,31 @@ export const actions = {
 
     if (!session || !session.user) {
       return error(401, 'Unauthorized');
+    }
+
+    // Get last created time
+    const lastCreatedTime = await db
+      .select({ lastCreatedTime: lastActionTimes.lastCreatedTime })
+      .from(lastActionTimes)
+      .where(eq(lastActionTimes.userId, session.user.id))
+      .get();
+
+    if (lastCreatedTime && lastCreatedTime.lastCreatedTime) {
+      const lastCreated = new Date(lastCreatedTime.lastCreatedTime);
+      const currentTime = new Date();
+
+      // 10 second cooldown
+      if (currentTime.getTime() - lastCreated.getTime() < 10000) {
+        return error(429, 'Slow down! Please wait a few seconds before creating another device.');
+      }
+
+      // Update last created time
+      await db
+        .update(lastActionTimes)
+        .set({ lastCreatedTime: currentTime })
+        .where(eq(lastActionTimes.userId, session.user.id));
+    } else {
+      await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
     }
 
     const form = await superValidate(formData, zod4(newDeviceSchema));
@@ -240,12 +274,7 @@ export const actions = {
         const processedImages: string[] = [];
         if (form.data.images && form.data.images.length > 0) {
           for (const image of form.data.images) {
-            const uploadDir = join(
-              process.cwd(),
-              'user_uploads',
-              'device',
-              deviceID.toString()
-            );
+            const uploadDir = join(process.cwd(), 'user_uploads', 'device', deviceID.toString());
             await mkdir(uploadDir, { recursive: true });
 
             // Get unique path for image
@@ -296,6 +325,31 @@ export const actions = {
 
     if (!session || !session.user) {
       return error(401, 'Unauthorized');
+    }
+
+    // Get last updated time
+    const lastUpdatedTime = await db
+      .select({ lastUpdatedTime: lastActionTimes.lastUpdatedTime })
+      .from(lastActionTimes)
+      .where(eq(lastActionTimes.userId, session.user.id))
+      .get();
+
+    if (lastUpdatedTime && lastUpdatedTime.lastUpdatedTime) {
+      const lastUpdated = new Date(lastUpdatedTime.lastUpdatedTime);
+      const currentTime = new Date();
+
+      // 10 second cooldown
+      if (currentTime.getTime() - lastUpdated.getTime() < 10000) {
+        return error(429, 'Slow down! Please wait a few seconds before updating a device.');
+      }
+
+      // Update last updated time
+      await db
+        .update(lastActionTimes)
+        .set({ lastUpdatedTime: currentTime })
+        .where(eq(lastActionTimes.userId, session.user.id));
+    } else {
+      await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
     }
 
     const form = await superValidate(formData, zod4(editDeviceSchema));

@@ -8,7 +8,7 @@ import { auth } from '$lib/server/auth';
 
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
-import { tags } from '$lib/server/db/schema';
+import { tags, lastActionTimes } from '$lib/server/db/schema';
 
 // thank you https://stackoverflow.com/a/41491220
 function colorIsDarkSimple(bgColor: string) {
@@ -35,6 +35,31 @@ export const actions = {
 
     if (!session || !session.user) {
       return error(401, 'Unauthorized');
+    }
+
+    // Get last tag created time
+    const lastTagCreatedTime = await db
+      .select({ lastTagCreatedTime: lastActionTimes.lastTagCreatedTime })
+      .from(lastActionTimes)
+      .where(eq(lastActionTimes.userId, session.user.id))
+      .get();
+
+    if (lastTagCreatedTime && lastTagCreatedTime.lastTagCreatedTime) {
+      const lastCreated = new Date(lastTagCreatedTime.lastTagCreatedTime);
+      const currentTime = new Date();
+
+      // 10 second cooldown
+      if (currentTime.getTime() - lastCreated.getTime() < 10000) {
+        return error(429, 'Slow down! Please wait a few seconds before creating another tag.');
+      }
+
+      // Update last created time
+      await db
+        .update(lastActionTimes)
+        .set({ lastTagCreatedTime: currentTime })
+        .where(eq(lastActionTimes.userId, session.user.id));
+    } else {
+      await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
     }
 
     const form = await superValidate(request, zod4(newTagSchema));
@@ -71,6 +96,31 @@ export const actions = {
 
     if (!session || !session.user) {
       return error(401, 'Unauthorized');
+    }
+
+    // Get last tag updated time
+    const lastTagUpdatedTime = await db
+      .select({ lastTagUpdatedTime: lastActionTimes.lastTagUpdatedTime })
+      .from(lastActionTimes)
+      .where(eq(lastActionTimes.userId, session.user.id))
+      .get();
+
+    if (lastTagUpdatedTime && lastTagUpdatedTime.lastTagUpdatedTime) {
+      const lastUpdated = new Date(lastTagUpdatedTime.lastTagUpdatedTime);
+      const currentTime = new Date();
+
+      // 10 second cooldown
+      if (currentTime.getTime() - lastUpdated.getTime() < 10000) {
+        return error(429, 'Slow down! Please wait a few seconds before creating another tag.');
+      }
+
+      // Update last created time
+      await db
+        .update(lastActionTimes)
+        .set({ lastTagUpdatedTime: currentTime })
+        .where(eq(lastActionTimes.userId, session.user.id));
+    } else {
+      await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
     }
 
     const form = await superValidate(request, zod4(newTagSchema));
