@@ -7,6 +7,7 @@ export const userDevices = sqliteTable('devices', {
     .references(() => user.id, { onDelete: 'cascade' }),
   deviceName: text('name', { length: 255 }).notNull(),
   description: text('description', { length: 1024 }).default(''),
+  additional: text('additional', { length: 1024 }).default(''),
   cpu: integer('cpu'),
   gpu: integer('gpu'),
   memory: integer('memory'),

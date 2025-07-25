@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import {
+    InfoIcon,
     MoveLeft,
     Cpu,
     Gpu,
@@ -12,7 +13,7 @@
     MoveRightIcon
   } from '@lucide/svelte';
   import Avatar from '$lib/components/Avatar.svelte';
-  import AttributePill from '$lib/components/AttributePill.svelte';
+  import AttributeTile from '$lib/components/AttributeTile.svelte';
 
   const { data, shareID } = $props();
   const device = data.device;
@@ -64,14 +65,37 @@
   />
 {/if}
 
-<div class="z-10 flex flex-col gap-4 p-4">
+<div class="z-10 flex flex-col gap-4 p-4 pb-0">
   <div>
     {#if device.brand}
       <p class="text-sm text-zinc-500 dark:text-zinc-400">{device.brand}</p>
     {/if}
     <h1 class="text-4xl font-bold">{device.deviceName}</h1>
+    {#if shareID}
+      <div class="flex max-w-full flex-wrap items-center gap-2">
+        <Avatar
+          src={data.shareUser?.image}
+          name={data.shareUser?.name}
+          size={30}
+          className="rounded-full"
+        />
+        <p class="text-base text-zinc-500 dark:text-zinc-400">
+          from <strong>{data.shareUser?.name}</strong>'s galaxy
+        </p>
+      </div>
+    {/if}
     <p>{device.description || 'No description.'}</p>
   </div>
+
+  {#if device.additional}
+    <div>
+      <div class="flex flex-nowrap items-center justify-start gap-1">
+        <InfoIcon />
+        <h2 class="font-bold">Additional Notes</h2>
+      </div>
+      <p>{device.additional}</p>
+    </div>
+  {/if}
 
   {#if device.tags?.length > 0}
     <div class="flex w-fit flex-wrap items-center justify-center gap-2">
@@ -86,49 +110,35 @@
     </div>
   {/if}
 
-  {#if shareID}
-    <div class="flex max-w-full flex-wrap items-center gap-2">
-      <Avatar
-        src={data.shareUser?.image}
-        name={data.shareUser?.name}
-        size={30}
-        className="rounded-full"
-      />
-      <p class="text-base text-zinc-500 dark:text-zinc-400">
-        from <strong>{data.shareUser?.name}</strong>'s galaxy
-      </p>
-    </div>
-  {/if}
-
   <div class="flex w-fit flex-wrap items-center justify-center gap-2">
     {#if device.cpu}
-      <AttributePill name="CPU" icon={Cpu}>
+      <AttributeTile name="CPU" icon={Cpu}>
         {device.cpu}
-      </AttributePill>
+      </AttributeTile>
     {/if}
 
     {#if device.gpu}
-      <AttributePill name="GPU" icon={Gpu}>
+      <AttributeTile name="GPU" icon={Gpu}>
         {device.gpu}
-      </AttributePill>
+      </AttributeTile>
     {/if}
 
     {#if device.memory}
-      <AttributePill name="Memory" icon={MemoryStick}>
+      <AttributeTile name="Memory" icon={MemoryStick}>
         {device.memory}
-      </AttributePill>
+      </AttributeTile>
     {/if}
 
     {#if device.storage}
-      <AttributePill name="Storage" icon={HardDrive}>
+      <AttributeTile name="Storage" icon={HardDrive}>
         {device.storage}
-      </AttributePill>
+      </AttributeTile>
     {/if}
 
     {#if device.os}
-      <AttributePill name="Operating System" icon={Cog}>
+      <AttributeTile name="Operating System" icon={Cog}>
         {device.os}
-      </AttributePill>
+      </AttributeTile>
     {/if}
   </div>
 </div>

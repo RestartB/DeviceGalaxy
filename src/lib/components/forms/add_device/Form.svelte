@@ -225,27 +225,42 @@
       >
         <div class="relative h-110 overflow-hidden">
           <div
-            class="absolute inset-0 flex flex-col gap-4 overflow-y-auto p-6 transition-transform duration-300"
+            class="absolute inset-0 overflow-y-auto p-6 transition-transform duration-300"
             style:transform="translateX({(0 - formPage) * 100}%)"
           >
-            <h3 class="text-2xl font-semibold">Basic Information</h3>
-            <label for="deviceName" class="text-sm font-medium">Device Name</label>
-            <input
-              type="text"
-              id="deviceName"
-              name="deviceName"
-              class="w-full rounded-lg border p-2"
-              bind:value={$form.deviceName}
-            />
-            {#if $errors.deviceName}<span class="text-red-600">{$errors.deviceName}</span>{/if}
-            <label for="description" class="text-sm font-medium">Description</label>
-            <textarea
-              id="description"
-              name="og:description"
-              class="h-24 w-full rounded-lg border p-2"
-              bind:value={$form.description}
-            ></textarea>
-            {#if $errors.description}<span class="text-red-600">{$errors.description}</span>{/if}
+            <div class="flex flex-col gap-4">
+              <h3 class="text-2xl font-semibold">Basic Information</h3>
+              <label for="deviceName" class="text-sm font-medium">Device Name</label>
+              <input
+                type="text"
+                id="deviceName"
+                name="deviceName"
+                class="w-full rounded-lg border p-2"
+                bind:value={$form.deviceName}
+              />
+              {#if $errors.deviceName}<span class="text-red-600">{$errors.deviceName}</span>{/if}
+              <label for="description" class="text-sm font-medium">Description</label>
+              <textarea
+                id="description"
+                name="description"
+                class="min-h-20 w-full rounded-lg border p-2"
+                bind:value={$form.description}
+              ></textarea>
+              {#if $errors.description}<span class="text-red-600">{$errors.description}</span>{/if}
+              <div>
+                <label for="additional" class="text-sm font-medium">Additional Notes</label>
+                <p class="text-sm font-light">
+                  Information that only shows in the fullscreen view.
+                </p>
+              </div>
+              <textarea
+                id="additional"
+                name="additional"
+                class="min-h-20 w-full rounded-lg border p-2"
+                bind:value={$form.additional}
+              ></textarea>
+              {#if $errors.additional}<span class="text-red-600">{$errors.additional}</span>{/if}
+            </div>
           </div>
 
           <div
