@@ -104,7 +104,7 @@
         {:else if data.totalCount > 5}
           <a
             class="relative flex max-w-sm min-w-50 flex-1 flex-col items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md sm:min-w-80 dark:bg-zinc-700"
-            href="/dash/dash/devices"
+            href="/dash/devices"
           >
             <div
               class="mt-auto flex max-w-full flex-col items-center justify-center gap-2 overflow-hidden"
