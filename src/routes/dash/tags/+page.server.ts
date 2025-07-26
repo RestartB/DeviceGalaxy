@@ -156,6 +156,19 @@ export const actions = {
       return error(400, 'Invalid form');
     }
 
+    // if (form.data['cf-turnstile-response']) {
+    //   // Verify Turnstile token
+    //   const isValid = await verifyTurnstile(
+    //     form.data['cf-turnstile-response'],
+    //     request.headers.get('cf-connecting-ip') || ''
+    //   );
+    //   if (!isValid) {
+    //     return error(400, 'Invalid Turnstile token. Please try again.');
+    //   }
+    // } else {
+    //   return error(400, 'Turnstile token is required.');
+    // }
+
     try {
       const existingTag = await db
         .select()

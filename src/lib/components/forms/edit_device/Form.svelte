@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+  import { Turnstile } from 'svelte-turnstile';
+
   import { tick } from 'svelte';
   import { fade } from 'svelte/transition';
 
@@ -45,6 +48,8 @@
     refreshAll: any;
   } = $props();
 
+  let reset = $state<() => void>();
+
   const { form, errors, message, submitting, delayed, timeout, formId, enhance, validateForm } =
     superForm(sourceForm, {
       validators: zod4Client(editDeviceSchema),
@@ -57,6 +62,11 @@
       onError: (error) => {
         console.error('Form submission error:', error);
         toast.error('Failed to update device. Try again later.');
+      },
+
+      onUpdated() {
+        // When the form is updated, we reset the turnstile
+        reset?.();
       }
     });
 
@@ -403,7 +413,7 @@
               <!-- New Images Upload Section -->
               <div>
                 <h4 class="text-lg font-semibold">Add New Images</h4>
-                <p>Max size per image: 5MB</p>
+                <p>Max size per image: 10MB</p>
                 <input
                   type="file"
                   multiple
@@ -609,6 +619,16 @@
                 </ul>
               </div>
             {/if}
+
+            <Turnstile
+              siteKey={PUBLIC_TURNSTILE_SITE_KEY}
+              theme="auto"
+              bind:reset
+              on:callback={(event) => {
+                const { token } = event.detail;
+                $form['cf-turnstile-response'] = token;
+              }}
+            />
 
             <p class="mt-auto text-base text-zinc-500">
               Once you're happy with the details above, click below to create.

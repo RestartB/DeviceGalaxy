@@ -17,7 +17,7 @@ export const editDeviceSchema = z
 
     newImages: z
       .instanceof(File, { message: 'Please upload a file.' })
-      .refine((f) => f.size < 5_000_000, 'A file is too big. The max size per file is 5MB.')
+      .refine((f) => f.size < 10_000_000, 'This file is too big. The max size per file is 10MB.')
       .refine(
         (f) => f.type === 'image/png' || f.type === 'image/jpeg' || f.type === 'image/webp',
         'Only PNG, JPEG and WEBP images are allowed.'
@@ -29,7 +29,7 @@ export const editDeviceSchema = z
     imageURLs: z.url().array().min(0).max(5, 'You can only add up to 5 image URLs'),
 
     tags: z.number().array().min(0),
-    "cf-turnstile-response": z.string().nonempty('Please complete the Captcha.')
+    'cf-turnstile-response': z.string().nonempty('Please complete the Captcha.')
   })
   .refine(
     (data) => {

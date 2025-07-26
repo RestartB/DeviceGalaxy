@@ -1,29 +1,29 @@
 <script lang="ts">
   let { data } = $props();
+
+  import { page } from '$app/state';
   import Device from '$lib/components/Device.svelte';
+
+  const utf8Arr = new TextEncoder().encode(`${data.share.id}-${data.device?.id}`);
+  const base64Encoded = btoa(String.fromCharCode(...utf8Arr));
+  const statusId = base64Encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 </script>
 
 <svelte:head>
-  <title>DeviceGalaxy - {data.device?.deviceName}</title>
-  <meta property="og:title" content={data.device?.deviceName} />
-  <meta
-    name="og:description"
-    content={data.device?.description || `View ${data.device?.deviceName} on DeviceGalaxy.`}
-  />
-  <meta content="DeviceGalaxy" property="og:site_name" />
+  {#if data.shareUser && data.device}
+    <meta property="og:image" content="" />
+    <meta name="twitter:card" content="tweet" />
 
-  {#if data.device?.internalImages && data.device.internalImages.length > 0}
-    <meta content="summary_large_image" name="twitter:card" />
-    <meta
-      property="og:image"
-      content="{data.baseURL}/api/image/device/{data.device.id}/{data.device
-        .internalImages[0]}?share={data.share.id}"
+    <meta name="og:title" content="{data.device.deviceName} (@{data.shareUser.name})" />
+    <link
+      type="application/activity+json"
+      href="{page.url.origin}/users/{data.shareUser.name}/statuses/{statusId}"
     />
-  {:else if data.device?.externalImages && data.device.externalImages.length > 0}
-    <meta content="summary_large_image" name="twitter:card" />
-    <meta property="og:image" content={data.device.externalImages[0]} />
-  {:else}
-    <meta property="og:image" content="https://devicegalaxy.me/favicon.png" />
+
+    <meta name="twitter:image" content={data.shareUser.image} />
+    <meta name="twitter:creator" content="@" />
+
+    <meta property="og:description" content={data.device.description} />
   {/if}
 </svelte:head>
 

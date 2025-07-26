@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+  import { Turnstile } from 'svelte-turnstile';
+
   import { tick } from 'svelte';
   import { fade } from 'svelte/transition';
 
@@ -51,6 +54,8 @@
     refreshAll: any;
   } = $props();
 
+  let reset = $state<() => void>();
+
   const { form, errors, message, submitting, delayed, timeout, enhance, validateForm } = superForm(
     sourceForm,
     {
@@ -65,6 +70,11 @@
         console.error('Form submission error:', error);
         toast.error('Failed to create device. Try again later.');
       },
+
+      onUpdated() {
+        // When the form is updated, we reset the turnstile
+        reset?.();
+      }
     }
   );
 
@@ -359,7 +369,7 @@
               <p>
                 You can upload images of your device here. The first image will also be used for the
                 thumbnail. Please ensure that your images comply with the Terms of Service. Max size
-                per image: 5MB.
+                per image: 10MB.
               </p>
               <input
                 type="file"
@@ -629,6 +639,16 @@
                 </ul>
               </div>
             {/if}
+
+            <Turnstile
+              siteKey={PUBLIC_TURNSTILE_SITE_KEY}
+              theme="auto"
+              bind:reset
+              on:callback={(event) => {
+                const { token } = event.detail;
+                $form['cf-turnstile-response'] = token;
+              }}
+            />
 
             <p class="mt-auto text-base text-zinc-500">
               Once you're happy with the details above, click below to create.

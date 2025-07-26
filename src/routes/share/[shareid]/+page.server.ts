@@ -103,5 +103,6 @@ export const load = async (event) => {
       device: processedDevice
     };
   }
+
   return { share, shareUser, baseURL: event.url.origin };
 };

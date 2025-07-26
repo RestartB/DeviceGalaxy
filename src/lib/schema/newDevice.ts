@@ -16,7 +16,7 @@ export const newDeviceSchema = z.object({
   brand: z.string().max(255, 'Brand must be 255 characters or less').optional(),
   images: z
     .instanceof(File, { message: 'Please upload a file.' })
-    .refine((f) => f.size < 5000000, 'A file is too big. The max size per file is 5MB.')
+    .refine((f) => f.size < 10_000_000, 'This file is too big. The max size per file is 10MB.')
     .refine(
       (f) => f.type === 'image/png' || f.type === 'image/jpeg' || f.type === 'image/webp',
       'Only PNG, JPEG and WEBP images are allowed.'
@@ -26,5 +26,5 @@ export const newDeviceSchema = z.object({
     .max(5, 'You can only select up to 5 images'),
   imageURLs: z.url().array().min(0).max(5, 'You can only select up to 5 images'),
   tags: z.number().array().min(0),
-  "cf-turnstile-response": z.string().nonempty('Please complete the Captcha.')
+  'cf-turnstile-response': z.string().nonempty('Please complete the Captcha.')
 });

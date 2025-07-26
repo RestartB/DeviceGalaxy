@@ -25,10 +25,10 @@
 </script>
 
 <svelte:head>
-  <title>DeviceGalaxy</title>
-  <meta content="#6463FF" data-react-helmet="true" name="theme-color" />
+  {#if !page.url.pathname.startsWith('/share') && page.url.pathname !== '/embed-test'}
+    <title>DeviceGalaxy</title>
+    <meta content="#6463FF" data-react-helmet="true" name="theme-color" />
 
-  {#if !page.url.pathname.startsWith('/share')}
     <meta property="og:title" content="DeviceGalaxy" />
     <meta name="og:description" content="Manage and share your galaxy of devices." />
     <meta content="https://devicegalaxy.me/favicon.png" property="og:image" />

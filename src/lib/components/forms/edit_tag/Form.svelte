@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+  import { Turnstile } from 'svelte-turnstile';
+
   import { fade } from 'svelte/transition';
 
   import { superForm } from 'sveltekit-superforms';
@@ -167,6 +170,16 @@
             />
             {#if $errors.colour}<span class="text-red-600">{$errors.colour}</span>{/if}
           {/if}
+
+          <Turnstile
+            siteKey={PUBLIC_TURNSTILE_SITE_KEY}
+            theme="auto"
+            bind:reset
+            on:callback={(event) => {
+              const { token } = event.detail;
+              $form['cf-turnstile-response'] = token;
+            }}
+          />
         </div>
         <div class="border-t p-6">
           <Submit text="Update Tag" {hasErrors} submitting={$submitting} delayed={$delayed} />
