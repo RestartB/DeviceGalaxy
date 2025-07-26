@@ -29,7 +29,7 @@ export const editDeviceSchema = z
     imageURLs: z.url().array().min(0).max(5, 'You can only add up to 5 image URLs'),
 
     tags: z.number().array().min(0),
-    "cf-turnstile-response": z.string().optional()
+    "cf-turnstile-response": z.string().nonempty('Please complete the Captcha.')
   })
   .refine(
     (data) => {

@@ -10,5 +10,5 @@ export const newTagSchema = z.object({
     .string()
     .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, 'Invalid hex color code')
     .optional(),
-  "cf-turnstile-response": z.string().optional()
+  "cf-turnstile-response": z.string().nonempty('Please complete the Captcha.')
 });

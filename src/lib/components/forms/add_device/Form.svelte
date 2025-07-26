@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
-
   import { tick } from 'svelte';
   import { fade } from 'svelte/transition';
 
@@ -66,7 +64,7 @@
       onError: (error) => {
         console.error('Form submission error:', error);
         toast.error('Failed to create device. Try again later.');
-      }
+      },
     }
   );
 
@@ -631,12 +629,6 @@
                 </ul>
               </div>
             {/if}
-
-            <div
-              class="cf-turnstile"
-              data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}
-              data-theme="auto"
-            ></div>
 
             <p class="mt-auto text-base text-zinc-500">
               Once you're happy with the details above, click below to create.

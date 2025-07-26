@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
-
   import { fade } from 'svelte/transition';
 
   import { superForm } from 'sveltekit-superforms';
@@ -24,8 +22,6 @@
     refreshAll: any;
   } = $props();
 
-  let reset = $state<() => void>();
-
   const { form, errors, message, submitting, delayed, timeout, enhance } = superForm(sourceForm, {
     validators: zod4Client(newTagSchema),
     customValidity: false,
@@ -38,10 +34,6 @@
     onError: (error) => {
       console.error('Form submission error:', error);
       toast.error('Failed to create tag. Try again later.');
-    },
-
-    onUpdated() {
-      reset?.();
     }
   });
 
@@ -153,12 +145,6 @@
             />
             {#if $errors.colour}<span class="text-red-600">{$errors.colour}</span>{/if}
           {/if}
-
-          <div
-            class="cf-turnstile"
-            data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}
-            data-theme="auto"
-          ></div>
         </div>
         <div class="border-t p-6">
           <Submit text="Add Tag" {hasErrors} submitting={$submitting} delayed={$delayed} />

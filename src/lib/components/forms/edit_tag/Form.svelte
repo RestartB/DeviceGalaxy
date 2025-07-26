@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
-
   import { fade } from 'svelte/transition';
 
   import { superForm } from 'sveltekit-superforms';
@@ -29,6 +27,8 @@
     tag: InferSelectModel<typeof tags> | undefined;
   } = $props();
 
+  let reset = $state<() => void>();
+
   const { form, errors, message, submitting, delayed, timeout, formId, enhance } = superForm(
     sourceForm,
     {
@@ -41,6 +41,11 @@
       onError: (error) => {
         console.error('Form submission error:', error);
         toast.error('Failed to edit tag. Try again later.');
+      },
+
+      onUpdated() {
+        // When the form is updated, we reset the turnstile
+        reset?.();
       }
     }
   );
@@ -162,12 +167,6 @@
             />
             {#if $errors.colour}<span class="text-red-600">{$errors.colour}</span>{/if}
           {/if}
-
-          <div
-            class="cf-turnstile"
-            data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}
-            data-theme="auto"
-          ></div>
         </div>
         <div class="border-t p-6">
           <Submit text="Update Tag" {hasErrors} submitting={$submitting} delayed={$delayed} />
