@@ -32,7 +32,7 @@
 
   let reset = $state<() => void>();
 
-  const { form, errors, message, submitting, delayed, timeout, formId, enhance } = superForm(
+  const { form, errors, allErrors, message, submitting, delayed, timeout, formId, enhance } = superForm(
     sourceForm,
     {
       validators: zod4Client(newTagSchema),
@@ -62,15 +62,7 @@
     }
   });
 
-  type FormErrors = typeof $errors;
-
-  let hasErrors = $derived(
-    Object.keys($errors).some((key) => {
-      const typedKey = key as keyof FormErrors;
-      return typedKey !== '_errors' && $errors[typedKey];
-    }) ||
-      ($errors._errors && $errors._errors.length > 0)
-  );
+  let hasErrors = $derived($allErrors.length > 0);
 
   $effect(() => {
     if ($message) {

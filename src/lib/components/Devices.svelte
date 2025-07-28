@@ -15,6 +15,7 @@
 
   import { toast } from 'svelte-sonner';
   import { Plus, Check, MoveLeft, MoveRight, RefreshCw, Search } from '@lucide/svelte';
+  import Avatar from '$lib/components/Avatar.svelte';
 
   import DeviceCard from '$lib/components/DeviceCard.svelte';
   import FilterPill from '$lib/components/FilterPill.svelte';
@@ -303,8 +304,26 @@
 {/if}
 
 <div class="flex flex-col gap-2">
-  <h1 class="text-4xl font-bold">Devices</h1>
   {#if shareID}
+    <div class="flex w-full flex-wrap items-center gap-2">
+      <Avatar
+        size={30}
+        src={data.shareUser.image || ''}
+        name={data.shareUser.name || ''}
+        alt="User Avatar"
+        className="border-zinc-400"
+      />
+      <h1 class="text-4xl font-bold">{data.shareUser.name}'s Devices</h1>
+    </div>
+  {:else}
+    <h1 class="text-4xl font-bold">Devices</h1>
+  {/if}
+
+  {#if shareID && data.shareUser && data.shareUser.description}
+    <p>
+      {data.shareUser.description}
+    </p>
+  {:else if shareID && data.shareUser}
     <p class="text-zinc-500 dark:text-zinc-400">
       View devices shared by {data.shareUser.name}.
     </p>

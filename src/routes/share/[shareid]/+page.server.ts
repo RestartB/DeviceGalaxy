@@ -31,7 +31,7 @@ export const load = async (event) => {
 
   // Get user's name and PFP
   const shareUser = await db
-    .select({ id: user.id, name: user.name, image: user.image })
+    .select({ id: user.id, name: user.name, description: user.description, image: user.image })
     .from(user)
     .where(eq(user.id, share.userId))
     .get();

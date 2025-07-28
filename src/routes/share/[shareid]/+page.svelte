@@ -17,7 +17,9 @@
       <meta property="og:title" content="{data.shareUser.name}'s Share" />
       <meta
         name="og:description"
-        content="View {data.shareUser.name}'s shared devices on DeviceGalaxy."
+        content={data.shareUser.description
+          ? data.shareUser.description
+          : `View ${data.shareUser.name}'s shared devices on DeviceGalaxy.`}
       />
       <meta content="DeviceGalaxy" property="og:site_name" />
       <meta property="og:image" content="https://devicegalaxy.me/favicon.png" />
@@ -53,7 +55,10 @@
     <Devices {data} shareID={data.share.id} />
   </div>
 {:else if data.share.type === 1}
-  <p>Placeholder</p>
+  <p>
+    Not implemented yet. You should not see this message, please create an issue in the GitHub repo
+    - https://github.com/restartb/devicegalaxy
+  </p>
 {:else if data.share.type === 2}
   <Device {data} shareID={data.share.id} />
 {:else}

@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 
-import { superValidate, message } from 'sveltekit-superforms';
+import { superValidate, message, fail } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { newUserSchema } from '$lib/schema/newUser';
 
@@ -16,7 +16,7 @@ export const actions = {
     const form = await superValidate(request, zod4(newUserSchema));
 
     if (!form.valid) {
-      return error(400, 'Invalid form');
+      return fail(400, { form });
     }
 
     // Create the new user
@@ -24,7 +24,10 @@ export const actions = {
       body: {
         email: form.data.email,
         name: form.data.name,
-        password: form.data.password
+        password: form.data.password,
+        description: '',
+        backgroundImage: '',
+        backgroundImageBlurPx: 0
       },
       asResponse: true
     });

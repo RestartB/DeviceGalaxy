@@ -36,7 +36,7 @@
           />
           <div class="flex w-full flex-col overflow-hidden text-start sm:gap-2 sm:text-center">
             <h2
-              class="w-full truncate text-2xl font-semibold sm:text-nowrap"
+              class="w-full truncate text-2xl font-semibold text-nowrap sm:text-wrap"
               style="view-transition-name: settings-username"
             >
               {data.user.name}
@@ -74,6 +74,15 @@
             aria-current={page.url.pathname === '/dash/settings/account' ? 'page' : undefined}
           >
             <p class="z-20">Account</p>
+          </a>
+          <a
+            class="relative rounded-full px-4 py-1 transition-colors hover:bg-zinc-300 dark:hover:bg-zinc-700"
+            class:dark:bg-zinc-600={page.url.pathname === '/dash/settings/customise'}
+            href="/dash/settings/customise"
+            title="Customisation"
+            aria-current={page.url.pathname === '/dash/settings/customise' ? 'page' : undefined}
+          >
+            <p class="z-20">Customise</p>
           </a>
           <a
             class="relative rounded-full px-4 py-1 transition-colors hover:bg-zinc-300 dark:hover:bg-zinc-700"

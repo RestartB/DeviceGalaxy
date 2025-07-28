@@ -143,7 +143,10 @@ export const user = sqliteTable('user', {
   updatedAt: integer('updated_at', { mode: 'timestamp' })
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
-  twoFactorEnabled: integer('two_factor_enabled', { mode: 'boolean' })
+  twoFactorEnabled: integer('two_factor_enabled', { mode: 'boolean' }),
+  backgroundImage: text('background_image'),
+  backgroundImageBlurPx: integer('background_image_blur_px'),
+  description: text('description')
 });
 
 export const session = sqliteTable('session', {

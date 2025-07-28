@@ -32,6 +32,26 @@ export const auth = betterAuth({
   },
 
   user: {
+    additionalFields: {
+      backgroundImage: {
+        type: 'string',
+        label: 'Background Image',
+        description: 'URL of the background image for the user profile',
+        default: ''
+      },
+      backgroundImageBlurPx: {
+        type: 'number',
+        label: 'Background Image Blur',
+        description: 'Blur level for the background image in pixels',
+        default: 0
+      },
+      description: {
+        type: 'string',
+        label: 'Description',
+        description: 'Description to show on share links',
+        default: ''
+      }
+    },
     changeEmail: {
       enabled: true
     },
@@ -72,18 +92,11 @@ export const auth = betterAuth({
               .where(eq(userDevices.userId, user.id));
 
             for (const device of devices) {
-              if (
-                existsSync(
-                  join(process.cwd(), 'user_uploads', 'device', device.id.toString())
-                )
-              ) {
-                await rm(
-                  join(process.cwd(), 'user_uploads', 'device', device.id.toString()),
-                  {
-                    recursive: true,
-                    force: true
-                  }
-                );
+              if (existsSync(join(process.cwd(), 'user_uploads', 'device', device.id.toString()))) {
+                await rm(join(process.cwd(), 'user_uploads', 'device', device.id.toString()), {
+                  recursive: true,
+                  force: true
+                });
               }
             }
           } catch (error) {

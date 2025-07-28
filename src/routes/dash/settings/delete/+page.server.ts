@@ -1,6 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
 
+import { fail } from 'sveltekit-superforms';
 import { superValidate, setError } from 'sveltekit-superforms/server';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { deleteAccountSchema } from '$lib/schema/deleteAccount';
@@ -25,7 +26,7 @@ export const actions = {
     const form = await superValidate(request, zod4(deleteAccountSchema));
 
     if (!form.valid) {
-      return error(400, 'Invalid form');
+      return fail(400, { form });
     }
 
     // Attempt to delete the user account

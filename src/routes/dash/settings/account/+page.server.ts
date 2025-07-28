@@ -1,19 +1,14 @@
 import { error } from '@sveltejs/kit';
-
 import { auth } from '$lib/server/auth';
 
-import { message } from 'sveltekit-superforms';
+import { message, fail } from 'sveltekit-superforms';
 import { superValidate } from 'sveltekit-superforms/server';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { profilePictureSchema } from '$lib/schema/profilePicture';
 
 import sharp from 'sharp';
 import { writeFile, mkdir } from 'fs/promises';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { join } from 'path';
 
 export const load = async () => {
   const profilePictureForm = await superValidate(zod4(profilePictureSchema));
@@ -35,7 +30,7 @@ export const actions = {
     const form = await superValidate(request, zod4(profilePictureSchema));
 
     if (!form.valid) {
-      return error(400, 'Invalid form');
+      return fail(400, { form });
     }
 
     // Create PFP folder if it doesn't exist

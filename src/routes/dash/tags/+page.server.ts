@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { TAG_LIMIT } from '$env/static/private';
 
-import { superValidate, message } from 'sveltekit-superforms';
+import { superValidate, message, fail } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { newTagSchema } from '$lib/schema/newTag';
 
@@ -10,8 +10,6 @@ import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and, count } from 'drizzle-orm';
 import { tags, lastActionTimes } from '$lib/server/db/schema';
-
-import { verifyTurnstile } from '$lib';
 
 // thank you https://stackoverflow.com/a/41491220
 function colorIsDarkSimple(bgColor: string) {
@@ -68,7 +66,7 @@ export const actions = {
     const form = await superValidate(request, zod4(newTagSchema));
 
     if (!form.valid) {
-      return error(400, 'Invalid form');
+      return fail(400, { form });
     }
 
     // if (form.data['cf-turnstile-response']) {
@@ -153,7 +151,7 @@ export const actions = {
     const form = await superValidate(request, zod4(newTagSchema));
 
     if (!form.valid) {
-      return error(400, 'Invalid form');
+      return fail(400, { form });
     }
 
     // if (form.data['cf-turnstile-response']) {

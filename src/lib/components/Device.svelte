@@ -65,7 +65,7 @@
   />
 {/if}
 
-<div class="z-10 flex flex-col gap-4 p-4 pb-0">
+<div class="z-10 flex flex-col gap-4 p-4">
   <div>
     {#if device.brand}
       <p class="text-sm text-zinc-500 dark:text-zinc-400">{device.brand}</p>
@@ -84,8 +84,9 @@
         </p>
       </div>
     {/if}
-    <p>{device.description || 'No description.'}</p>
   </div>
+
+  <p>{device.description || 'No description.'}</p>
 
   {#if device.additional}
     <div>
@@ -141,17 +142,15 @@
       </AttributeTile>
     {/if}
   </div>
-</div>
 
-{#if hasInternalImages}
-  <div class="flex flex-col gap-4 p-4">
+  {#if hasInternalImages}
     <h2 class="text-2xl font-bold">Images</h2>
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {#each device.internalImages as image, index}
         <button
           style="background-image: url('/api/image/device/{device.id}/{image}?share={shareID}');"
           aria-label="Click to fullscreen image"
-          class="bg-fit h-48 w-full rounded-lg border-2 border-zinc-400 bg-cover bg-center"
+          class="bg-fit h-64 w-full rounded-lg border-2 border-zinc-400 bg-cover bg-center"
           onclick={() => {
             imageIndex = index;
             imageOpen = true;
@@ -159,8 +158,8 @@
         ></button>
       {/each}
     </div>
-  </div>
-{/if}
+  {/if}
+</div>
 
 {#if imageOpen}
   <div

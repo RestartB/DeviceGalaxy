@@ -56,9 +56,8 @@
 
   let reset = $state<() => void>();
 
-  const { form, errors, message, submitting, delayed, timeout, enhance, validateForm } = superForm(
-    sourceForm,
-    {
+  const { form, errors, allErrors, message, submitting, delayed, timeout, enhance, validateForm } =
+    superForm(sourceForm, {
       validators: zod4Client(newDeviceSchema),
       dataType: 'json',
       customValidity: false,
@@ -75,8 +74,7 @@
         // When the form is updated, we reset the turnstile
         reset?.();
       }
-    }
-  );
+    });
 
   const files = filesProxy(form, 'images');
 
@@ -87,53 +85,7 @@
   let newImgURLEl: HTMLInputElement | undefined = $state();
   let uploadAllowed = true;
 
-  type FormErrors = typeof $errors;
-
-  let hasErrors = $derived(
-    (() => {
-      // Check top-level _errors
-      if ($errors._errors && $errors._errors.length > 0) return true;
-
-      // Check all form fields (excluding special cases)
-      const fieldKeys = Object.keys($errors).filter(
-        (key) => !['_errors', 'images', 'imageURLs'].includes(key)
-      );
-      const hasFieldErrors = fieldKeys.some((key) => $errors[key as keyof FormErrors]);
-
-      if (hasFieldErrors) return true;
-
-      // Check image errors (for uploads)
-      if ($errors.images) {
-        // Check images._errors
-        if ($errors.images._errors && $errors.images._errors.length > 0) return true;
-
-        // Check individual file errors
-        const hasFileErrors = Object.entries($errors.images).some(
-          ([index, fileErrors]) =>
-            index !== '_errors' &&
-            fileErrors &&
-            (Array.isArray(fileErrors) ? fileErrors.length > 0 : Boolean(fileErrors))
-        );
-        if (hasFileErrors) return true;
-      }
-
-      // Check imageURL errors (for URL inputs)
-      if ($errors.imageURLs) {
-        if ($errors.imageURLs._errors && $errors.imageURLs._errors.length > 0) return true;
-
-        const hasUrlErrors = Object.entries($errors.imageURLs).some(
-          ([index, urlErrors]) =>
-            index !== '_errors' &&
-            urlErrors &&
-            (Array.isArray(urlErrors) ? urlErrors.length > 0 : Boolean(urlErrors))
-        );
-        if (hasUrlErrors) return true;
-      }
-
-      return false;
-    })()
-  );
-
+  let hasErrors = $derived($allErrors.length > 0);
   let imagesHaveErrors = $derived(
     (() => {
       // Check image errors (for uploads)

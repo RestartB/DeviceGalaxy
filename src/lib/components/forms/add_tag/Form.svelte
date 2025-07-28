@@ -12,7 +12,6 @@
   import { toast } from 'svelte-sonner';
   import { X } from '@lucide/svelte';
   import Submit from '$lib/components/forms/Submit.svelte';
-  import SuperDebug from 'sveltekit-superforms';
 
   type schemaType = typeof newTagSchema;
 
@@ -28,35 +27,30 @@
 
   let reset = $state<() => void>();
 
-  const { form, errors, message, submitting, delayed, timeout, enhance } = superForm(sourceForm, {
-    validators: zod4Client(newTagSchema),
-    customValidity: false,
-    invalidateAll: false,
-    validationMethod: 'auto',
-    id: 'newTagForm',
-    delayMs: 1000,
-    timeoutMs: 10000,
+  const { form, errors, allErrors, message, submitting, delayed, timeout, enhance } = superForm(
+    sourceForm,
+    {
+      validators: zod4Client(newTagSchema),
+      customValidity: false,
+      invalidateAll: false,
+      validationMethod: 'auto',
+      id: 'newTagForm',
+      delayMs: 1000,
+      timeoutMs: 10000,
 
-    onError: (error) => {
-      console.error('Form submission error:', error);
-      toast.error('Failed to create tag. Try again later.');
-    },
+      onError: (error) => {
+        console.error('Form submission error:', error);
+        toast.error('Failed to create tag. Try again later.');
+      },
 
-    onUpdated() {
-      // When the form is updated, we reset the turnstile
-      reset?.();
+      onUpdated() {
+        // When the form is updated, we reset the turnstile
+        reset?.();
+      }
     }
-  });
-
-  type FormErrors = typeof $errors;
-
-  let hasErrors = $derived(
-    Object.keys($errors).some((key) => {
-      const typedKey = key as keyof FormErrors;
-      return typedKey !== '_errors' && $errors[typedKey];
-    }) ||
-      ($errors._errors && $errors._errors.length > 0)
   );
+
+  let hasErrors = $derived($allErrors.length > 0);
 
   $effect(() => {
     if ($message) {

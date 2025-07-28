@@ -1,6 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 
-import { superValidate, message, setError } from 'sveltekit-superforms';
+import { superValidate, message, setError, fail } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { logInSchema } from '$lib/schema/logIn';
 
@@ -16,7 +16,7 @@ export const actions = {
     const form = await superValidate(request, zod4(logInSchema));
 
     if (!form.valid) {
-      return error(400, 'Invalid form');
+      return fail(400, { form });
     }
 
     // Log in

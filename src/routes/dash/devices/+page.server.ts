@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { DEVICE_LIMIT } from '$env/static/private';
 
-import { superValidate, message } from 'sveltekit-superforms';
+import { superValidate, message, fail } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { newDeviceSchema } from '$lib/schema/newDevice';
 import { editDeviceSchema } from '$lib/schema/editDevice';
@@ -29,11 +29,7 @@ import { verifyTurnstile } from '$lib';
 import sharp from 'sharp';
 import { existsSync } from 'fs';
 import { writeFile, unlink, mkdir } from 'fs/promises';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { join } from 'path';
 
 export const load = async () => {
   const newDeviceForm = await superValidate(zod4(newDeviceSchema));
@@ -84,7 +80,7 @@ export const actions = {
     const form = await superValidate(formData, zod4(newDeviceSchema));
 
     if (!form.valid) {
-      return error(400, 'Invalid form');
+      return fail(400, { form });
     }
 
     if (form.data['cf-turnstile-response']) {
@@ -381,7 +377,7 @@ export const actions = {
     const form = await superValidate(formData, zod4(editDeviceSchema));
 
     if (!form.valid) {
-      return error(400, 'Invalid form');
+      return fail(400, { form });
     }
 
     if (form.data['cf-turnstile-response']) {
