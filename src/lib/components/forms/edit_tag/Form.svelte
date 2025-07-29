@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
-  import { Turnstile } from 'svelte-turnstile';
-
   import { fade } from 'svelte/transition';
 
   import { superForm } from 'sveltekit-superforms';
@@ -30,11 +27,8 @@
     tag: InferSelectModel<typeof tags> | undefined;
   } = $props();
 
-  let reset = $state<() => void>();
-
-  const { form, errors, allErrors, message, submitting, delayed, timeout, formId, enhance } = superForm(
-    sourceForm,
-    {
+  const { form, errors, allErrors, message, submitting, delayed, timeout, formId, enhance } =
+    superForm(sourceForm, {
       validators: zod4Client(newTagSchema),
       customValidity: false,
       validationMethod: 'auto',
@@ -44,14 +38,8 @@
       onError: (error) => {
         console.error('Form submission error:', error);
         toast.error('Failed to edit tag. Try again later.');
-      },
-
-      onUpdated() {
-        // When the form is updated, we reset the turnstile
-        reset?.();
       }
-    }
-  );
+    });
 
   $effect(() => {
     if (editPopupOpen && tag) {
@@ -162,16 +150,6 @@
             />
             {#if $errors.colour}<span class="text-red-600">{$errors.colour}</span>{/if}
           {/if}
-
-          <Turnstile
-            siteKey={PUBLIC_TURNSTILE_SITE_KEY}
-            theme="auto"
-            bind:reset
-            on:callback={(event) => {
-              const { token } = event.detail;
-              $form['cf-turnstile-response'] = token;
-            }}
-          />
         </div>
         <div class="border-t p-6">
           <Submit text="Update Tag" {hasErrors} submitting={$submitting} delayed={$delayed} />

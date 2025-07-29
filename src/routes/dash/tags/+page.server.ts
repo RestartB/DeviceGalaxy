@@ -69,19 +69,6 @@ export const actions = {
       return fail(400, { form });
     }
 
-    // if (form.data['cf-turnstile-response']) {
-    //   // Verify Turnstile token
-    //   const isValid = await verifyTurnstile(
-    //     form.data['cf-turnstile-response'],
-    //     request.headers.get('cf-connecting-ip') || ''
-    //   );
-    //   if (!isValid) {
-    //     return error(400, 'Invalid Turnstile token. Please try again.');
-    //   }
-    // } else {
-    //   return error(400, 'Turnstile token is required.');
-    // }
-
     // Check tag limit
     const tagCount = await db
       .select({ count: count() })
@@ -153,19 +140,6 @@ export const actions = {
     if (!form.valid) {
       return fail(400, { form });
     }
-
-    // if (form.data['cf-turnstile-response']) {
-    //   // Verify Turnstile token
-    //   const isValid = await verifyTurnstile(
-    //     form.data['cf-turnstile-response'],
-    //     request.headers.get('cf-connecting-ip') || ''
-    //   );
-    //   if (!isValid) {
-    //     return error(400, 'Invalid Turnstile token. Please try again.');
-    //   }
-    // } else {
-    //   return error(400, 'Turnstile token is required.');
-    // }
 
     try {
       const existingTag = await db
