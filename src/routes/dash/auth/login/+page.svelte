@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+  import { Turnstile } from 'svelte-turnstile';
+
   import { goto } from '$app/navigation';
 
   import { superForm } from 'sveltekit-superforms';
@@ -9,8 +12,9 @@
   import { toast } from 'svelte-sonner';
 
   const { data } = $props();
+  let reset = $state<() => void>();
 
-  const { form, errors, message, enhance } = superForm(data.logInForm, {
+  const { form, errors, allErrors, message, submitting, enhance } = superForm(data.logInForm, {
     validators: zod4Client(logInSchema),
     customValidity: false,
     validationMethod: 'auto',
@@ -18,6 +22,11 @@
     onError: (error) => {
       console.error('Form submission error:', error);
       toast.error('Failed to log in. Try again later.');
+    },
+
+    onUpdated() {
+      // When the form is updated, we reset the turnstile
+      reset?.();
     }
   });
 
@@ -74,12 +83,28 @@
       {#if $errors.password}<span class="text-red-600">{$errors.password}</span>{/if}
     </div>
 
+    <Turnstile
+      siteKey={PUBLIC_TURNSTILE_SITE_KEY}
+      theme="auto"
+      bind:reset
+      on:callback={(event) => {
+        const { token } = event.detail;
+        $form['cf-turnstile-response'] = token;
+      }}
+    />
+
+    {#if $errors['cf-turnstile-response']}<span class="text-red-600"
+        >{$errors['cf-turnstile-response']}</span
+      >{/if}
+
     <a href="/dash/auth/signup" class="text-blue-600 hover:underline dark:text-blue-400">
       Don't have an account? Sign up
     </a>
 
     <button
-      class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+      type="submit"
+      class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-all hover:bg-zinc-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 disabled:dark:hover:bg-zinc-700"
+      disabled={$allErrors.length > 0 || $submitting}
     >
       <LogIn />
       Log in

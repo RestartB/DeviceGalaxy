@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+  import { Turnstile } from 'svelte-turnstile';
+
   import { goto } from '$app/navigation';
 
   import { superForm } from 'sveltekit-superforms';
@@ -9,8 +12,9 @@
   import { toast } from 'svelte-sonner';
 
   const { data } = $props();
+  let reset = $state<() => void>();
 
-  const { form, errors, message, enhance } = superForm(data.newUserForm, {
+  const { form, errors, allErrors, submitting, message, enhance } = superForm(data.newUserForm, {
     validators: zod4Client(newUserSchema),
     customValidity: false,
     validationMethod: 'auto',
@@ -18,6 +22,11 @@
     onError: (error) => {
       console.error('Form submission error:', error);
       toast.error('Failed to create an account. Try again later.');
+    },
+
+    onUpdated() {
+      // When the form is updated, we reset the turnstile
+      reset?.();
     }
   });
 
@@ -95,16 +104,32 @@
         class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
         id="confirm"
         type="password"
+        bind:value={$form.confirm}
       />
+      {#if $errors.confirm}<span class="text-red-600">{$errors.confirm}</span>{/if}
     </div>
+
+    <Turnstile
+      siteKey={PUBLIC_TURNSTILE_SITE_KEY}
+      theme="auto"
+      bind:reset
+      on:callback={(event) => {
+        const { token } = event.detail;
+        $form['cf-turnstile-response'] = token;
+      }}
+    />
+    {#if $errors['cf-turnstile-response']}<span class="text-red-600"
+        >{$errors['cf-turnstile-response']}</span
+      >{/if}
 
     <a href="/dash/auth/login" class="text-blue-600 hover:underline dark:text-blue-400">
       Already have an account? Log in
     </a>
 
     <button
-      class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
       type="submit"
+      class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-all hover:bg-zinc-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 disabled:dark:hover:bg-zinc-700"
+      disabled={$allErrors.length > 0 || $submitting}
     >
       <UserPlus />
       Sign Up

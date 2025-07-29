@@ -5,6 +5,7 @@ import { zod4 } from 'sveltekit-superforms/adapters';
 import { logInSchema } from '$lib/schema/logIn';
 
 import { auth } from '$lib/server/auth';
+import { verifyTurnstile } from '$lib/index';
 
 export const load = async () => {
   const logInForm = await superValidate(zod4(logInSchema));
@@ -17,6 +18,19 @@ export const actions = {
 
     if (!form.valid) {
       return fail(400, { form });
+    }
+
+    if (form.data['cf-turnstile-response']) {
+      // Verify Turnstile token
+      const isValid = await verifyTurnstile(
+        form.data['cf-turnstile-response'],
+        request.headers.get('cf-connecting-ip') || ''
+      );
+      if (!isValid) {
+        return error(400, 'Invalid Turnstile token. Please try again.');
+      }
+    } else {
+      return error(400, 'Turnstile token is required.');
     }
 
     // Log in

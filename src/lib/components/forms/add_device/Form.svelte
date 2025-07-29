@@ -602,6 +602,10 @@
               }}
             />
 
+            {#if $errors['cf-turnstile-response']}<span class="text-red-600"
+                >{$errors['cf-turnstile-response']}</span
+              >{/if}
+
             <p class="mt-auto text-base text-zinc-500">
               Once you're happy with the details above, click below to create.
             </p>
