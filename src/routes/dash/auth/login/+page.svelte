@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+  import { PUBLIC_TURNSTILE_SITE_KEY, PUBLIC_TURNSTILE_ENABLED } from '$env/static/public';
   import { Turnstile } from 'svelte-turnstile';
 
   import { goto } from '$app/navigation';
@@ -83,15 +83,17 @@
       {#if $errors.password}<span class="text-red-600">{$errors.password}</span>{/if}
     </div>
 
-    <Turnstile
-      siteKey={PUBLIC_TURNSTILE_SITE_KEY}
-      theme="auto"
-      bind:reset
-      on:callback={(event) => {
-        const { token } = event.detail;
-        $form['cf-turnstile-response'] = token;
-      }}
-    />
+    {#if PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'}
+      <Turnstile
+        siteKey={PUBLIC_TURNSTILE_SITE_KEY}
+        theme="auto"
+        bind:reset
+        on:callback={(event) => {
+          const { token } = event.detail;
+          $form['cf-turnstile-response'] = token;
+        }}
+      />
+    {/if}
 
     {#if $errors['cf-turnstile-response']}<span class="text-red-600"
         >{$errors['cf-turnstile-response']}</span

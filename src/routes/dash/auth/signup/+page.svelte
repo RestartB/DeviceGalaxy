@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+  import { PUBLIC_TURNSTILE_SITE_KEY, PUBLIC_TURNSTILE_ENABLED } from '$env/static/public';
   import { Turnstile } from 'svelte-turnstile';
 
   import { goto } from '$app/navigation';
@@ -110,18 +110,20 @@
       {#if $errors.confirm}<span class="text-red-600">{$errors.confirm}</span>{/if}
     </div>
 
-    <Turnstile
-      siteKey={PUBLIC_TURNSTILE_SITE_KEY}
-      theme="auto"
-      bind:reset
-      on:callback={(event) => {
-        const { token } = event.detail;
-        $form['cf-turnstile-response'] = token;
-      }}
-    />
-    {#if $errors['cf-turnstile-response']}<span class="text-red-600"
-        >{$errors['cf-turnstile-response']}</span
-      >{/if}
+    {#if PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'}
+      <Turnstile
+        siteKey={PUBLIC_TURNSTILE_SITE_KEY}
+        theme="auto"
+        bind:reset
+        on:callback={(event) => {
+          const { token } = event.detail;
+          $form['cf-turnstile-response'] = token;
+        }}
+      />
+      {#if $errors['cf-turnstile-response']}<span class="text-red-600"
+          >{$errors['cf-turnstile-response']}</span
+        >{/if}
+    {/if}
 
     <a href="/dash/auth/login" class="text-blue-600 hover:underline dark:text-blue-400">
       Already have an account? Log in

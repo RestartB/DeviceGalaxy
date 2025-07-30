@@ -1,4 +1,5 @@
 import { z } from 'zod/v4';
+import { PUBLIC_TURNSTILE_ENABLED } from '$env/static/public';
 
 export const editDeviceSchema = z
   .object({
@@ -29,7 +30,10 @@ export const editDeviceSchema = z
     imageURLs: z.url().array().min(0).max(5, 'You can only add up to 5 image URLs'),
 
     tags: z.number().array().min(0),
-    'cf-turnstile-response': z.string().nonempty('Please complete the Captcha.')
+    'cf-turnstile-response':
+      PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'
+        ? z.string().nonempty('Please complete the Captcha.')
+        : z.string().optional()
   })
   .refine(
     (data) => {

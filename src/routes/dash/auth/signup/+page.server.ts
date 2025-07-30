@@ -1,4 +1,5 @@
 import { error } from '@sveltejs/kit';
+import { PUBLIC_TURNSTILE_ENABLED } from '$env/static/public';
 
 import { superValidate, message, fail } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
@@ -20,17 +21,19 @@ export const actions = {
       return fail(400, { form });
     }
 
-    if (form.data['cf-turnstile-response']) {
-      // Verify Turnstile token
-      const isValid = await verifyTurnstile(
-        form.data['cf-turnstile-response'],
-        request.headers.get('cf-connecting-ip') || ''
-      );
-      if (!isValid) {
-        return error(400, 'Invalid Turnstile token. Please try again.');
+    if (PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
+      if (form.data['cf-turnstile-response']) {
+        // Verify Turnstile token
+        const isValid = await verifyTurnstile(
+          form.data['cf-turnstile-response'],
+          request.headers.get('cf-connecting-ip') || ''
+        );
+        if (!isValid) {
+          return error(400, 'Invalid Turnstile token. Please try again.');
+        }
+      } else {
+        return error(400, 'Turnstile token is required.');
       }
-    } else {
-      return error(400, 'Turnstile token is required.');
     }
 
     // Create the new user
