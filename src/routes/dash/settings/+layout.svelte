@@ -38,6 +38,7 @@
             <h2
               class="w-full truncate text-2xl font-semibold text-nowrap sm:text-wrap"
               style="view-transition-name: settings-username"
+              translate="no"
             >
               {data.user.name}
             </h2>

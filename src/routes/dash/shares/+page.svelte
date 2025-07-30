@@ -122,7 +122,7 @@
         {#each data.deviceShares as share, index}
           <li class="flex w-full items-center justify-between gap-2">
             <div>
-              <h3 class="text-xl font-semibold">{share.deviceName}</h3>
+              <h3 class="text-xl font-semibold" translate="no">{share.deviceName}</h3>
               <a
                 href={`/share/${share.shareId}`}
                 class="text-wrap text-blue-500 hover:underline"

@@ -70,7 +70,7 @@
     {#if device.brand}
       <p class="text-sm text-zinc-500 dark:text-zinc-400">{device.brand}</p>
     {/if}
-    <h1 class="text-4xl font-bold">{device.deviceName}</h1>
+    <h1 class="text-4xl font-bold" translate="no">{device.deviceName}</h1>
     {#if shareID}
       <div class="flex max-w-full flex-wrap items-center gap-2">
         <Avatar
@@ -80,7 +80,7 @@
           className="rounded-full"
         />
         <p class="text-base text-zinc-500 dark:text-zinc-400">
-          from <strong>{data.shareUser?.name}</strong>'s galaxy
+          from <strong translate="no">{data.shareUser?.name}</strong>'s galaxy
         </p>
       </div>
     {/if}

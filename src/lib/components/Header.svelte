@@ -24,7 +24,7 @@
 >
   <a class="flex h-full items-center gap-2" href="/" title="DeviceGalaxy">
     <enhanced:img src="$lib/images/logo/logo_square.svg" alt="DeviceGalaxy Logo" class="h-6 w-6" />
-    <h1 class=" text-xl font-bold">DeviceGalaxy</h1>
+    <h1 class=" text-xl font-bold" translate="no">DeviceGalaxy</h1>
   </a>
   {#if data.user}
     <nav class="hidden h-full items-center justify-center sm:flex">
@@ -67,7 +67,9 @@
           alt="User Avatar"
           className="border-zinc-400"
         />
-        <p class="xxs:block hidden max-w-full truncate font-bold text-nowrap">{data.user.name}</p>
+        <p class="xxs:block hidden max-w-full truncate font-bold text-nowrap" translate="no">
+          {data.user.name}
+        </p>
         <div class="hidden h-full sm:flex">
           <a
             class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
@@ -163,7 +165,7 @@
               alt="User Avatar"
               className="border-zinc-400"
             />
-            <p class="max-w-full truncate text-xl text-nowrap">{data.user.name}</p>
+            <p class="max-w-full truncate text-xl text-nowrap" translate="no">{data.user.name}</p>
           </div>
           <div class="flex w-full items-center justify-center gap-2">
             <a

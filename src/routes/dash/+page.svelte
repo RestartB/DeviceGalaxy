@@ -54,7 +54,7 @@
       <div>
         <h1 class="text-lg font-semibold">
           {data.randomGreeting}
-          {data.user.name}! Where to today?
+          <span translate="no">{data.user.name}</span>! Where to today?
         </h1>
       </div>
     </div>

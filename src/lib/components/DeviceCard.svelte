@@ -83,7 +83,7 @@
   <div class="flex w-full flex-col gap-2 p-4">
     <div>
       <p class="text-sm text-zinc-600 dark:text-zinc-400">{device.brand}</p>
-      <h2 class="text-xl font-semibold">{device.deviceName}</h2>
+      <h2 class="text-xl font-semibold" translate="no">{device.deviceName}</h2>
       {#if !device.description || device.description.trim() === ''}
         <p class="text-sm text-zinc-500 dark:text-zinc-300">No description available</p>
       {:else}
@@ -97,7 +97,7 @@
           class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
         >
           <Cpu size="20" />
-          <p>{device.cpu}</p>
+          <p translate="no">{device.cpu}</p>
         </div>
       {/if}
       {#if device.gpu}
@@ -105,7 +105,7 @@
           class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
         >
           <Gpu size="20" />
-          <p>{device.gpu}</p>
+          <p translate="no">{device.gpu}</p>
         </div>
       {/if}
       {#if device.memory}
@@ -113,7 +113,7 @@
           class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
         >
           <MemoryStick size="20" />
-          <p>{device.memory}</p>
+          <p translate="no">{device.memory}</p>
         </div>
       {/if}
       {#if device.storage}
@@ -121,7 +121,7 @@
           class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
         >
           <HardDrive size="20" />
-          <p>{device.storage}</p>
+          <p translate="no">{device.storage}</p>
         </div>
       {/if}
       {#if device.os}
@@ -129,7 +129,7 @@
           class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
         >
           <Cog size="20" />
-          <p>{device.os}</p>
+          <p translate="no">{device.os}</p>
         </div>
       {/if}
 
@@ -140,7 +140,7 @@
             style="background-color: {tag.tagColour}; color: {tag.tagTextColour};"
           >
             <Tag size="20" />
-            <p>{tag.tagName}</p>
+            <p translate="no">{tag.tagName}</p>
           </div>
         {/each}
       {/if}

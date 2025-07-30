@@ -494,7 +494,7 @@
                 {#if $files && $files.length > 0}
                   <p><strong>Images:</strong></p>
                   {#each $files as file}
-                    <p class="break-words">{file.name} ({file.size} bytes)</p>
+                    <p class="break-words" translate="no">{file.name} ({file.size} bytes)</p>
                   {/each}
                 {:else}
                   <p><strong>Images:</strong> None</p>

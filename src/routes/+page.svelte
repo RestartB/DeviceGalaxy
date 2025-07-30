@@ -35,7 +35,7 @@
     <div>
       <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
         <enhanced:img src="$lib/images/logo/monitor.svg" alt="DeviceGalaxy Logo" />
-        <h1 class="text-5xl font-bold">DeviceGalaxy</h1>
+        <h1 class="text-5xl font-bold" translate="no">DeviceGalaxy</h1>
       </div>
 
       <div class="mt-4 flex items-center justify-center gap-2 sm:mt-0">
@@ -44,7 +44,7 @@
           alt="Restart's PFP"
           class="h-8 w-8 rounded-full border-2"
         />
-        <p class="text-xl">by <strong>Restart</strong></p>
+        <p class="text-xl">by <strong translate="no">Restart</strong></p>
       </div>
     </div>
 
@@ -96,7 +96,7 @@
       >
         <div class="flex w-full flex-col gap-2 p-4">
           <div>
-            <p class="text-sm text-zinc-600 dark:text-zinc-400">Apple</p>
+            <p class="text-sm text-zinc-600 dark:text-zinc-400" translate="no">Apple</p>
             <h2 class="text-xl font-semibold">Macbook Air</h2>
             <p>My Midnight Blue Macbook Air, that I got in October 2024.</p>
           </div>
@@ -146,7 +146,7 @@
           <li class="flex items-center gap-2">
             <Info size="20" class="flex-shrink-0" />
             <span
-              >Set <strong>CPU, Memory, Hard Drive, OS</strong> and <strong>Brand</strong> attributes.</span
+              >Set <strong>CPU, GPU, Memory, Hard Drive, OS</strong> and <strong>Brand</strong> attributes.</span
             >
           </li>
           <li class="flex items-center gap-2">
@@ -165,13 +165,13 @@
           class="flex w-full items-center justify-start gap-2 rounded-full border-2 border-zinc-400 bg-zinc-200 px-4 py-2 shadow-md dark:bg-zinc-700"
         >
           <Search size="20" class="flex-shrink-0" />
-          <p class="text-zinc-600 dark:text-zinc-300">optiplex</p>
+          <p class="text-zinc-600 dark:text-zinc-300" translate="no">optiplex</p>
         </div>
         <div
           class="flex max-w-100 flex-1 cursor-default flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md select-none sm:min-w-80 dark:bg-zinc-700"
         >
           <p class="text-sm text-zinc-600 dark:text-zinc-400">Dell</p>
-          <h2 class="text-xl font-semibold">Optiplex 3080</h2>
+          <h2 class="text-xl font-semibold" translate="no">Optiplex 3080</h2>
           <p>Took this from recycling, installed Proxmox on it, now it's the core of my homelab!</p>
         </div>
         <p class="text-zinc-600 dark:text-zinc-300"><strong>+5</strong> results</p>
@@ -216,7 +216,7 @@
             />
           </span>
           <div class="flex flex-1 flex-col justify-center text-start">
-            <p class="w-fit text-xl font-semibold">Restart</p>
+            <p class="w-fit text-xl font-semibold" translate="no">Restart</p>
             <p class="w-fit">devicegalaxy.me/share/1234abcd</p>
           </div>
         </div>
@@ -226,7 +226,7 @@
         >
           <div class="flex gap-2 border-l-4 border-[#6463FF] p-4">
             <div>
-              <p class="text-zinc-600 dark:text-zinc-300">DeviceGalaxy</p>
+              <p class="text-zinc-600 dark:text-zinc-300" translate="no">DeviceGalaxy</p>
               <p class="text-2xl font-bold">Restart's Devices</p>
               <p>View Restart's devices on DeviceGalaxy.</p>
             </div>

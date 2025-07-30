@@ -313,7 +313,9 @@
         alt="User Avatar"
         className="border-zinc-400"
       />
-      <h1 class="text-4xl font-bold">{data.shareUser.name}'s Devices</h1>
+      <h1 class="text-4xl font-bold">
+        <span translate="no">{data.shareUser.name}</span>'s Devices
+      </h1>
     </div>
   {:else}
     <h1 class="text-4xl font-bold">Devices</h1>
@@ -325,7 +327,7 @@
     </p>
   {:else if shareID && data.shareUser}
     <p class="text-zinc-500 dark:text-zinc-400">
-      View devices shared by {data.shareUser.name}.
+      View devices shared by <span translate="no">{data.shareUser.name}</span>.
     </p>
   {:else}
     <p>View all of the devices saved to your account.</p>

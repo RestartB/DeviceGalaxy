@@ -26,7 +26,7 @@
     <div>
       <h2 class="text-2xl font-bold">Source Code</h2>
       <p>
-        DeviceGalaxy is fully open source on GitHub! You can view the code, run your own instance,
+        <span translate="no">DeviceGalaxy</span> is fully open source on GitHub! You can view the code, run your own instance,
         or contribute to the project.
       </p>
       <a
@@ -62,7 +62,7 @@
               /></svg
             >
             <div>
-              <h3 class="text-xl font-semibold">SvelteKit</h3>
+              <h3 class="text-xl font-semibold" translate="no">SvelteKit</h3>
               <p>
                 SvelteKit is the backbone of the Projector. It's a full stack framework, allowing me
                 to easily create the frontend and backend in one codebase.
@@ -85,7 +85,7 @@
               /></svg
             >
             <div>
-              <h3 class="text-xl font-semibold">Drizzle</h3>
+              <h3 class="text-xl font-semibold" translate="no">Drizzle</h3>
               <p>
                 Drizzle is an ORM that lets me easily interface with DeviceGalaxy's SQL database. By
                 using Drizzle, I don't have to worry about writing manual SQL queries, worry about
@@ -109,9 +109,9 @@
               /></svg
             >
             <div>
-              <h3 class="text-xl font-semibold">Better Auth</h3>
+              <h3 class="text-xl font-semibold" translate="no">Better Auth</h3>
               <p>
-                Better Auth is an auth plugin that lets me easily manage my own local auth. It has
+                Better Auth is an auth library that lets me easily manage my own local auth. It has
                 built in support for encrypted and salted passwords, 2FA, OAuth, Drizzle
                 integration, and more.
               </p>
@@ -133,7 +133,7 @@
               /></svg
             >
             <div>
-              <h3 class="text-xl font-semibold">Lucide</h3>
+              <h3 class="text-xl font-semibold" translate="no">Lucide</h3>
               <p>
                 Lucide is an awesome icon pack, with over 1000 icons, all of them available as
                 Svelte components. All of the icons in this project come from them!
@@ -156,7 +156,7 @@
               /></svg
             >
             <div>
-              <h3 class="text-xl font-semibold">SuperForms and Zod</h3>
+              <h3 class="text-xl font-semibold" translate="no">SuperForms and Zod</h3>
               <p>
                 SuperForms is a form library that lets me easily create forms. It integrates with
                 Zod for live validation on the client, and server side validation.
