@@ -102,6 +102,7 @@
       <label for="confirm" class="w-full text-start font-semibold">Confirm Password</label>
       <input
         class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
+        name="confirm"
         id="confirm"
         type="password"
         bind:value={$form.confirm}
