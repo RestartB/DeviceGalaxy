@@ -72,11 +72,17 @@
   {href}
 >
   {#if device.externalImages && device.externalImages.length > 0}
-    <img src={device.externalImages[0]} alt={device.deviceName} class="h-48 w-full object-cover" />
+    <img
+      src={device.externalImages[0]}
+      alt={device.deviceName}
+      loading="lazy"
+      class="h-48 w-full object-cover"
+    />
   {:else if device.internalImages && device.internalImages.length > 0}
     <img
       src={`/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID || ''}`}
       alt={device.deviceName}
+      loading="lazy"
       class="h-48 w-full object-cover"
     />
   {/if}

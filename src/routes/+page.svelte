@@ -126,7 +126,7 @@
               class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
             >
               <Cog size="20" class="flex-shrink-0" />
-              <p>macOS 15</p>
+              <p>macOS 26</p>
             </div>
           </div>
         </div>
