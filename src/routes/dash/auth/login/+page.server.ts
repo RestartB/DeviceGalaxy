@@ -21,6 +21,21 @@ export const actions = {
       return fail(400, { form });
     }
 
+    if (PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
+      if (form.data['cf-turnstile-response']) {
+        // Verify Turnstile token
+        const isValid = await verifyTurnstile(
+          form.data['cf-turnstile-response'],
+          request.headers.get('cf-connecting-ip') || ''
+        );
+        if (!isValid) {
+          return error(400, 'Invalid Turnstile token. Please try again.');
+        }
+      } else {
+        return error(400, 'Turnstile token is required.');
+      }
+    }
+
     // Log in
     const response = await auth.api.signInEmail({
       body: {
