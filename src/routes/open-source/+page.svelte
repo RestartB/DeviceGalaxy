@@ -64,7 +64,7 @@
             <div>
               <h3 class="text-xl font-semibold">SvelteKit</h3>
               <p>
-                SvelteKit is the backbone of the Projector. It's a full stack framework, allowing me
+                SvelteKit is the backbone of the project. It's a full stack framework, allowing me
                 to easily create the frontend and backend in one codebase.
               </p>
             </div>
