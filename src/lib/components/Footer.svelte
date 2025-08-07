@@ -34,7 +34,7 @@
           style="image-rendering: pixelated;"
         /></a
       >
-      <a href="/" aria-labelledby="titanium-88x31" title="Titanium"
+      <a href="https://titaniumbot.me" aria-labelledby="titanium-88x31" title="Titanium"
         ><img
           src={titanium}
           alt="Titanium's 88x31"
