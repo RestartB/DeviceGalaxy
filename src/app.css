@@ -3,5 +3,6 @@
 @theme {
   --font-family: 'Figtree', sans-serif;
   --breakpoint-xs: 35rem;
-  --breakpoint-xxs: 22rem;
+  --breakpoint-xxs: 482px;
+  --breakpoint-xxxs: 22rem;
 }

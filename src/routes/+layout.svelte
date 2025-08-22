@@ -26,7 +26,9 @@
 
 <svelte:head>
   {#if !page.url.pathname.startsWith('/share') && page.url.pathname !== '/embed-test'}
-    <title>DeviceGalaxy</title>
+    {#if !page.url.pathname.startsWith('/policy')}
+      <title>DeviceGalaxy</title>
+    {/if}
     <meta content="#6463FF" data-react-helmet="true" name="theme-color" />
 
     <meta property="og:title" content="DeviceGalaxy" />
@@ -40,11 +42,13 @@
 
   <div
     class="box-border min-h-screen flex-1 overflow-y-auto p-4 pt-16"
-    class:p-4={page.url.pathname.startsWith('/dash') &&
+    class:p-4={(page.url.pathname.startsWith('/dash') || page.url.pathname.startsWith('/policy')) &&
       !page.url.pathname.startsWith('/dash/device/')}
-    class:pt-12={!page.url.pathname.startsWith('/dash') ||
+    class:pt-12={(!page.url.pathname.startsWith('/dash') &&
+      !page.url.pathname.startsWith('/policy')) ||
       page.url.pathname.startsWith('/dash/device/')}
-    class:pt-16={page.url.pathname.startsWith('/dash') &&
+    class:pt-16={(page.url.pathname.startsWith('/dash') ||
+      page.url.pathname.startsWith('/policy')) &&
       !page.url.pathname.startsWith('/dash/device/')}
   >
     <Toaster position="top-center" richColors closeButton />

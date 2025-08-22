@@ -67,7 +67,7 @@
           alt="User Avatar"
           className="border-zinc-400"
         />
-        <p class="xxs:block hidden max-w-full truncate font-bold text-nowrap" translate="no">
+        <p class="xxxs:block hidden max-w-full truncate font-bold text-nowrap" translate="no">
           {data.user.name}
         </p>
         <div class="hidden h-full sm:flex">
