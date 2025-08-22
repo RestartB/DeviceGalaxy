@@ -129,6 +129,17 @@
       Already have an account? Log in
     </a>
 
+    <p>
+      By signing up, you agree to our <a
+        href="/policy/tos"
+        class="text-blue-600 hover:underline dark:text-blue-400">Terms of Service</a
+      >
+      and
+      <a href="/policy/privacy" class="text-blue-600 hover:underline dark:text-blue-400"
+        >Privacy Policy</a
+      >.
+    </p>
+
     <button
       type="submit"
       class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-all hover:bg-zinc-300 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 disabled:dark:hover:bg-zinc-700"
