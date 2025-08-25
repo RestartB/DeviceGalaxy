@@ -25,7 +25,7 @@ export const auth = betterAuth({
     provider: 'sqlite'
   }),
 
-  plugins: [twoFactor(), sveltekitCookies(async () => getRequestEvent())],
+  plugins: [twoFactor(), sveltekitCookies(getRequestEvent)],
 
   emailAndPassword: {
     enabled: true
