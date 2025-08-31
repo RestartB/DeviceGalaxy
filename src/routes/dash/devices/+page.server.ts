@@ -53,6 +53,10 @@ export const actions = {
       return error(401, 'Unauthorized');
     }
 
+    if (session.user.banned) {
+      return error(403, 'Your account is banned.');
+    }
+
     // Get last created time
     const lastCreatedTime = await db
       .select({ lastCreatedTime: lastActionTimes.lastCreatedTime })
@@ -350,6 +354,10 @@ export const actions = {
 
     if (!session || !session.user) {
       return error(401, 'Unauthorized');
+    }
+
+    if (session.user.banned) {
+      return error(403, 'Your account is banned.');
     }
 
     // Get last updated time

@@ -146,7 +146,9 @@ export const user = sqliteTable('user', {
   twoFactorEnabled: integer('two_factor_enabled', { mode: 'boolean' }),
   backgroundImage: text('background_image'),
   backgroundImageBlurPx: integer('background_image_blur_px'),
-  description: text('description')
+  description: text('description'),
+  banned: integer('banned', { mode: 'boolean' }),
+  banReason: text('ban_reason')
 });
 
 export const session = sqliteTable('session', {

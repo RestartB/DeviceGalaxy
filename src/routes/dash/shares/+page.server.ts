@@ -3,8 +3,14 @@ import { db } from '$lib/server/db';
 import type { InferSelectModel } from 'drizzle-orm';
 import { shares, userDevices } from '$lib/server/db/schema';
 
+import { redirect } from '@sveltejs/kit';
+
 export const load = async (event) => {
   const parent = await event.parent();
+
+  if (parent.user?.banned) {
+    return redirect(303, '/dash');
+  }
 
   if (!parent.user) {
     return { shares: [] };

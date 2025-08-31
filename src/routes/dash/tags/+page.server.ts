@@ -38,6 +38,10 @@ export const actions = {
       return error(401, 'Unauthorized');
     }
 
+    if (session.user.banned) {
+      return error(403, 'Your account is banned.');
+    }
+
     // Get last tag created time
     const lastTagCreatedTime = await db
       .select({ lastTagCreatedTime: lastActionTimes.lastTagCreatedTime })
@@ -108,6 +112,10 @@ export const actions = {
 
     if (!session || !session.user) {
       return error(401, 'Unauthorized');
+    }
+
+    if (session.user.banned) {
+      return error(403, 'Your account is banned.');
     }
 
     // Get last tag updated time

@@ -44,13 +44,15 @@ export const actions = {
         password: form.data.password,
         description: '',
         backgroundImage: '',
-        backgroundImageBlurPx: 0
+        backgroundImageBlurPx: 0,
+        banned: false,
       },
       asResponse: true
     });
 
     if (!response.ok) {
-      console.error('Error creating user:', response);
+      const errorData = await response.json();
+      console.error('Error creating user:', errorData);
       return error(response.status, 'Failed to create user');
     } else {
       console.log('User created:', await response.json());

@@ -7,11 +7,7 @@ import { BETTER_AUTH_SECRET } from '$env/static/private';
 
 import { existsSync } from 'fs';
 import { unlink, rm } from 'fs/promises';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { join } from 'path';
 
 import { db } from './db';
 import { userDevices } from './db/schema';
@@ -50,6 +46,15 @@ export const auth = betterAuth({
         label: 'Description',
         description: 'Description to show on share links',
         default: ''
+      },
+      banned: {
+        type: 'boolean',
+        defaultValue: false,
+        input: false
+      },
+      banReason: {
+        type: 'string',
+        input: false
       }
     },
     changeEmail: {

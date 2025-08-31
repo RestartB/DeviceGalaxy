@@ -6,6 +6,7 @@
   import { Toaster } from 'svelte-sonner';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
+  import Banned from '$lib/components/Banned.svelte';
 
   let { data, children } = $props();
 
@@ -52,6 +53,13 @@
       !page.url.pathname.startsWith('/dash/device/')}
   >
     <Toaster position="top-center" richColors closeButton />
+
+    {#if data.user}
+      {#if data.user.banned}
+        <Banned reason={data.user.banReason} />
+      {/if}
+    {/if}
+
     {@render children()}
   </div>
 

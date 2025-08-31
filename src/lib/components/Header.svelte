@@ -49,13 +49,15 @@
       >
         Tags
       </a>
-      <a
-        class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-        href="/dash/shares"
-        title="Shared"
-      >
-        Shared
-      </a>
+      {#if data.user && !data.user.banned}
+        <a
+          class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+          href="/dash/shares"
+          title="Shared"
+        >
+          Shared
+        </a>
+      {/if}
     </nav>
 
     <div class="ml-auto flex h-full max-w-[50%] items-center justify-end gap-2">
@@ -147,13 +149,15 @@
             <Tag size="30" />
             Tags
           </a>
-          <a
-            class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-            href="/dash/shares"
-          >
-            <Share size="30" />
-            Shared
-          </a>
+          {#if data.user && !data.user.banned}
+            <a
+              class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
+              href="/dash/shares"
+            >
+              <Share size="30" />
+              Shared
+            </a>
+          {/if}
 
           <hr class="w-full text-zinc-800 dark:text-zinc-200" />
 
