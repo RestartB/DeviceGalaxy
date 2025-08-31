@@ -72,20 +72,18 @@ export const auth = betterAuth({
               existsSync(
                 join(
                   process.cwd(),
-                  'static',
-                  'public',
+                  'user_uploads',
                   'pfp',
-                  user.image.replaceAll(`${url.origin}/public/pfp/`, '') + '.webp'
+                  user.image.replaceAll(`${url.origin}/api/image/pfp/`, '') + '.webp'
                 )
               )
             ) {
               await unlink(
                 join(
                   process.cwd(),
-                  'static',
-                  'public',
+                  'user_uploads',
                   'pfp',
-                  user.image.replaceAll(`${url.origin}/public/pfp/`, '') + '.webp'
+                  user.image.replaceAll(`${url.origin}/api/image/pfp/`, '') + '.webp'
                 )
               );
             }
