@@ -3,9 +3,9 @@
 </script>
 
 <div class="border-box flex h-screen w-full flex-col items-center justify-center gap-4 p-4">
-  <div>
-    <h1 class="font-mono text-8xl font-bold">{page.status}</h1>
-    <h2 class="text-4xl">
+  <div class="flex flex-col items-center justify-center">
+    <h1 class="text-center font-mono text-8xl font-bold">{page.status}</h1>
+    <h2 class="text-center text-4xl">
       {page.error && page.error.message ? page.error.message : 'An error occurred'}
     </h2>
   </div>
