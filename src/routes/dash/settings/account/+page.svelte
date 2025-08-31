@@ -59,6 +59,18 @@
 
   async function resetAvatar() {
     try {
+      if (!data.user || !data.user.image) {
+        return;
+      }
+
+      const response = await fetch(data.user.image, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to reset avatar');
+      }
+
       await authClient.updateUser({ image: null });
       window.location.reload();
     } catch (error) {

@@ -1,8 +1,10 @@
 import { json } from '@sveltejs/kit';
 
 import { existsSync } from 'fs';
-import { readFile } from 'fs/promises';
+import { readFile, unlink } from 'fs/promises';
 import { join } from 'path';
+
+import { auth } from '$lib/server/auth';
 // import { fileURLToPath } from 'url';
 
 // const __filename = fileURLToPath(import.meta.url);
@@ -40,4 +42,42 @@ export async function GET(event) {
       'Cache-Control': 'public, max-age=31536000'
     }
   });
+}
+
+export async function DELETE(event) {
+  // Check if the user is authenticated
+  const session = await auth.api.getSession({
+    headers: event.request.headers
+  });
+
+  if (!session) {
+    return json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const userId = event.params.userid;
+  if (!userId) {
+    return json({ message: 'User ID is required' }, { status: 400 });
+  }
+
+  if (userId !== session.user.id) {
+    return json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  if (!session.user.image) {
+    return json({ error: 'No profile picture found' }, { status: 404 });
+  }
+
+  try {
+    const imageName = session.user.image.split('/').pop();
+    const safeImageName = imageName ? imageName.split('?')[0] : '';
+
+    if (existsSync(join(process.cwd(), 'user_uploads', 'pfp', safeImageName + '.webp'))) {
+      await unlink(join(process.cwd(), 'user_uploads', 'pfp', safeImageName + '.webp'));
+    }
+
+    return json({ message: 'Profile picture deleted' }, { status: 200 });
+  } catch (error) {
+    console.error('Error deleting profile picture:', error);
+    return json({ error: 'Failed to delete profile picture' }, { status: 500 });
+  }
 }

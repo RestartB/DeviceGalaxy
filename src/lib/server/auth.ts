@@ -67,14 +67,11 @@ export const auth = betterAuth({
         // Check for user PFP
         if (user.image) {
           try {
-            if (
-              existsSync(
-                join(process.cwd(), 'user_uploads', 'pfp', user.image.split('/').pop() + '.webp')
-              )
-            ) {
-              await unlink(
-                join(process.cwd(), 'user_uploads', 'pfp', user.image.split('/').pop() + '.webp')
-              );
+            const imageName = user.image.split('/').pop();
+            const safeImageName = imageName ? imageName.split('?')[0] : '';
+
+            if (existsSync(join(process.cwd(), 'user_uploads', 'pfp', safeImageName + '.webp'))) {
+              await unlink(join(process.cwd(), 'user_uploads', 'pfp', safeImageName + '.webp'));
             }
 
             // Find all of user's devices and delete any images
