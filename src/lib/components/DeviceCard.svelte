@@ -19,6 +19,7 @@
     device,
     shareID = '',
     includeMenu = true,
+    banned = false,
     deleteDevice = undefined,
     editPopupOpen = $bindable(),
     toEdit = $bindable()
@@ -26,6 +27,7 @@
     device: any;
     shareID?: string;
     includeMenu?: boolean;
+    banned?: boolean;
     deleteDevice: any;
     editPopupOpen: boolean;
     toEdit: any;
@@ -196,17 +198,19 @@
         <p>Edit Device</p>
       </button>
       <hr class="w-full text-zinc-800 dark:text-zinc-200" />
-      <button
-        class="flex w-full cursor-pointer items-center justify-center gap-2"
-        onclick={(event) => {
-          event.preventDefault();
-          shareDevice();
-        }}
-      >
-        <Share size="20" />
-        <p>New Share Link</p>
-      </button>
-      <hr class="w-full text-zinc-800 dark:text-zinc-200" />
+      {#if !banned}
+        <button
+          class="flex w-full cursor-pointer items-center justify-center gap-2"
+          onclick={(event) => {
+            event.preventDefault();
+            shareDevice();
+          }}
+        >
+          <Share size="20" />
+          <p>New Share Link</p>
+        </button>
+        <hr class="w-full text-zinc-800 dark:text-zinc-200" />
+      {/if}
       <button
         class="flex w-full cursor-pointer items-center justify-center gap-2 text-red-700 dark:text-red-200"
         onclick={() => {

@@ -491,6 +491,7 @@
           {deleteDevice}
           {shareID}
           includeMenu={!shareID}
+          banned={data.user.banned}
         />
       {/each}
     </div>
