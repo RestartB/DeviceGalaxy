@@ -31,10 +31,12 @@ export async function GET(event) {
   }
 
   const imageBuffer = await readFile(imagePath);
-  return new Response(imageBuffer, {
+  const imageUint8Array = new Uint8Array(imageBuffer);
+
+  return new Response(imageUint8Array, {
     headers: {
       'Content-Type': 'image/webp',
-      'Content-Length': imageBuffer.length.toString(),
+      'Content-Length': imageUint8Array.length.toString(),
       'Cache-Control': 'public, max-age=31536000'
     }
   });

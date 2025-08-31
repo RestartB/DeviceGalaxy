@@ -67,24 +67,13 @@ export const auth = betterAuth({
         // Check for user PFP
         if (user.image) {
           try {
-            const url = new URL(user.image);
             if (
               existsSync(
-                join(
-                  process.cwd(),
-                  'user_uploads',
-                  'pfp',
-                  user.image.replaceAll(`${url.origin}/api/image/pfp/`, '') + '.webp'
-                )
+                join(process.cwd(), 'user_uploads', 'pfp', user.image.split('/').pop() + '.webp')
               )
             ) {
               await unlink(
-                join(
-                  process.cwd(),
-                  'user_uploads',
-                  'pfp',
-                  user.image.replaceAll(`${url.origin}/api/image/pfp/`, '') + '.webp'
-                )
+                join(process.cwd(), 'user_uploads', 'pfp', user.image.split('/').pop() + '.webp')
               );
             }
 
