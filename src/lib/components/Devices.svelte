@@ -333,13 +333,15 @@
     <p>View all of the devices saved to your account.</p>
   {/if}
   <div class="flex flex-wrap gap-2">
-    {#if !shareID && data.user && !data.user.banned}
-      <button
-        class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-blue-500 text-white"
-        onclick={() => (createPopupOpen = true)}
-      >
-        <Plus size="20" />
-      </button>
+    {#if !shareID && data.user}
+      {#if !data.user.banned}
+        <button
+          class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-blue-500 text-white"
+          onclick={() => (createPopupOpen = true)}
+        >
+          <Plus size="20" />
+        </button>
+      {/if}
     {/if}
     <button
       class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
