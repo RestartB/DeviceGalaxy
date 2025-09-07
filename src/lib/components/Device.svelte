@@ -27,6 +27,10 @@
   );
 </script>
 
+<svelte:head>
+  <title>DeviceGalaxy - {device.deviceName}</title>
+</svelte:head>
+
 <svelte:body
   onkeypress={(event) => {
     if (event) {

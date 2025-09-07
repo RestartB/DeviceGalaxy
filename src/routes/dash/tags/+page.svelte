@@ -99,7 +99,7 @@
 </script>
 
 <svelte:head>
-  <title>DeviceGalaxy- Tags</title>
+  <title>DeviceGalaxy - Tags</title>
 </svelte:head>
 
 <CreateTagForm sourceForm={data.newTagForm} bind:createPopupOpen refreshAll={getTags} />
