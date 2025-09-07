@@ -20,9 +20,6 @@ export const userDevices = sqliteTable('devices', {
   internalImages: text('internal_images', { mode: 'json' })
     .$type<string[]>()
     .$defaultFn(() => []),
-  externalImages: text('image_urls', { mode: 'json' })
-    .$type<string[]>()
-    .$defaultFn(() => []),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
   updatedAt: integer('updated_at', { mode: 'timestamp' })
 });

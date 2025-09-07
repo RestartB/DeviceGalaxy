@@ -73,14 +73,7 @@
   class="relative flex max-w-100 min-w-85 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
   {href}
 >
-  {#if device.externalImages && device.externalImages.length > 0}
-    <img
-      src={device.externalImages[0]}
-      alt={device.deviceName}
-      loading="lazy"
-      class="h-48 w-full object-cover"
-    />
-  {:else if device.internalImages && device.internalImages.length > 0}
+  {#if device.internalImages && device.internalImages.length > 0}
     <img
       src={`/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID || ''}`}
       alt={device.deviceName}

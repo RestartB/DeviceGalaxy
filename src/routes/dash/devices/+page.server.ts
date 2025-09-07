@@ -290,7 +290,6 @@ export const actions = {
             storage: newStorage?.id,
             os: newOS?.id,
             brand: newBrand?.id,
-            externalImages: form.data.imageURLs,
             tags: form.data.tags,
             createdAt: new Date(),
             updatedAt: new Date()
@@ -655,7 +654,6 @@ export const actions = {
             os: newOS?.id,
             brand: newBrand?.id,
             internalImages: processedImages,
-            externalImages: form.data.imageURLs,
             tags: form.data.tags,
             updatedAt: new Date()
           })

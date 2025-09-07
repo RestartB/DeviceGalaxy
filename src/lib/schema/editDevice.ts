@@ -27,7 +27,6 @@ export const editDeviceSchema = z
       .min(0)
       .max(5, 'You can only select up to 5 new images'),
     oldImages: z.string().array().min(0),
-    imageURLs: z.url().array().min(0).max(5, 'You can only add up to 5 image URLs'),
 
     tags: z.number().array().min(0),
     'cf-turnstile-response':

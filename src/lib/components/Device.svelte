@@ -17,8 +17,6 @@
 
   const { data, shareID } = $props();
   const device = data.device;
-
-  const hasExternalImages = device.externalImages?.length > 0;
   const hasInternalImages = device.internalImages?.length > 0;
 
   let imageOpen = $state(false);
@@ -44,7 +42,7 @@
 />
 
 {#if !data.share || data.share.type === 0}
-  <div class={hasExternalImages || hasInternalImages ? 'fixed top-16 left-4 z-20' : 'p-4 pb-0'}>
+  <div class={hasInternalImages ? 'fixed top-16 left-4 z-20' : 'p-4 pb-0'}>
     <button
       onclick={() => history.back()}
       class="flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 shadow-md transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800 dark:hover:bg-zinc-600"
@@ -55,11 +53,9 @@
   </div>
 {/if}
 
-{#if hasInternalImages || hasExternalImages}
+{#if hasInternalImages}
   <img
-    src={hasExternalImages
-      ? device.externalImages[0]
-      : `/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID}`}
+    src={`/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID}`}
     alt={device.deviceName}
     class="h-[50vh] w-full mask-b-from-70% object-cover"
   />

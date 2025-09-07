@@ -78,13 +78,7 @@
 
   const files = filesProxy(form, 'images');
 
-  let formPage = $state(0);
   let tagFormOpen = $state(false);
-
-  let newImgURL = $state('');
-  let newImgURLEl: HTMLInputElement | undefined = $state();
-  let uploadAllowed = true;
-
   let hasErrors = $derived($allErrors.length > 0);
   let imagesHaveErrors = $derived(
     (() => {
@@ -109,15 +103,6 @@
     await validateForm({ update: true });
   }
 
-  async function addImageURL() {
-    if (!newImgURL) return;
-    if (!$form.imageURLs) $form.imageURLs = [];
-    $form.imageURLs = [...$form.imageURLs, newImgURL];
-
-    await tick();
-    setTimeout(() => (newImgURL = ''), 1);
-  }
-
   $effect(() => {
     if ($message) {
       if ($message === 'Device added successfully!') {
@@ -125,18 +110,11 @@
         refreshAll();
 
         createPopupOpen = false;
-        formPage = 0;
       } else if (typeof $message === 'string' && $message) {
         toast.warning($message);
       }
     }
     $message = null;
-  });
-
-  $effect(() => {
-    if (formPage === 4) {
-      asyncValidateForm();
-    }
   });
 
   $effect(() => {
@@ -185,50 +163,40 @@
         enctype="multipart/form-data"
         use:enhance
       >
-        <div class="relative h-110 overflow-hidden">
-          <div
-            class="absolute inset-0 overflow-y-auto p-6 transition-transform duration-300"
-            style:transform="translateX({(0 - formPage) * 100}%)"
-          >
-            <div class="flex flex-col gap-4">
-              <h3 class="text-2xl font-semibold">Basic Information</h3>
-              <label for="deviceName" class="text-sm font-medium">Device Name</label>
-              <input
-                type="text"
-                id="deviceName"
-                name="deviceName"
-                class="w-full rounded-lg border p-2"
-                bind:value={$form.deviceName}
-              />
-              {#if $errors.deviceName}<span class="text-red-600">{$errors.deviceName}</span>{/if}
-              <label for="description" class="text-sm font-medium">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                class="min-h-20 w-full rounded-lg border p-2"
-                bind:value={$form.description}
-              ></textarea>
-              {#if $errors.description}<span class="text-red-600">{$errors.description}</span>{/if}
-              <div>
-                <label for="additional" class="text-sm font-medium">Additional Notes</label>
-                <p class="text-sm font-light">
-                  Information that only shows in the fullscreen view.
-                </p>
-              </div>
-              <textarea
-                id="additional"
-                name="additional"
-                class="min-h-20 w-full rounded-lg border p-2"
-                bind:value={$form.additional}
-              ></textarea>
-              {#if $errors.additional}<span class="text-red-600">{$errors.additional}</span>{/if}
+        <div class="relative flex h-110 flex-col gap-8 overflow-y-auto p-4">
+          <div class="flex flex-col gap-4">
+            <h3 class="text-2xl font-semibold">Basic Information</h3>
+            <label for="deviceName" class="text-sm font-medium">Device Name</label>
+            <input
+              type="text"
+              id="deviceName"
+              name="deviceName"
+              class="w-full rounded-lg border p-2"
+              bind:value={$form.deviceName}
+            />
+            {#if $errors.deviceName}<span class="text-red-600">{$errors.deviceName}</span>{/if}
+            <label for="description" class="text-sm font-medium">Description</label>
+            <textarea
+              id="description"
+              name="description"
+              class="min-h-20 w-full rounded-lg border p-2"
+              bind:value={$form.description}
+            ></textarea>
+            {#if $errors.description}<span class="text-red-600">{$errors.description}</span>{/if}
+            <div>
+              <label for="additional" class="text-sm font-medium">Additional Notes</label>
+              <p class="text-sm font-light">Information that only shows in the fullscreen view.</p>
             </div>
+            <textarea
+              id="additional"
+              name="additional"
+              class="min-h-20 w-full rounded-lg border p-2"
+              bind:value={$form.additional}
+            ></textarea>
+            {#if $errors.additional}<span class="text-red-600">{$errors.additional}</span>{/if}
           </div>
 
-          <div
-            class="absolute inset-0 flex flex-col gap-4 overflow-y-auto p-6 transition-transform duration-300"
-            style:transform="translateX({(1 - formPage) * 100}%)"
-          >
+          <div class="flex flex-col gap-4">
             <h3 class="text-2xl font-semibold">Specifications</h3>
 
             <Field
@@ -269,10 +237,7 @@
             />
           </div>
 
-          <div
-            class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
-            style:transform="translateX({(2 - formPage) * 100}%)"
-          >
+          <div class="flex flex-col gap-4">
             <h3 class="text-2xl font-semibold">Tags</h3>
             <p>
               You can select tags to categorise your device. To delete or edit tags, please go to
@@ -291,9 +256,9 @@
                   />
                   <span
                     class="inline-flex items-center justify-center rounded-full border-2 border-zinc-400
-										bg-zinc-100 px-4 py-2 text-zinc-700 transition-all peer-checked:brightness-80
-										dark:bg-zinc-800 dark:text-zinc-200 peer-checked:dark:text-white
-										dark:peer-checked:brightness-150"
+                      bg-zinc-100 px-4 py-2 text-zinc-700 transition-all peer-checked:brightness-80
+                      dark:bg-zinc-800 dark:text-zinc-200 peer-checked:dark:text-white
+                      dark:peer-checked:brightness-150"
                     style={tag.tagColour
                       ? `background-color: ${tag.tagColour}; color: ${tag.tagTextColour}`
                       : ''}
@@ -312,27 +277,24 @@
             </div>
           </div>
 
-          <div
-            class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
-            style:transform="translateX({(3 - formPage) * 100}%)"
-          >
-            {#if uploadAllowed}
-              <h3 class="text-2xl font-semibold">Upload Images</h3>
-              <p>
-                You can upload images of your device here. The first image will also be used for the
-                thumbnail. Please ensure that your images comply with the Terms of Service. Max size
-                per image: 10MB.
-              </p>
-              <input
-                type="file"
-                multiple
-                name="images"
-                accept="image/png, image/jpeg, image/webp"
-                class="file:h-11 file:cursor-pointer file:rounded-full file:border-2 file:border-zinc-400 file:bg-zinc-100 file:px-4 file:py-2 file:text-center file:font-bold file:text-nowrap file:dark:bg-zinc-800"
-                bind:files={$files}
-              />
+          <div class="flex flex-col gap-4">
+            <h3 class="text-2xl font-semibold">Upload Images</h3>
+            <p>
+              You can upload images of your device here. The first image will also be used for the
+              thumbnail. Please ensure that your images comply with the Terms of Service. Max size
+              per image: 10MB.
+            </p>
+            <input
+              type="file"
+              multiple
+              name="images"
+              accept="image/png, image/jpeg, image/webp"
+              class="file:h-11 file:cursor-pointer file:rounded-full file:border-2 file:border-zinc-400 file:bg-zinc-100 file:px-4 file:py-2 file:text-center file:font-bold file:text-nowrap file:dark:bg-zinc-800"
+              bind:files={$files}
+            />
 
-              {#if imagesHaveErrors}
+            {#if imagesHaveErrors}
+              <div>
                 <h3 class="text-xl font-semibold">Problems</h3>
                 {#if $errors.images?._errors}
                   <ul class="text-red-600">
@@ -341,149 +303,94 @@
                     {/each}
                   </ul>
                 {/if}
+              </div>
 
-                {#if $errors.images && Object.keys($errors.images).length > 0}
-                  <ul class="w-full">
-                    {#each Object.entries($errors.images) as [index, fileErrors]}
-                      {#if index !== '_errors' && fileErrors}
-                        <li class="flex w-full justify-center gap-2">
-                          {#if $files && $files[parseInt(index)] && $files[parseInt(index)].type.startsWith('image/')}
-                            <img
-                              src={URL.createObjectURL($files[parseInt(index)])}
-                              alt={$files[parseInt(index)] && $files[parseInt(index)].name
-                                ? `${$files[parseInt(index)].name} (file ${parseInt(index) + 1})`
-                                : `File ${parseInt(index) + 1}`}
-                              class="h-16 w-16 rounded-lg object-cover"
-                            />
-                          {/if}
-                          <div class="flex-1">
-                            <p class="font-bold">
-                              {#if $files[parseInt(index)] && $files[parseInt(index)].name}
-                                {$files[parseInt(index)].name} (file {parseInt(index) + 1})
-                              {:else}
-                                File {parseInt(index) + 1}
-                              {/if}
-                            </p>
-                            <ul>
-                              {#if Array.isArray(fileErrors)}
-                                {#each fileErrors as error}
-                                  <li class="text-red-600">{error}</li>
-                                {/each}
-                              {:else}
-                                <li class="text-red-600">{fileErrors}</li>
-                              {/if}
-                            </ul>
-                          </div>
-                          <button
-                            type="button"
-                            class="cursor-pointer text-red-600 hover:text-red-800"
-                            onclick={() => {
-                              files.update((currentFiles) => {
-                                const newFiles = [...currentFiles];
-                                newFiles.splice(parseInt(index), 1);
-                                return newFiles;
-                              });
+              {#if $errors.images && Object.keys($errors.images).length > 0}
+                <ul class="w-full">
+                  {#each Object.entries($errors.images) as [index, fileErrors]}
+                    {#if index !== '_errors' && fileErrors}
+                      <li class="flex w-full justify-center gap-2">
+                        {#if $files && $files[parseInt(index)] && $files[parseInt(index)].type.startsWith('image/')}
+                          <img
+                            src={URL.createObjectURL($files[parseInt(index)])}
+                            alt={$files[parseInt(index)] && $files[parseInt(index)].name
+                              ? `${$files[parseInt(index)].name} (file ${parseInt(index) + 1})`
+                              : `File ${parseInt(index) + 1}`}
+                            class="h-16 w-16 rounded-lg object-cover"
+                          />
+                        {/if}
+                        <div class="flex-1 flex flex-col justify-center">
+                          <p class="font-bold">
+                            {#if $files[parseInt(index)] && $files[parseInt(index)].name}
+                              {$files[parseInt(index)].name} (file {parseInt(index) + 1})
+                            {:else}
+                              File {parseInt(index) + 1}
+                            {/if}
+                          </p>
+                          <ul>
+                            {#if Array.isArray(fileErrors)}
+                              {#each fileErrors as error}
+                                <li class="text-red-600">{error}</li>
+                              {/each}
+                            {:else}
+                              <li class="text-red-600">{fileErrors}</li>
+                            {/if}
+                          </ul>
+                        </div>
+                        <button
+                          type="button"
+                          class="cursor-pointer text-red-600 hover:text-red-800"
+                          onclick={() => {
+                            files.update((currentFiles) => {
+                              const newFiles = [...currentFiles];
+                              newFiles.splice(parseInt(index), 1);
+                              return newFiles;
+                            });
 
-                              asyncValidateForm();
-                            }}
-                          >
-                            <Trash size="20" />
-                          </button>
-                        </li>
-                      {/if}
-                    {/each}
-                  </ul>
-                {/if}
-              {/if}
-
-              <h3 class="text-xl font-semibold">Allowed Images</h3>
-              <p>Click on an image to remove it.</p>
-              {#if $files && $files.length > 0}
-                <div class="flex flex-wrap gap-2">
-                  {#each $files as file, index}
-                    {#if !($errors.images?.[index] && $errors.images[index])}
-                      <!-- svelte-ignore a11y_click_events_have_key_events -->
-                      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt={file.name}
-                        class="h-32 w-32 cursor-pointer rounded-lg object-cover"
-                        onclick={() => {
-                          files.update((currentFiles) => {
-                            const newFiles = [...currentFiles];
-                            newFiles.splice(index, 1);
-                            return newFiles;
-                          });
-
-                          asyncValidateForm();
-                        }}
-                      />
+                            asyncValidateForm();
+                          }}
+                        >
+                          <Trash size="20" />
+                        </button>
+                      </li>
                     {/if}
-                  {/each}
-                </div>
-              {/if}
-            {:else}
-              <h3 class="text-2xl font-semibold">Add Images</h3>
-              <p>
-                Uploading images is disabled on this instance. Instead, you can provide image URLs.
-                The first image will be used for the thumbnail.
-              </p>
-
-              {#if $errors.imageURLs?._errors}
-                <ul class="text-red-600">
-                  {#each $errors.imageURLs._errors as error}
-                    <li>{error}</li>
                   {/each}
                 </ul>
               {/if}
+            {/if}
 
-              {#each $form.imageURLs as _, i}
-                <div class="flex gap-2">
-                  <input
-                    class="flex-1 rounded-lg border p-2"
-                    type="text"
-                    name="newImageURLs"
-                    bind:value={$form.imageURLs[i]}
-                    placeholder="Enter image URL..."
-                  />
-                  <button
-                    type="button"
-                    class="rounded-lg bg-red-500 px-3 py-2 text-white hover:bg-red-600"
-                    onclick={() => {
-                      $form.imageURLs = $form.imageURLs.filter((_, idx) => idx !== i);
-                    }}
-                  >
-                    <X size="16" />
-                  </button>
-                </div>
-                {#if $errors.imageURLs?.[i]}<span class="text-red-600">{$errors.imageURLs[i]}</span
-                  >{/if}
-              {/each}
+            {#if $files && $files.length > 0}
+              <div>
+                <h3 class="text-xl font-semibold">Allowed Images</h3>
+                <p>Click on an image to remove it.</p>
+              </div>
 
-              <input
-                class="w-full rounded-lg border p-2"
-                type="text"
-                placeholder="Enter image URL..."
-                bind:value={newImgURL}
-                bind:this={newImgURLEl}
-                onchange={() => addImageURL()}
-              />
+              <div class="flex flex-wrap gap-2">
+                {#each $files as file, index}
+                  {#if !($errors.images?.[index] && $errors.images[index])}
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      class="h-32 w-32 cursor-pointer rounded-lg object-cover"
+                      onclick={() => {
+                        files.update((currentFiles) => {
+                          const newFiles = [...currentFiles];
+                          newFiles.splice(index, 1);
+                          return newFiles;
+                        });
 
-              {#if newImgURL}
-                <input
-                  class="w-full rounded-lg border p-2"
-                  type="text"
-                  placeholder="Enter image URL..."
-                  onfocus={() => newImgURLEl?.focus()}
-                />
-              {/if}
+                        asyncValidateForm();
+                      }}
+                    />
+                  {/if}
+                {/each}
+              </div>
             {/if}
           </div>
 
-          <div
-            class="absolute inset-0 flex flex-col gap-2 overflow-y-auto p-6 transition-transform duration-300"
-            style:transform="translateX({(4 - formPage) * 100}%)"
-          >
+          <div class="flex flex-col gap-4">
             <h3 class="text-2xl font-semibold">Confirm Details</h3>
             <div class="rounded-lg bg-zinc-200 p-4 text-sm dark:bg-zinc-700">
               <p class="break-words"><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
@@ -497,22 +404,11 @@
               <p class="break-words"><strong>Memory:</strong> {$form.memory || 'N/A'}</p>
               <p class="break-words"><strong>Storage:</strong> {$form.storage || 'N/A'}</p>
               <p class="break-words"><strong>OS:</strong> {$form.os || 'N/A'}</p>
-              {#if uploadAllowed}
-                {#if $files && $files.length > 0}
-                  <p><strong>Images:</strong></p>
-                  {#each $files as file}
-                    <p class="break-words">{file.name} ({file.size} bytes)</p>
-                  {/each}
-                {:else}
-                  <p><strong>Images:</strong> None</p>
-                {/if}
-              {:else if $form.imageURLs && $form.imageURLs.length > 0}
+              {#if $files && $files.length > 0}
                 <p><strong>Images:</strong></p>
-                <ul class="list-disc pl-5">
-                  {#each $form.imageURLs as imageURL}
-                    <li class="break-words">{imageURL}</li>
-                  {/each}
-                </ul>
+                {#each $files as file}
+                  <p class="break-words">{file.name} ({file.size} bytes)</p>
+                {/each}
               {:else}
                 <p><strong>Images:</strong> None</p>
               {/if}
@@ -545,39 +441,24 @@
                   {#if $errors.os}
                     <li class="text-red-600 dark:text-red-400">{$errors.os}</li>
                   {/if}
-                  {#if uploadAllowed}
-                    {#if $errors.images}
-                      {#if $errors.images._errors}
-                        {#each $errors.images._errors as error}
-                          <li class="text-red-600 dark:text-red-400">{error}</li>
-                        {/each}
-                      {/if}
-                      {#each Object.entries($errors.images) as [index, fileErrors]}
-                        {#if index !== '_errors' && fileErrors}
-                          <li class="text-red-600 dark:text-red-400">
-                            {#if $files && $files[parseInt(index)] && $files[parseInt(index)].name}
-                              {$files[parseInt(index)].name} (file {parseInt(index) + 1})
-                            {:else}
-                              File {parseInt(index) + 1}
-                            {/if}:
-                            {#if Array.isArray(fileErrors)}
-                              {fileErrors.join(', ')}
-                            {:else}
-                              {fileErrors}
-                            {/if}
-                          </li>
-                        {/if}
+                  {#if $errors.images}
+                    {#if $errors.images._errors}
+                      {#each $errors.images._errors as error}
+                        <li class="text-red-600 dark:text-red-400">{error}</li>
                       {/each}
                     {/if}
-                  {:else if $errors.imageURLs}
-                    {#each Object.entries($errors.imageURLs) as [index, imageErrors]}
-                      {#if index !== '_errors' && imageErrors}
+                    {#each Object.entries($errors.images) as [index, fileErrors]}
+                      {#if index !== '_errors' && fileErrors}
                         <li class="text-red-600 dark:text-red-400">
-                          {$form.imageURLs[parseInt(index)]}:
-                          {#if Array.isArray(imageErrors)}
-                            {imageErrors.join(', ')}
+                          {#if $files && $files[parseInt(index)] && $files[parseInt(index)].name}
+                            {$files[parseInt(index)].name} (file {parseInt(index) + 1})
                           {:else}
-                            {imageErrors}
+                            File {parseInt(index) + 1}
+                          {/if}:
+                          {#if Array.isArray(fileErrors)}
+                            {fileErrors.join(', ')}
+                          {:else}
+                            {fileErrors}
                           {/if}
                         </li>
                       {/if}
@@ -615,24 +496,7 @@
         </div>
 
         <div class="flex items-center justify-between gap-4 border-t p-4">
-          <button
-            type="button"
-            class="cursor-pointer rounded-md border px-4 py-2"
-            onclick={() => (formPage = Math.max(formPage - 1, 0))}
-            style:visibility={formPage > 0 ? 'visible' : 'hidden'}>Previous</button
-          >
-
-          {#if formPage < 4}
-            <button
-              type="button"
-              class="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-              onclick={() => (formPage = Math.min(formPage + 1, 4))}>Next</button
-            >
-          {/if}
-
-          {#if formPage === 4}
-            <Submit text="Add Device" {hasErrors} submitting={$submitting} delayed={$delayed} />
-          {/if}
+          <Submit text="Add Device" {hasErrors} submitting={$submitting} delayed={$delayed} />
         </div>
       </form>
     </div>
