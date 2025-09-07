@@ -14,7 +14,7 @@
     <meta property="og:image" content="" />
     <meta name="twitter:card" content="tweet" />
 
-    <meta name="og:title" content="{data.device.deviceName} (@{data.shareUser.name})" />
+    <meta name="og:title" content="{data.device.deviceName} by @{data.shareUser.name}" />
     <link
       type="application/activity+json"
       href="{page.url.origin}/users/{data.shareUser.name}/statuses/{statusId}"
