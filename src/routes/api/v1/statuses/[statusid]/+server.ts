@@ -4,8 +4,6 @@ import { eq, and } from 'drizzle-orm';
 import { userDevices, shares, user } from '$lib/server/db/schema';
 
 export async function GET(event) {
-  console.log('hello discord - v1');
-
   // Get status ID
   const statusIdBase: string = event.params.statusid;
 
@@ -61,18 +59,17 @@ export async function GET(event) {
     return json({ error: 'User not found' }, { status: 404 });
   }
 
-  console.log('All checks passed, returning status');
-  console.log(userData);
-
   const mediaAttachments = [];
 
   if (device.internalImages && device.internalImages.length > 0) {
-    mediaAttachments.push({
-      id: '123456789',
-      preview_url: `${event.url.origin}/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareId}`,
-      type: 'image',
-      url: `${event.url.origin}/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareId}&name=orig`
-    });
+    for (const [id, image] of device.internalImages.entries()) {
+      mediaAttachments.push({
+        id: id.toString(),
+        preview_url: `${event.url.origin}/api/image/device/${device.id}/${image}?share=${shareId}`,
+        type: 'image',
+        url: `${event.url.origin}/api/image/device/${device.id}/${image}?share=${shareId}&name=orig`
+      });
+    }
   }
 
   // https://docs.joinmastodon.org/methods/statuses/
@@ -104,6 +101,5 @@ export async function GET(event) {
     visibility: 'public'
   };
 
-  console.log('Returning response:', jsonResponse);
   return json(jsonResponse);
 }
