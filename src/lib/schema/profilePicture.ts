@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { z } from 'zod/v4';
 
 export const profilePictureSchema = z.object({
@@ -10,20 +11,34 @@ export const profilePictureSchema = z.object({
     )
     // https://www.codu.co/articles/validate-an-image-file-with-zod-jjhied8p
     .refine(
-      (f) =>
-        new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-              const meetsDimensions =
-                img.width > 64 && img.height > 64 && img.width < 1024 && img.height < 1024;
-              resolve(meetsDimensions);
+      async (f) => {
+        if (browser) {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const img = new Image();
+              img.onload = () => {
+                const meetsDimensions =
+                  img.width > 64 && img.height > 64 && img.width < 1024 && img.height < 1024;
+                resolve(meetsDimensions);
+              };
+              img.src = e.target?.result as string;
             };
-            img.src = e.target?.result as string;
-          };
-          reader.readAsDataURL(f);
-        }),
+            reader.readAsDataURL(f);
+          });
+        } else {
+          try {
+            const sharp = await import('sharp');
+            const buffer = Buffer.from(await f.arrayBuffer());
+            const metadata = await sharp.default(buffer).metadata();
+
+            const { width, height } = metadata;
+            return width && height && width > 64 && height > 64 && width < 1024 && height < 1024;
+          } catch {
+            return false;
+          }
+        }
+      },
       {
         message:
           'Image dimensions are invalid. Please upload an image between 64x64 and 1024x1024 pixels.'
