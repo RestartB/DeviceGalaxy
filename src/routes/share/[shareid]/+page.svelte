@@ -22,7 +22,12 @@
           : `View ${data.shareUser.name}'s shared devices on DeviceGalaxy.`}
       />
       <meta content="DeviceGalaxy" property="og:site_name" />
-      <meta property="og:image" content="https://devicegalaxy.me/favicon.png" />
+      <meta
+        property="og:image"
+        content={data.shareUser.image
+          ? data.shareUser.image
+          : 'https://devicegalaxy.me/favicon.png'}
+      />
     {:else if data.share.type === 2 && data.device}
       <meta property="og:image" content="" />
       <meta name="twitter:card" content="tweet" />
@@ -45,7 +50,12 @@
         content="View {data.shareUser.name}'s shared devices on DeviceGalaxy."
       />
       <meta content="DeviceGalaxy" property="og:site_name" />
-      <meta property="og:image" content="https://devicegalaxy.me/favicon.png" />
+      <meta
+        property="og:image"
+        content={data.shareUser.image
+          ? data.shareUser.image
+          : 'https://devicegalaxy.me/favicon.png'}
+      />
     {/if}
   {/if}
 </svelte:head>
