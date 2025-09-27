@@ -118,8 +118,6 @@
       $form.os = toEdit.os || '';
 
       $form.oldImages = toEdit.internalImages || [];
-      $form.imageURLs = toEdit.imageURLs || [];
-
       $form.tags = toEdit.tags?.map((tag: any) => tag.id) || [];
     }
   });

@@ -44,8 +44,7 @@ export const actions = {
         password: form.data.password,
         description: '',
         backgroundImage: '',
-        backgroundImageBlurPx: 0,
-        banned: false,
+        backgroundImageBlurPx: 0
       },
       asResponse: true
     });

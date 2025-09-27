@@ -17,11 +17,7 @@ import deleteOrphans from '$lib/deleteOrphans';
 
 import { existsSync } from 'fs';
 import { rm } from 'fs/promises';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { join } from 'path';
 
 export async function DELETE(event) {
   // Check if the user is authenticated
