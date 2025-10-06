@@ -124,7 +124,7 @@
       <p class="text-zinc-500 dark:text-zinc-300">No shares available.</p>
     {/if}
 
-    <hr class="w-full text-zinc-800 dark:text-zinc-200" />
+    <hr class="w-full border-t-2 border-zinc-800 dark:border-zinc-400" />
 
     <div class="flex flex-col gap-2">
       <h2 class="text-2xl font-semibold">Device Shares</h2>
