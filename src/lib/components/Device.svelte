@@ -32,7 +32,7 @@
 </svelte:head>
 
 <svelte:body
-  onkeypress={(event) => {
+  onkeydown={(event) => {
     if (event) {
       if (event.key === 'Escape') {
         imageOpen = false;
