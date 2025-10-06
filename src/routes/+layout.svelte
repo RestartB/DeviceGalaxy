@@ -26,7 +26,7 @@
 </script>
 
 <svelte:head>
-  {#if !page.url.pathname.startsWith('/share') && page.url.pathname !== '/embed-test'}
+  {#if !page.url.pathname.startsWith('/share')}
     {#if !page.url.pathname.startsWith('/policy')}
       <title>DeviceGalaxy</title>
     {/if}
@@ -61,7 +61,9 @@
       {/if}
     {/if}
 
-    {@render children()}
+    <div class="flex w-full justify-center h-full">
+      {@render children()}
+    </div>
   </div>
 
   <Footer />

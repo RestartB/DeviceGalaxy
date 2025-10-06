@@ -40,55 +40,57 @@
   />
 {/if}
 
-<div class="flex w-full flex-col gap-2">
+<div class="flex w-full max-w-[1920px] flex-col gap-4">
   {#if data.user}
-    <h1 class="text-4xl font-bold">Home</h1>
-    <div class="flex items-center gap-2">
-      <Avatar
-        size={44}
-        src={data.user.image || ''}
-        name={data.user.name || ''}
-        alt="User Avatar"
-        className="border-zinc-400"
-      />
-      <div>
-        <h1 class="text-lg font-semibold">
-          {data.randomGreeting}
-          <span translate="no">{data.user.name}</span>! Where to today?
-        </h1>
+    <div class="flex w-full flex-col gap-2">
+      <h1 class="text-4xl font-bold">Home</h1>
+      <div class="flex items-center gap-2">
+        <Avatar
+          size={44}
+          src={data.user.image || ''}
+          name={data.user.name || ''}
+          alt="User Avatar"
+          className="border-zinc-400"
+        />
+        <div>
+          <h1 class="text-lg font-semibold">
+            {data.randomGreeting}
+            <span translate="no">{data.user.name}</span>! Where to today?
+          </h1>
+        </div>
       </div>
-    </div>
 
-    <div class="flex flex-wrap items-center gap-2">
-      {#if !data.user.twoFactorEnabled}
-        <a
-          class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
-          href="/dash/auth/setup-2fa"
-          title="Enable 2FA"
+      <div class="flex flex-wrap items-center gap-2">
+        {#if !data.user.twoFactorEnabled}
+          <a
+            class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
+            href="/dash/auth/setup-2fa"
+            title="Enable 2FA"
+          >
+            <Shield size="20" />
+            Enable 2FA
+          </a>
+        {/if}
+        <button
+          class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-600 px-4 py-2 font-bold text-nowrap text-white transition-colors hover:bg-green-500"
+          onclick={() => (createDevicePopupOpen = true)}
         >
-          <Shield size="20" />
-          Enable 2FA
-        </a>
-      {/if}
-      <button
-        class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-green-600 px-4 py-2 font-bold text-nowrap text-white transition-colors hover:bg-green-500"
-        onclick={() => (createDevicePopupOpen = true)}
-      >
-        <Monitor size="20" />
-        Add New Device
-      </button>
-      <button
-        class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-blue-600 px-4 py-2 font-bold text-nowrap text-white transition-colors hover:bg-blue-500"
-        onclick={() => (createTagPopupOpen = true)}
-      >
-        <Tag size="20" />
-        Add New Tag
-      </button>
+          <Monitor size="20" />
+          Add New Device
+        </button>
+        <button
+          class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-blue-600 px-4 py-2 font-bold text-nowrap text-white transition-colors hover:bg-blue-500"
+          onclick={() => (createTagPopupOpen = true)}
+        >
+          <Tag size="20" />
+          Add New Tag
+        </button>
+      </div>
     </div>
 
     {#if data.recentlyUpdated && data.recentlyUpdated?.length > 0}
       <h2 class="text-2xl font-semibold">Recently Modified</h2>
-      <div class="flex w-fit max-w-full flex-nowrap gap-2 overflow-x-auto">
+      <div class="flex w-fit max-w-full flex-nowrap gap-4 overflow-x-auto">
         {#each data.recentlyUpdated as device}
           <DeviceCard
             {device}
@@ -127,7 +129,7 @@
 
     {#if data.recentlyCreated && data.recentlyCreated?.length > 0}
       <h2 class="text-2xl font-semibold">Recently Created</h2>
-      <div class="flex w-fit max-w-full flex-nowrap gap-2 overflow-x-auto">
+      <div class="flex w-fit max-w-full flex-nowrap gap-4 overflow-x-auto">
         {#each data.recentlyCreated as device}
           <DeviceCard
             {device}

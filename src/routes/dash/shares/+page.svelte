@@ -47,17 +47,47 @@
   }
 </script>
 
+{#snippet copyButton(shareId: string)}
+  <button
+    class="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600"
+    onclick={() => {
+      navigator.clipboard.writeText(`${window.location.origin}/share/${shareId}`);
+      toast.success('Copied to clipboard!');
+    }}
+  >
+    <Clipboard size="20" />
+    <span class="xs:block hidden">Copy</span>
+  </button>
+{/snippet}
+
+{#snippet revokeButton(shareId: string)}
+  <button
+    class="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-red-200 p-2 transition-colors hover:bg-red-300 dark:bg-red-700 dark:hover:bg-red-800"
+    onclick={() => {
+      toRevoke = shareId || '';
+      revokePopupOpen = true;
+    }}
+  >
+    <X size="20" />
+    <span class="xs:block hidden">Revoke</span>
+  </button>
+{/snippet}
+
 <svelte:head>
   <title>DeviceGalaxy - Shares</title>
 </svelte:head>
 
 {#if data.user}
-  <div class="flex flex-col gap-2">
-    <h1 class="text-4xl font-bold">Shares</h1>
-    <p>View and manage all of your share links.</p>
+  <div class="flex w-full max-w-[1920px] flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <h1 class="text-4xl font-bold">Shares</h1>
+      <p>View and manage all of your share links.</p>
+    </div>
 
-    <h2 class="text-2xl font-semibold">Account Shares</h2>
-    <p>Share your entire collection of devices.</p>
+    <div class="flex flex-col gap-2">
+      <h2 class="text-2xl font-semibold">Account Shares</h2>
+      <p>Share your entire collection of devices.</p>
+    </div>
     <button
       class="flex w-fit cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-blue-500 px-4 py-2 text-white"
       onclick={createAccountShare}
@@ -79,26 +109,8 @@
               </a>
             </div>
             <div class="flex items-center gap-2">
-              <button
-                class="flex items-center justify-center gap-2 rounded-lg bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600"
-                onclick={() => {
-                  navigator.clipboard.writeText(`${window.location.origin}/share/${share.id}`);
-                  toast.success('Copied to clipboard!');
-                }}
-              >
-                <Clipboard size="20" />
-                <span class="xs:block hidden">Copy</span>
-              </button>
-              <button
-                class="flex items-center justify-center gap-2 rounded-lg bg-red-200 p-2 transition-colors hover:bg-red-300 dark:bg-red-700 dark:hover:bg-red-800"
-                onclick={() => {
-                  toRevoke = share.id || '';
-                  revokePopupOpen = true;
-                }}
-              >
-                <X size="20" />
-                <span class="xs:block hidden">Revoke</span>
-              </button>
+              {@render copyButton(share.id || '')}
+              {@render revokeButton(share.id || '')}
             </div>
           </li>
           {#if index < data.accountShares.length - 1}
@@ -112,11 +124,15 @@
       <p class="text-zinc-500 dark:text-zinc-300">No shares available.</p>
     {/if}
 
-    <h2 class="text-2xl font-semibold">Device Shares</h2>
-    <p>
-      To share a specific device, go to the devices page, find the device to share, click the menu
-      button, then click "Create Share Link".
-    </p>
+    <hr class="w-full text-zinc-800 dark:text-zinc-200" />
+
+    <div class="flex flex-col gap-2">
+      <h2 class="text-2xl font-semibold">Device Shares</h2>
+      <p>
+        To share a specific device, go to the devices page, find the device to share, click the menu
+        button, then click "Create Share Link".
+      </p>
+    </div>
     {#if data.deviceShares && data.deviceShares.length > 0}
       <ul class="flex flex-col gap-2">
         {#each data.deviceShares as share, index}
@@ -132,26 +148,8 @@
               </a>
             </div>
             <div class="flex items-center gap-2">
-              <button
-                class="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600"
-                onclick={() => {
-                  navigator.clipboard.writeText(`${window.location.origin}/share/${share.shareId}`);
-                  toast.success('Copied to clipboard!');
-                }}
-              >
-                <Clipboard size="20" />
-                <span class="xs:block hidden">Copy</span>
-              </button>
-              <button
-                class="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-red-200 p-2 transition-colors hover:bg-red-300 dark:bg-red-700 dark:hover:bg-red-800"
-                onclick={() => {
-                  toRevoke = share.shareId || '';
-                  revokePopupOpen = true;
-                }}
-              >
-                <X size="20" />
-                <span class="xs:block hidden">Revoke</span>
-              </button>
+              {@render copyButton(share.shareId || '')}
+              {@render revokeButton(share.shareId || '')}
             </div>
           </li>
           {#if index < data.deviceShares.length - 1}

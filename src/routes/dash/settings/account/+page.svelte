@@ -132,18 +132,20 @@
   <div class="flex flex-col gap-2">
     <h4 class="text-xl font-bold">Email</h4>
 
-    <p class="font-semibold">View your login email address.</p>
+    <h5 class="font-semibold">View your login email address.</h5>
     <div>
       <button
         class="w-fit overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 dark:bg-zinc-700"
         onclick={() => (emailBlurred = !emailBlurred)}
       >
-        <p class="w-full blur-sm transition-all" class:blur-sm={emailBlurred}>{data.user?.email}</p>
+        <p class="w-full blur-sm transition-all" class:blur-sm={emailBlurred}>
+          {data.user?.email}
+        </p>
       </button>
       <p class="mt-1 text-sm">Click to toggle</p>
     </div>
 
-    <p class="font-semibold">Change your login email address.</p>
+    <h5 class="font-semibold">Change your login email address.</h5>
     <button
       class="flex w-fit items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
       onclick={() => (emailPopupOpen = true)}
@@ -153,9 +155,11 @@
     </button>
   </div>
 
+  <hr class="w-full text-zinc-200 dark:text-zinc-700" />
+
   <div class="flex flex-col gap-2">
     <h4 class="text-xl font-bold">Name</h4>
-    <p class="font-semibold">Change your display name.</p>
+    <h5 class="font-semibold">Change your display name.</h5>
 
     <div class="flex items-center gap-2">
       <input
@@ -189,9 +193,11 @@
     </div>
   </div>
 
+  <hr class="w-full text-zinc-200 dark:text-zinc-700" />
+
   <div class="flex flex-col gap-2">
     <h4 class="text-xl font-bold">Profile Picture</h4>
-    <p class="font-semibold">Edit your profile picture.</p>
+    <h5 class="font-semibold">Edit your profile picture.</h5>
 
     <div class="flex items-center gap-2">
       <Avatar

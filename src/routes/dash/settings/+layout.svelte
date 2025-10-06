@@ -14,7 +14,7 @@
   <title>DeviceGalaxy - Settings</title>
 </svelte:head>
 
-<div class="flex w-full flex-col gap-2">
+<div class="flex w-full max-w-[1920px] flex-col gap-2">
   {#if data.user}
     <div class="flex w-full flex-col gap-4 sm:flex-row">
       <div

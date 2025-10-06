@@ -14,11 +14,8 @@
     <div class="flex flex-col gap-2">
       <h4 class="text-xl font-bold">Description</h4>
 
-      <p class="font-semibold">Set a description that appears on account share links.</p>
-      <Form
-        sourceForm={data.descriptionForm}
-        oldDescription={data.user.description}
-      />
+      <p>Set a description that appears on account share links.</p>
+      <Form sourceForm={data.descriptionForm} oldDescription={data.user.description} />
     </div>
   </div>
 {/if}

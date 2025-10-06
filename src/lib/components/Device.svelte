@@ -45,128 +45,133 @@
   }}
 />
 
-{#if !data.share || data.share.type === 0}
-  <div class={hasInternalImages ? 'fixed top-16 left-4 z-20' : 'p-4 pb-0'}>
-    <button
-      onclick={() => history.back()}
-      class="flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 shadow-md transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800 dark:hover:bg-zinc-600"
-    >
-      <MoveLeft size="20" />
-      <p>Back</p>
-    </button>
-  </div>
-{/if}
-
-{#if hasInternalImages}
-  <img
-    src={`/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID}`}
-    alt={device.deviceName}
-    class="h-[50vh] w-full mask-b-from-70% object-cover"
-  />
-{/if}
-
-<div class="z-10 flex flex-col gap-4 p-4">
-  <div>
-    {#if device.brand}
-      <p class="text-sm text-zinc-500 dark:text-zinc-400">{device.brand}</p>
-    {/if}
-    <h1 class="text-4xl font-bold" translate="no">{device.deviceName}</h1>
-    {#if shareID}
-      <div class="flex max-w-full flex-wrap items-center gap-2">
-        <Avatar
-          src={data.shareUser?.image}
-          name={data.shareUser?.name}
-          size={30}
-          className="rounded-full"
-        />
-        <p class="text-base text-zinc-500 dark:text-zinc-400">
-          from <strong translate="no">{data.shareUser?.name}</strong>'s galaxy
-        </p>
-      </div>
-    {/if}
-  </div>
-
-  <p>{device.description || 'No description.'}</p>
-
-  {#if device.additional}
-    <div>
-      <div class="flex flex-nowrap items-center justify-start gap-1">
-        <InfoIcon />
-        <h2 class="font-bold">Additional Notes</h2>
-      </div>
-      <p>{device.additional}</p>
+<div class="w-full">
+  {#if !data.share || data.share.type === 0}
+    <div class={hasInternalImages ? 'fixed top-16 left-4 z-20' : 'p-4 pb-0'}>
+      <button
+        onclick={() => history.back()}
+        class="flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 shadow-md transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800 dark:hover:bg-zinc-600"
+      >
+        <MoveLeft size="20" />
+        <p>Back</p>
+      </button>
     </div>
   {/if}
-
-  {#if device.tags?.length > 0}
-    <div class="flex w-fit flex-wrap items-center justify-center gap-2">
-      {#each device.tags as tag}
-        <span
-          class="rounded-full bg-zinc-300 px-3 py-1 text-sm font-semibold text-zinc-800 dark:bg-zinc-600 dark:text-zinc-200"
-          style="background-color: {tag?.tagColour}; color: {tag?.tagTextColour};"
-        >
-          {tag?.tagName}
-        </span>
-      {/each}
-    </div>
-  {/if}
-
-  <div class="flex w-fit flex-wrap items-center justify-center gap-2">
-    {#if device.cpu}
-      <AttributeTile name="CPU" icon={Cpu}>
-        {device.cpu}
-      </AttributeTile>
-    {/if}
-
-    {#if device.gpu}
-      <AttributeTile name="GPU" icon={Gpu}>
-        {device.gpu}
-      </AttributeTile>
-    {/if}
-
-    {#if device.memory}
-      <AttributeTile name="Memory" icon={MemoryStick}>
-        {device.memory}
-      </AttributeTile>
-    {/if}
-
-    {#if device.storage}
-      <AttributeTile name="Storage" icon={HardDrive}>
-        {device.storage}
-      </AttributeTile>
-    {/if}
-
-    {#if device.os}
-      <AttributeTile name="Operating System" icon={Cog}>
-        {device.os}
-      </AttributeTile>
-    {/if}
-  </div>
 
   {#if hasInternalImages}
-    <h2 class="text-2xl font-bold">Images</h2>
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {#each device.internalImages as image, index}
-        <button
-          style="background-image: url('/api/image/device/{device.id}/{image}?share={shareID}');"
-          aria-label="Click to fullscreen image"
-          class="bg-fit h-64 w-full rounded-lg border-2 border-zinc-400 bg-cover bg-center"
-          onclick={() => {
-            imageIndex = index;
-            imageOpen = true;
-          }}
-        ></button>
-      {/each}
-    </div>
+    <img
+      src={`/api/image/device/${device.id}/${device.internalImages[0]}?share=${shareID}`}
+      alt={device.deviceName}
+      class="h-[50vh] w-full mask-b-from-70% object-cover"
+    />
   {/if}
-</div>
 
+  <div class="z-10 mx-auto flex max-w-[1920px] flex-col gap-4 p-4">
+    <div class="flex flex-col gap-2">
+      <div>
+        {#if device.brand}
+          <p class="text-sm text-zinc-500 dark:text-zinc-400">{device.brand}</p>
+        {/if}
+        <h1 class="text-4xl font-bold" translate="no">{device.deviceName}</h1>
+      </div>
+
+      {#if shareID}
+        <div class="flex max-w-full flex-wrap items-center gap-2">
+          <Avatar
+            src={data.shareUser?.image}
+            name={data.shareUser?.name}
+            size={30}
+            className="rounded-full"
+          />
+          <p class="text-base text-zinc-500 dark:text-zinc-400">
+            from <strong translate="no">{data.shareUser?.name}</strong>'s galaxy
+          </p>
+        </div>
+      {/if}
+
+      <p>{device.description || 'No description.'}</p>
+    </div>
+
+    {#if device.additional}
+      <div class="border-l-4 border-zinc-300 pl-2 dark:border-zinc-700">
+        <div class="mb-2 flex flex-nowrap items-center justify-start gap-1">
+          <InfoIcon />
+          <h2 class="font-bold">Additional Notes</h2>
+        </div>
+        <p>{device.additional}</p>
+      </div>
+    {/if}
+
+    {#if device.tags?.length > 0}
+      <div class="flex w-fit flex-wrap items-center justify-center gap-2">
+        {#each device.tags as tag}
+          <span
+            class="rounded-full bg-zinc-300 px-3 py-1 text-sm font-semibold text-zinc-800 dark:bg-zinc-600 dark:text-zinc-200"
+            style="background-color: {tag?.tagColour}; color: {tag?.tagTextColour};"
+          >
+            {tag?.tagName}
+          </span>
+        {/each}
+      </div>
+    {/if}
+
+    <div class="flex w-fit flex-wrap items-center justify-center gap-2">
+      {#if device.cpu}
+        <AttributeTile name="CPU" icon={Cpu}>
+          {device.cpu}
+        </AttributeTile>
+      {/if}
+
+      {#if device.gpu}
+        <AttributeTile name="GPU" icon={Gpu}>
+          {device.gpu}
+        </AttributeTile>
+      {/if}
+
+      {#if device.memory}
+        <AttributeTile name="Memory" icon={MemoryStick}>
+          {device.memory}
+        </AttributeTile>
+      {/if}
+
+      {#if device.storage}
+        <AttributeTile name="Storage" icon={HardDrive}>
+          {device.storage}
+        </AttributeTile>
+      {/if}
+
+      {#if device.os}
+        <AttributeTile name="Operating System" icon={Cog}>
+          {device.os}
+        </AttributeTile>
+      {/if}
+    </div>
+
+    {#if hasInternalImages}
+      <h2 class="text-2xl font-bold">Images</h2>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {#each device.internalImages as image, index}
+          <button
+            style="background-image: url('/api/image/device/{device.id}/{image}?share={shareID}');"
+            aria-label="Click to fullscreen image"
+            class="bg-fit h-64 w-full cursor-pointer rounded-lg border-2 border-zinc-400 bg-cover bg-center"
+            onclick={() => {
+              imageIndex = index;
+              imageOpen = true;
+            }}
+          ></button>
+        {/each}
+      </div>
+    {/if}
+  </div>
+</div>
 {#if imageOpen}
   <div
-    class="fixed inset-0 z-60 flex items-center justify-center bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+    class="fixed inset-0 z-60 mt-12 flex items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
     transition:fade={{ duration: 100 }}
   >
-    <div class="flex flex-col items-center justify-center gap-2">
+    <div class="absolute inset-0 z-10" onclick={() => (imageOpen = false)} aria-hidden="true"></div>
+    <div class="z-20 m-2 flex flex-col items-center justify-center gap-2">
       <div class="flex w-full items-center gap-2">
         <button
           class="flex h-11 w-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 shadow-md transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"

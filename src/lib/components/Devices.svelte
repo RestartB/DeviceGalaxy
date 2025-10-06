@@ -14,7 +14,16 @@
   } from '$lib/server/db/schema';
 
   import { toast } from 'svelte-sonner';
-  import { Plus, Check, MoveLeft, MoveRight, RefreshCw, Search } from '@lucide/svelte';
+  import {
+    Plus,
+    Check,
+    MoveLeft,
+    MoveRight,
+    RefreshCw,
+    Search,
+    LoaderCircle,
+    X
+  } from '@lucide/svelte';
   import Avatar from '$lib/components/Avatar.svelte';
 
   import DeviceCard from '$lib/components/DeviceCard.svelte';
@@ -303,35 +312,38 @@
   />
 {/if}
 
-<div class="flex flex-col gap-2">
-  {#if shareID}
-    <div class="flex w-full flex-wrap items-center gap-2">
-      <Avatar
-        size={30}
-        src={data.shareUser.image || ''}
-        name={data.shareUser.name || ''}
-        alt="User Avatar"
-        className="border-zinc-400"
-      />
-      <h1 class="text-4xl font-bold">
-        <span translate="no">{data.shareUser.name}</span>'s Devices
-      </h1>
-    </div>
-  {:else}
-    <h1 class="text-4xl font-bold">Devices</h1>
-  {/if}
+<div class="flex w-full max-w-[1920px] flex-col gap-4">
+  <div class="flex flex-col gap-2">
+    {#if shareID}
+      <div class="flex w-full flex-wrap items-center gap-2">
+        <Avatar
+          size={30}
+          src={data.shareUser.image || ''}
+          name={data.shareUser.name || ''}
+          alt="User Avatar"
+          className="border-zinc-400"
+        />
+        <h1 class="text-4xl font-bold">
+          <span translate="no">{data.shareUser.name}</span>'s Devices
+        </h1>
+      </div>
+    {:else}
+      <h1 class="text-4xl font-bold">Devices</h1>
+    {/if}
 
-  {#if shareID && data.shareUser && data.shareUser.description}
-    <p>
-      {data.shareUser.description}
-    </p>
-  {:else if shareID && data.shareUser}
-    <p class="text-zinc-500 dark:text-zinc-400">
-      View devices shared by <span translate="no">{data.shareUser.name}</span>.
-    </p>
-  {:else}
-    <p>View all of the devices saved to your account.</p>
-  {/if}
+    {#if shareID && data.shareUser && data.shareUser.description}
+      <p>
+        {data.shareUser.description}
+      </p>
+    {:else if shareID && data.shareUser}
+      <p class="text-zinc-500 dark:text-zinc-400">
+        View devices shared by <span translate="no">{data.shareUser.name}</span>.
+      </p>
+    {:else}
+      <p>View all of the devices saved to your account.</p>
+    {/if}
+  </div>
+
   <div class="flex flex-wrap gap-2">
     {#if !shareID && data.user && !data.user.banned}
       <button
@@ -342,10 +354,12 @@
       </button>
     {/if}
     <button
-      class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
+      class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-zinc-100 transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800 dark:hover:bg-zinc-600"
       onclick={refreshAll}
+      disabled={loadingDevices}
+      aria-label="Refresh Devices"
     >
-      <RefreshCw size="20" />
+      <RefreshCw size="20" class={loadingDevices ? 'animate-spin' : ''} />
     </button>
     <input
       type="text"
@@ -478,9 +492,15 @@
     {/if}
   </div>
   {#if loadingDevices}
-    <p>Loading devices...</p>
+    <div class="flex items-center gap-2">
+      <LoaderCircle class="animate-spin" size="20" />
+      <p class="font-bold">Loading devices...</p>
+    </div>
   {:else if totalDevices === 0}
-    <p>No devices found.</p>
+    <div class="flex items-center gap-2">
+      <X size="20" />
+      <p class="font-bold">No devices found.</p>
+    </div>
   {:else}
     <div class="flex w-full flex-wrap justify-center gap-4">
       {#each devices as device}

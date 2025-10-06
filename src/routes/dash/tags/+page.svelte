@@ -151,9 +151,11 @@
   </div>
 {/if}
 
-<div class="flex flex-col gap-2">
-  <h1 class="text-4xl font-bold">Tags</h1>
-  <p>Manage your tags here. Tags are used to categorize devices.</p>
+<div class="flex w-full max-w-[1920px] flex-col gap-4">
+  <div class="flex flex-col gap-2">
+    <h1 class="text-4xl font-bold">Tags</h1>
+    <p>Manage your tags here. Tags are used to categorize devices.</p>
+  </div>
 
   <div class="flex flex-wrap gap-2">
     {#if data.user && !data.user.banned}
@@ -174,7 +176,7 @@
       type="text"
       id="search"
       name="search"
-      class="flex items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
+      class="flex w-full max-w-96 items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 dark:bg-zinc-800"
       placeholder="Search tags..."
       bind:value={search}
     />
