@@ -266,7 +266,7 @@
             navigator.clipboard.writeText(shareLink);
             toast.success('Share link copied to clipboard!');
           }}
-          class="w-full rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600"
+          class="w-full cursor-pointer rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600"
         >
           Copy Share Link
         </button>

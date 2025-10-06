@@ -96,7 +96,7 @@
   </p>
 
   <button
-    class="flex w-fit items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-red-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-red-300 dark:bg-red-700 dark:text-zinc-200 dark:hover:bg-red-600"
+    class="flex w-fit cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-red-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-red-300 dark:bg-red-700 dark:text-zinc-200 dark:hover:bg-red-600"
     onclick={() => (deletePopupOpen = true)}
   >
     <Trash size="20" />

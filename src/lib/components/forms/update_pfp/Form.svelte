@@ -14,7 +14,7 @@
     user
   }: { sourceForm: SuperValidated<Infer<typeof profilePictureSchema>>; user: any } = $props();
 
-  const { form, message, errors, enhance } = superForm(sourceForm, {
+  const { form, message, errors, allErrors, enhance } = superForm(sourceForm, {
     validators: zod4Client(profilePictureSchema),
     customValidity: false,
     validationMethod: 'auto',
@@ -68,7 +68,8 @@
       {#if $file?.length > 0}
         <button
           type="submit"
-          class="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-zinc-400 bg-green-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-green-300 dark:bg-green-700 dark:text-zinc-200 dark:hover:bg-green-600"
+          class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg border-2 border-zinc-400 bg-green-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-green-300 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-green-700 dark:text-zinc-200 dark:hover:bg-green-600"
+          disabled={$allErrors.length > 0}
         >
           <Save size="20" />
         </button>
@@ -95,7 +96,7 @@
   </form>
   {#if user?.image && !$errors.image && !$errors._errors}
     <button
-      class="w-fit overflow-hidden rounded-lg border-2 border-zinc-400 bg-red-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-red-300 dark:bg-red-700 dark:text-zinc-200 dark:hover:bg-red-600"
+      class="w-fit cursor-pointer overflow-hidden rounded-lg border-2 border-zinc-400 bg-red-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-red-300 dark:bg-red-700 dark:text-zinc-200 dark:hover:bg-red-600"
       onclick={resetAvatar}
     >
       Reset Avatar

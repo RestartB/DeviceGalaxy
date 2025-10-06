@@ -9,7 +9,7 @@
 
 {#if data.user}
   <div class="flex flex-col gap-4">
-    <h3 class="text-2xl font-bold">Account Settings</h3>
+    <h3 class="text-2xl font-bold">Customise</h3>
 
     <div class="flex flex-col gap-2">
       <h4 class="text-xl font-bold">Description</h4>

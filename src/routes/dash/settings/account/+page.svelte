@@ -24,7 +24,7 @@
     <h5 class="font-semibold">View your login email address.</h5>
     <div>
       <button
-        class="w-fit overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 dark:bg-zinc-700"
+        class="w-fit cursor-pointer overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 dark:bg-zinc-700"
         onclick={() => (emailBlurred = !emailBlurred)}
       >
         <p class="w-full blur-sm transition-all" class:blur-sm={emailBlurred}>
