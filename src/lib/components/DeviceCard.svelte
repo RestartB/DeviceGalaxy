@@ -18,6 +18,7 @@
   let {
     device,
     shareID = '',
+    subdomain = false,
     includeMenu = true,
     banned = false,
     deleteDevice = undefined,
@@ -26,6 +27,7 @@
   }: {
     device: any;
     shareID?: string;
+    subdomain?: boolean;
     includeMenu?: boolean;
     banned?: boolean;
     deleteDevice: any;
@@ -39,7 +41,9 @@
   let href = $state('');
   let shareLink = $state('');
 
-  if (shareID && shareID !== '') {
+  if (shareID && shareID !== '' && subdomain) {
+    href = `/${device.id}`;
+  } else if (shareID && shareID !== '') {
     href = `/share/${shareID}/${device.id}`;
   } else {
     href = `/dash/device/${device.id}`;

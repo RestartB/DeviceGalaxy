@@ -47,6 +47,21 @@ export const auth = betterAuth({
         description: 'Description to show on share links',
         default: ''
       },
+      subdomain: {
+        type: 'string',
+        label: 'Subdomain',
+        input: false
+      },
+      subdomainShareId: {
+        type: 'string',
+        label: 'Subdomain Share ID',
+        input: false
+      },
+      discordDomainVerifyToken: {
+        type: 'string',
+        label: 'Discord Domain Verify Token',
+        input: false
+      },
       banned: {
         type: 'boolean',
         defaultValue: false,

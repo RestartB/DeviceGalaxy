@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { shares } from '$lib/server/db/schema';
 
 export async function DELETE(event) {
@@ -15,7 +15,9 @@ export async function DELETE(event) {
   }
 
   try {
-    await db.delete(shares).where(eq(shares.userId, session.user.id));
+    await db
+      .delete(shares)
+      .where(and(eq(shares.userId, session.user.id), eq(shares.internal, false)));
 
     return json({ message: 'Shares deleted successfully' }, { status: 200 });
   } catch (error) {

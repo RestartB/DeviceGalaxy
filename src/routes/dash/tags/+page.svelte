@@ -185,11 +185,20 @@
   {#if loadingTags || !pageInitialized}
     <p>Loading tags...</p>
   {:else if errorLoadingTags}
-    <p class="text-red-500">Error loading tags. Please try again later.</p>
+    <div class="flex items-center gap-2">
+      <X size="20" />
+      <p class="text-red-500">Error loading tags. Please try again later.</p>
+    </div>
   {:else if tagList.length === 0}
-    <p>No tags available. When you create a new tag, it will show here.</p>
+    <div class="flex items-center gap-2">
+      <X size="20" />
+      <p>No tags found. When you create a new tag, it will show here.</p>
+    </div>
   {:else if searchedTags.length === 0}
-    <p>No tags found matching your search.</p>
+    <div class="flex items-center gap-2">
+      <X size="20" />
+      <p>No tags found.</p>
+    </div>
   {:else}
     <ul class="flex list-none flex-wrap justify-center gap-2 sm:justify-start">
       {#each searchedTags as tag (tag.id)}

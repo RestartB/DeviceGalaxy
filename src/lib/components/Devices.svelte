@@ -43,7 +43,7 @@
   type Brand = InferSelectModel<typeof brands>;
   type Tag = InferSelectModel<typeof tags>;
 
-  const { data, shareID } = $props();
+  const { data, shareID, subdomain = false } = $props();
 
   let devices = $state<Device[]>([]);
   let createPopupOpen: boolean = $state(false);
@@ -312,7 +312,7 @@
   />
 {/if}
 
-<div class="flex w-full max-w-[1920px] flex-col gap-4">
+<div class="flex w-full max-w-[1920px] flex-col gap-4 {subdomain ? 'p-4' : ''}">
   <div class="flex flex-col gap-2">
     {#if shareID}
       <div class="flex w-full flex-wrap items-center gap-2">
@@ -510,6 +510,7 @@
           bind:toEdit
           {deleteDevice}
           {shareID}
+          {subdomain}
           includeMenu={!shareID}
           banned={data.user?.banned ?? false}
         />

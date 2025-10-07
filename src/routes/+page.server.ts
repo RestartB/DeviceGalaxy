@@ -1,12 +1,42 @@
+import { error } from '@sveltejs/kit';
+
 import { db } from '$lib/server/db';
-import { user, userDevices } from '$lib/server/db/schema';
-import { count } from 'drizzle-orm';
+import { user, userDevices, shares } from '$lib/server/db/schema';
+import { count, eq, and } from 'drizzle-orm';
 
 import { readdir, stat } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
-export const load = async () => {
+import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
+
+export const load = async ({ url }) => {
+  const hostname = url.hostname;
+
+  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
+
+  if (subdomain && subdomain !== hostname) {
+    const shareUser = await db
+      .select({ id: user.id, name: user.name, description: user.description, image: user.image })
+      .from(user)
+      .where(eq(user.subdomain, subdomain))
+      .get();
+
+    if (!shareUser) {
+      return error(404, 'Share not found');
+    }
+
+    // Get share info
+    const share = await db
+      .select()
+      .from(shares)
+      .where(and(eq(shares.userId, shareUser.id), eq(shares.internal, true)))
+      .get();
+
+    return { share, shareUser, baseURL: url.hostname };
+  }
+
   // Get counts from db
   const totalUsers = await db.select({ count: count() }).from(user).get();
   const totalDevices = await db.select({ count: count() }).from(userDevices).get();

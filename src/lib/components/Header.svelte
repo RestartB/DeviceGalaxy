@@ -1,5 +1,7 @@
 <script lang="ts">
   import { goto, onNavigate } from '$app/navigation';
+  import { page } from '$app/state';
+  import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
   import { fade, fly } from 'svelte/transition';
   import { prefersReducedMotion } from 'svelte/motion';
   import type { LayoutData } from '../../routes/$types';
@@ -16,6 +18,18 @@
   onNavigate(() => {
     menuOpen = false;
   });
+
+  const hostname = page.url.hostname;
+  let hasSubdomain = $state(false);
+
+  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
+
+  if (subdomain && subdomain !== hostname) {
+    hasSubdomain = true;
+  } else {
+    hasSubdomain = false;
+  }
 </script>
 
 <header
@@ -107,6 +121,14 @@
           <Menu size="20" />
         </button>
       </div>
+    {:else if hasSubdomain}
+      <a
+        class="ml-auto flex w-fit items-center justify-center gap-2 rounded-lg p-2 font-semibold"
+        href={`https://${baseDomain}/dash`}
+      >
+        <House size="20" />
+        <p class="xxxs:block hidden">Dashboard</p>
+      </a>
     {:else}
       <a
         class="ml-auto flex w-fit items-center justify-center gap-2 rounded-lg p-2 font-semibold"

@@ -37,8 +37,6 @@ export const actions = {
       return fail(400, { form });
     }
 
-    console.log('Updating name to:', form.data.name);
-
     // Update user name
     await auth.api.updateUser({
       headers: request.headers,

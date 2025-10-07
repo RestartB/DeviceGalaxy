@@ -2,6 +2,7 @@
   import '../app.css';
   import { onNavigate } from '$app/navigation';
   import { page } from '$app/state';
+  import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
 
   import { Toaster } from 'svelte-sonner';
   import Header from '$lib/components/Header.svelte';
@@ -9,6 +10,18 @@
   import Banned from '$lib/components/Banned.svelte';
 
   let { data, children } = $props();
+
+  const hostname = page.url.hostname;
+  let hasSubdomain = $state(false);
+
+  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
+
+  if (subdomain && subdomain !== hostname) {
+    hasSubdomain = true;
+  } else {
+    hasSubdomain = false;
+  }
 
   onNavigate((navigation) => {
     if (!document.startViewTransition) return;
@@ -26,7 +39,7 @@
 </script>
 
 <svelte:head>
-  {#if !page.url.pathname.startsWith('/share')}
+  {#if !page.url.pathname.startsWith('/share') && !hasSubdomain}
     {#if !page.url.pathname.startsWith('/policy')}
       <title>DeviceGalaxy</title>
     {/if}
@@ -61,7 +74,7 @@
       {/if}
     {/if}
 
-    <div class="flex w-full justify-center h-full">
+    <div class="flex h-full w-full justify-center">
       {@render children()}
     </div>
   </div>

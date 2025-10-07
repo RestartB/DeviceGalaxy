@@ -23,7 +23,9 @@ export async function DELETE(event) {
   const shareExists = await db
     .select()
     .from(shares)
-    .where(and(eq(shares.id, shareId), eq(shares.userId, session.user.id)))
+    .where(
+      and(eq(shares.id, shareId), eq(shares.userId, session.user.id), eq(shares.internal, false))
+    )
     .get();
 
   if (!shareExists) {
@@ -31,7 +33,11 @@ export async function DELETE(event) {
   }
 
   try {
-    await db.delete(shares).where(and(eq(shares.id, shareId), eq(shares.userId, session.user.id)));
+    await db
+      .delete(shares)
+      .where(
+        and(eq(shares.id, shareId), eq(shares.userId, session.user.id), eq(shares.internal, false))
+      );
 
     return json({ message: 'Share deleted successfully' }, { status: 200 });
   } catch (error) {

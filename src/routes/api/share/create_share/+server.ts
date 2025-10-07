@@ -3,23 +3,7 @@ import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
 import { userDevices, shares } from '$lib/server/db/schema';
-import crypto from 'crypto';
-
-async function generateShareId() {
-  let trying = true;
-  let shareId;
-
-  while (trying) {
-    shareId = crypto.randomBytes(4).toString('hex');
-    const existingShare = await db.select().from(shares).where(eq(shares.id, shareId)).get();
-
-    if (!existingShare) {
-      trying = false;
-    }
-  }
-
-  return shareId;
-}
+import { generateShareId } from '$lib';
 
 export async function POST(event) {
   // Check if the user is authenticated

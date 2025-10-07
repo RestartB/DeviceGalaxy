@@ -1,7 +1,11 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import { toast } from 'svelte-sonner';
-  import { X, Clipboard, Plus } from '@lucide/svelte';
+
+  import ClaimSubdomainForm from '$lib/components/forms/claim_subdomain/Form.svelte';
+  import DeleteSubdomainForm from '$lib/components/forms/delete_subdomain/Form.svelte';
+  import DiscordTokenForm from '$lib/components/forms/discord_token/Form.svelte';
+  import { X, Clipboard, Plus, Check } from '@lucide/svelte';
 
   const { data } = $props();
 
@@ -83,6 +87,67 @@
       <h1 class="text-4xl font-bold">Shares</h1>
       <p>View and manage all of your share links.</p>
     </div>
+
+    <div class="flex flex-col gap-2">
+      <h2 class="text-2xl font-semibold">Custom Subdomain</h2>
+      <p>
+        Claim a custom subdomain to quickly share your galaxy and connect to your Discord profile.
+      </p>
+    </div>
+
+    <ol class="flex list-none flex-col gap-2">
+      <!-- prettier-ignore -->
+      <li>
+        <h3
+          class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-zinc-300 dark:bg-zinc-700 text-center font-bold"
+        >
+          1
+        </h3>
+        Click the <strong>Claim Subdomain</strong> button below to claim a subdomain.
+      </li>
+      <li>
+        <h3
+          class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-zinc-300 text-center font-bold dark:bg-zinc-700"
+        >
+          2
+        </h3>
+        To connect the subdomain to Discord, add the subdomain to your Discord profile connections, and
+        select HTTPS as the challenge type.
+      </li>
+      <!-- prettier-ignore -->
+      <li>
+        <h3
+          class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-zinc-300 dark:bg-zinc-700 text-center font-bold"
+        >
+          3
+        </h3>
+        Click the <strong>Enter Discord Content</strong> button below, then follow the steps to complete
+        the challenge and link the subdomain to your Discord profile.
+      </li>
+    </ol>
+
+    {#if data.user.subdomain}
+      <p>
+        <Check size={20} class="inline" />
+        <a
+          href={`https://${data.user.subdomain}.devicegalaxy.me`}
+          target="_blank"
+          class="font-bold text-blue-500 hover:underline">{data.user.subdomain}.devicegalaxy.me</a
+        > is your current subdomain.
+      </p>
+    {/if}
+
+    {#if data.subdomainForm && data.discordForm && data.user}
+      <div class="flex items-center gap-2">
+        <ClaimSubdomainForm sourceForm={data.subdomainForm} user={data.user} />
+        {#if data.user.subdomain}
+          <DeleteSubdomainForm sourceForm={data.deleteSubdomainForm} user={data.user} />
+          <DiscordTokenForm sourceForm={data.discordForm} user={data.user} />
+        {/if}
+      </div>
+    {/if}
+
+    <hr class="w-full border-t-2 border-zinc-800 dark:border-zinc-400" />
 
     <div class="flex flex-col gap-2">
       <h2 class="text-2xl font-semibold">Account Shares</h2>
