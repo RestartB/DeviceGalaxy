@@ -13,7 +13,11 @@ export const handle: Handle = async ({ event, resolve }) => {
     const pathParts = event.url.pathname.split('/').filter(Boolean);
     const firstPart = pathParts[0];
 
-    if (event.url.pathname === '/' || (firstPart && !isNaN(Number(firstPart)))) {
+    if (
+      event.url.pathname === '/' ||
+      (firstPart && !isNaN(Number(firstPart))) ||
+      firstPart === '.well_known'
+    ) {
       const response = await resolve(event);
       return response;
     } else {
