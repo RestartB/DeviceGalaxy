@@ -15,6 +15,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     if (
       event.url.pathname === '/' ||
+      firstPart === 'api' ||
       (firstPart && !isNaN(Number(firstPart))) ||
       firstPart === '.well-known'
     ) {
