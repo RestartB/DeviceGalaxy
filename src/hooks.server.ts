@@ -16,7 +16,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     if (
       event.url.pathname === '/' ||
       (firstPart && !isNaN(Number(firstPart))) ||
-      firstPart === '.well-known'
+      firstPart === '.well_known'
     ) {
       const response = await resolve(event);
       return response;
