@@ -27,7 +27,7 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@tailwindcss/vite": "^4.0.0",
     "@types/node": "^22",
-    "drizzle-kit": "^0.30.2",
+    "drizzle-kit": "^0.31.5",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-svelte": "^3.0.0",
