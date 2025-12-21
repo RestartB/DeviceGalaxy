@@ -36,7 +36,7 @@
   class="fixed z-1000 box-border h-12 w-full border-b-4 border-zinc-300 bg-zinc-200 px-4 dark:border-zinc-700 dark:bg-zinc-800"
   style="view-transition-name: header"
 >
-  <div class="mx-auto flex h-full w-full max-w-[1920px] items-center justify-center gap-4">
+  <div class="mx-auto flex h-full w-full max-w-480 items-center justify-center gap-4">
     <a class="flex h-full items-center gap-2" href="/" title="DeviceGalaxy">
       <enhanced:img
         src="$lib/images/logo/logo_square.svg"

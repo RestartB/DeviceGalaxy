@@ -151,7 +151,7 @@
   </div>
 {/if}
 
-<div class="flex w-full max-w-[1920px] flex-col gap-4">
+<div class="flex w-full max-w-480 flex-col gap-4">
   <div class="flex flex-col gap-2">
     <h1 class="text-4xl font-bold">Tags</h1>
     <p>Manage your tags here. Tags are used to categorize devices.</p>

@@ -368,7 +368,7 @@
                             class="h-16 w-16 rounded-lg object-cover"
                           />
                         {/if}
-                        <div class="flex-1 flex flex-col justify-center">
+                        <div class="flex flex-1 flex-col justify-center">
                           <p class="font-bold">
                             {#if $files[parseInt(index)] && $files[parseInt(index)].name}
                               {$files[parseInt(index)].name} (file {parseInt(index) + 1})
@@ -448,21 +448,24 @@
           <div class="flex flex-col gap-4">
             <h3 class="text-2xl font-semibold">Confirm Details</h3>
             <div class="rounded-lg bg-zinc-200 p-4 text-sm dark:bg-zinc-700">
-              <p class="break-words"><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
-              <p class="break-words"><strong>Description:</strong> {$form.description || 'N/A'}</p>
-              <p class="break-words">
+              <p class="wrap-break-word"><strong>Name:</strong> {$form.deviceName || 'N/A'}</p>
+              <p class="wrap-break-word">
+                <strong>Description:</strong>
+                {$form.description || 'N/A'}
+              </p>
+              <p class="wrap-break-word">
                 <strong>Additional Notes:</strong>
                 {$form.additional || 'N/A'}
               </p>
-              <p class="break-words"><strong>Brand:</strong> {$form.brand || 'N/A'}</p>
-              <p class="break-words"><strong>CPU:</strong> {$form.cpu || 'N/A'}</p>
-              <p class="break-words"><strong>Memory:</strong> {$form.memory || 'N/A'}</p>
-              <p class="break-words"><strong>Storage:</strong> {$form.storage || 'N/A'}</p>
-              <p class="break-words"><strong>OS:</strong> {$form.os || 'N/A'}</p>
+              <p class="wrap-break-word"><strong>Brand:</strong> {$form.brand || 'N/A'}</p>
+              <p class="wrap-break-word"><strong>CPU:</strong> {$form.cpu || 'N/A'}</p>
+              <p class="wrap-break-word"><strong>Memory:</strong> {$form.memory || 'N/A'}</p>
+              <p class="wrap-break-word"><strong>Storage:</strong> {$form.storage || 'N/A'}</p>
+              <p class="wrap-break-word"><strong>OS:</strong> {$form.os || 'N/A'}</p>
               {#if $files && $files.length > 0}
                 <p><strong>Images:</strong></p>
                 {#each $files as file}
-                  <p class="break-words" translate="no">{file.name} ({file.size} bytes)</p>
+                  <p class="wrap-break-word" translate="no">{file.name} ({file.size} bytes)</p>
                 {/each}
               {:else}
                 <p><strong>Images:</strong> None</p>

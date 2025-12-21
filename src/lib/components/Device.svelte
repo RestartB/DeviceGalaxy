@@ -66,7 +66,7 @@
     />
   {/if}
 
-  <div class="z-10 mx-auto flex max-w-[1920px] flex-col gap-4 p-4">
+  <div class="z-10 mx-auto flex max-w-480 flex-col gap-4 p-4">
     <div class="flex flex-col gap-2">
       <div>
         {#if device.brand}

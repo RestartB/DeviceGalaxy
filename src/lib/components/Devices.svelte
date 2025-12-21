@@ -312,7 +312,7 @@
   />
 {/if}
 
-<div class="flex w-full max-w-[1920px] flex-col gap-4 {subdomain ? 'p-4' : ''}">
+<div class="flex w-full max-w-480 flex-col gap-4 {subdomain ? 'p-4' : ''}">
   <div class="flex flex-col gap-2">
     {#if shareID}
       <h1 class="text-4xl font-bold">

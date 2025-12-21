@@ -40,7 +40,7 @@
   />
 {/if}
 
-<div class="flex w-full max-w-[1920px] flex-col gap-4">
+<div class="flex w-full max-w-480 flex-col gap-4">
   {#if data.user}
     <div class="flex w-full flex-col gap-2">
       <h1 class="text-4xl font-bold">Home</h1>

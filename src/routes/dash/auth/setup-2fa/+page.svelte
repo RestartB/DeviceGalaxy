@@ -88,7 +88,7 @@
 
       <h3 class="text-xl font-semibold">QR not working?</h3>
       <p>Copy this URL into your authenticator app:</p>
-      <p class="max-w-full font-mono text-sm break-words">{totpURI}</p>
+      <p class="max-w-full font-mono text-sm wrap-break-word">{totpURI}</p>
 
       <div class="flex flex-col gap-2">
         <label for="totp" class="font-semibold">Enter 2FA Code</label>

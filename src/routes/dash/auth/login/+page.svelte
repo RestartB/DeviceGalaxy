@@ -86,11 +86,10 @@
     {#if PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'}
       <Turnstile
         siteKey={PUBLIC_TURNSTILE_SITE_KEY}
-        theme="auto"
         bind:reset
         on:callback={(event) => {
-          const { token } = event.detail;
-          $form['cf-turnstile-response'] = token;
+          // Required when using client side validation
+          $form['cf-turnstile-response'] = event.detail.token;
         }}
       />
     {/if}
