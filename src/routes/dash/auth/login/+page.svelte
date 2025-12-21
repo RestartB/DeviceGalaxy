@@ -40,6 +40,8 @@
       toast.error($message);
     }
   });
+
+  console.log(PUBLIC_TURNSTILE_ENABLED.toLowerCase());
 </script>
 
 <svelte:head>
