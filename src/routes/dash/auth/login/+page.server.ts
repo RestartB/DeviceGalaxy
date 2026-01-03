@@ -49,9 +49,14 @@ export const actions = {
     if (!response.ok) {
       console.error('Error logging in:', json);
       if (json.code === 'INVALID_EMAIL_OR_PASSWORD') {
-        return setError(form, 'password', 'Incorrect email or password.');
+        return setError(form, 'password', 'incorrect email or password.');
+      } else if (json.code === 'BANNED_USER') {
+        return error(
+          403,
+          'this account has been banned. You are not allowed to log into this account.'
+        );
       } else {
-        return error(response.status, 'Failed to log in');
+        return error(response.status, 'unexpected error.');
       }
     } else {
       if (json.twoFactorRedirect) {

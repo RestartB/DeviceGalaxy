@@ -20,7 +20,7 @@
     shareID = '',
     subdomain = false,
     includeMenu = true,
-    banned = false,
+    suspended = false,
     deleteDevice = undefined,
     editPopupOpen = $bindable(),
     toEdit = $bindable()
@@ -29,7 +29,7 @@
     shareID?: string;
     subdomain?: boolean;
     includeMenu?: boolean;
-    banned?: boolean;
+    suspended?: boolean;
     deleteDevice: any;
     editPopupOpen: boolean;
     toEdit: any;
@@ -195,7 +195,7 @@
         <p>Edit Device</p>
       </button>
       <hr class="w-full text-zinc-800 dark:text-zinc-200" />
-      {#if !banned}
+      {#if !suspended}
         <button
           class="flex w-full cursor-pointer items-center justify-center gap-2"
           onclick={(event) => {

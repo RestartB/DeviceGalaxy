@@ -18,7 +18,7 @@ import { generateShareId } from '$lib';
 export const load = async (event) => {
   const parent = await event.parent();
 
-  if (parent.user?.banned) {
+  if (parent.user?.suspended) {
     return redirect(303, '/dash');
   }
 
@@ -88,8 +88,8 @@ export const actions = {
       return error(401, 'Unauthorized');
     }
 
-    if (session.user.banned) {
-      return error(403, 'Your account is banned.');
+    if (session.user.suspended) {
+      return error(403, 'Your account is suspended.');
     }
 
     const form = await superValidate(formData, zod4(subdomainSchema));
@@ -153,8 +153,8 @@ export const actions = {
       return error(401, 'Unauthorized');
     }
 
-    if (session.user.banned) {
-      return error(403, 'Your account is banned.');
+    if (session.user.suspended) {
+      return error(403, 'Your account is suspended.');
     }
 
     const form = await superValidate(formData, zod4(subdomainSchema));
@@ -200,8 +200,8 @@ export const actions = {
       return error(401, 'Unauthorized');
     }
 
-    if (session.user.banned) {
-      return error(403, 'Your account is banned.');
+    if (session.user.suspended) {
+      return error(403, 'Your account is suspended.');
     }
 
     const form = await superValidate(formData, zod4(discordVerificationSchema));

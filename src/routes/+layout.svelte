@@ -7,7 +7,7 @@
   import { Toaster } from 'svelte-sonner';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
-  import Banned from '$lib/components/Banned.svelte';
+  import Suspended from '$lib/components/Suspended.svelte';
 
   let { data, children } = $props();
 
@@ -69,8 +69,8 @@
     <Toaster position="top-center" richColors closeButton />
 
     {#if data.user}
-      {#if data.user.banned}
-        <Banned reason={data.user.banReason} />
+      {#if data.user.suspended}
+        <Suspended reason={data.user.suspendReason} />
       {/if}
     {/if}
 

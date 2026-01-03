@@ -22,7 +22,7 @@
       class="z-110 flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-xl border-4 border-zinc-400 bg-zinc-100 shadow-2xl dark:bg-zinc-800"
     >
       <div class="flex items-center justify-between border-b p-4">
-        <h2 class="text-xl font-bold">Account Banned</h2>
+        <h2 class="text-xl font-bold">Account Suspended</h2>
         <button
           onclick={() => (popupOpen = false)}
           class="cursor-pointer text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-400"
@@ -32,7 +32,7 @@
 
       <div class="flex w-full flex-wrap items-center justify-center gap-2 overflow-y-auto p-6">
         <p>
-          Unfortunately, your account has been banned. You will not be able to create new devices or
+          Unfortunately, your account has been suspended. You will not be able to create new devices or
           share links. All existing share links have been revoked.
         </p>
       </div>

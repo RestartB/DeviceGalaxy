@@ -1,5 +1,5 @@
 import { createAuthClient } from 'better-auth/svelte';
-import { twoFactorClient } from 'better-auth/client/plugins';
+import { twoFactorClient, adminClient } from 'better-auth/client/plugins';
 import { goto } from '$app/navigation';
 
 export const authClient = createAuthClient({
@@ -9,7 +9,8 @@ export const authClient = createAuthClient({
       onTwoFactorRedirect() {
         goto('/dash/auth/verify-2fa');
       }
-    })
+    }),
+    adminClient()
   ]
 });
 

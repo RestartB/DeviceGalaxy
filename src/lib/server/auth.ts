@@ -1,6 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { twoFactor } from 'better-auth/plugins';
+import { twoFactor, admin } from 'better-auth/plugins';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { getRequestEvent } from '$app/server';
 import { BETTER_AUTH_SECRET } from '$env/static/private';
@@ -21,7 +21,7 @@ export const auth = betterAuth({
     provider: 'sqlite'
   }),
 
-  plugins: [twoFactor(), sveltekitCookies(getRequestEvent)],
+  plugins: [twoFactor(), sveltekitCookies(getRequestEvent), admin()],
 
   emailAndPassword: {
     enabled: true
@@ -62,12 +62,12 @@ export const auth = betterAuth({
         label: 'Discord Domain Verify Token',
         input: false
       },
-      banned: {
+      suspended: {
         type: 'boolean',
         defaultValue: false,
         input: false
       },
-      banReason: {
+      suspendReason: {
         type: 'string',
         input: false
       }

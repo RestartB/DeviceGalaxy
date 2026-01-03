@@ -19,9 +19,13 @@
     customValidity: false,
     validationMethod: 'auto',
 
-    onError: (error) => {
-      console.error('Form submission error:', error);
-      toast.error('Failed to log in. Try again later.');
+    onError: ({ result }) => {
+      console.error('Form submission error:', result);
+      if (result.error?.message) {
+        toast.error('Failed to log in: ' + result.error.message);
+      } else {
+        toast.error('Failed to log in. Please try again.');
+      }
     },
 
     onUpdated() {
@@ -40,8 +44,6 @@
       toast.error($message);
     }
   });
-
-  console.log(PUBLIC_TURNSTILE_ENABLED.toLowerCase());
 </script>
 
 <svelte:head>

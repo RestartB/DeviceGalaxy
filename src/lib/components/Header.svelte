@@ -9,7 +9,7 @@
   import { authClient } from '$lib/client';
 
   import Avatar from '$lib/components/Avatar.svelte';
-  import { House, Monitor, Tag, Share, Cog, LogOut, Menu, LogIn } from '@lucide/svelte';
+  import { House, Monitor, Tag, Share, Shield, Cog, LogOut, Menu, LogIn } from '@lucide/svelte';
 
   // Get session from props
   let { data }: { data: LayoutData } = $props();
@@ -68,13 +68,22 @@
         >
           Tags
         </a>
-        {#if data.user && !data.user.banned}
+        {#if data.user && !data.user.suspended}
           <a
             class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
             href="/dash/shares"
             title="Shared"
           >
             Shared
+          </a>
+        {/if}
+        {#if data.user.role === 'admin'}
+          <a
+            class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+            href="/dash/admin"
+            title="Admin"
+          >
+            Admin
           </a>
         {/if}
       </nav>
@@ -176,13 +185,22 @@
               <Tag size="30" />
               Tags
             </a>
-            {#if data.user && !data.user.banned}
+            {#if data.user && !data.user.suspended}
               <a
                 class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
                 href="/dash/shares"
               >
                 <Share size="30" />
                 Shared
+              </a>
+            {/if}
+            {#if data.user.role === 'admin'}
+              <a
+                class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
+                href="/dash/admin"
+              >
+                <Shield size="30" />
+                Admin
               </a>
             {/if}
 

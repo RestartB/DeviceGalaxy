@@ -158,7 +158,7 @@
   </div>
 
   <div class="flex flex-wrap gap-2">
-    {#if data.user && !data.user.banned}
+    {#if data.user && !data.user.suspended}
       <button
         class="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-2 border-zinc-400 bg-blue-500 text-white"
         onclick={() => (createPopupOpen = true)}

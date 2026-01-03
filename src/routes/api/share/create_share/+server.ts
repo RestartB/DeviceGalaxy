@@ -15,8 +15,8 @@ export async function POST(event) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  if (session.user.banned) {
-    return json({ error: 'Account is banned' }, { status: 403 });
+  if (session.user.suspended) {
+    return json({ error: 'Account is suspended' }, { status: 403 });
   }
 
   // Get data

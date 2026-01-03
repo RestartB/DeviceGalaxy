@@ -53,8 +53,8 @@ export const actions = {
       return error(401, 'Unauthorized');
     }
 
-    if (session.user.banned) {
-      return error(403, 'Your account is banned.');
+    if (session.user.suspended) {
+      return error(403, 'Your account is suspended.');
     }
 
     // Get last created time
@@ -355,8 +355,8 @@ export const actions = {
       return error(401, 'Unauthorized');
     }
 
-    if (session.user.banned) {
-      return error(403, 'Your account is banned.');
+    if (session.user.suspended) {
+      return error(403, 'Your account is suspended.');
     }
 
     // Get last updated time
