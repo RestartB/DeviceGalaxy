@@ -48,11 +48,21 @@
   async function changePassword() {
     if (newPassword) {
       try {
-        await authClient.changePassword({
-          newPassword: oldPassword,
-          currentPassword: newPassword,
+        const { error } = await authClient.changePassword({
+          newPassword: newPassword,
+          currentPassword: oldPassword,
           revokeOtherSessions: revokeSessions
         });
+
+        if (error) {
+          toast.error(
+            'Failed to update password: ' +
+              (error.message
+                ? error.message?.toLocaleLowerCase()
+                : 'unknown error. Please try again.')
+          );
+          return;
+        }
 
         passwordPopupOpen = false;
         toast.success('Password updated successfully!');
@@ -151,6 +161,10 @@
           bind:value={oldPassword}
         />
 
+        {#if oldPassword.length > 0 && oldPassword.length < 8}
+          <span class="text-sm text-red-500">Password must be at least 8 characters long.</span>
+        {/if}
+
         <label for="newPassword" class="text-sm font-medium">New Password</label>
         <input
           type="password"
@@ -159,6 +173,10 @@
           class="w-full rounded-lg border p-2"
           bind:value={newPassword}
         />
+
+        {#if newPassword.length > 0 && newPassword.length < 8}
+          <span class="text-sm text-red-500">Password must be at least 8 characters long.</span>
+        {/if}
 
         <div class="flex items-center justify-between gap-4">
           <div>

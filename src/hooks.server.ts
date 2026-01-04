@@ -1,9 +1,17 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect, error } from '@sveltejs/kit';
 import type { Handle } from '@sveltejs/kit';
 
+import { passwordResetLimiter } from '$lib/server/limiters/passwordReset';
 import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
 
 export const handle: Handle = async ({ event, resolve }) => {
+  if (event.url.pathname === '/api/auth/request-password-reset') {
+    if (await passwordResetLimiter.isLimited(event)) {
+      console.log('Rate limit exceeded');
+      return error(429, 'Too Many Requests');
+    }
+  }
+
   const hostname = event.url.hostname;
 
   const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';

@@ -13,6 +13,8 @@ import { db } from './db';
 import { userDevices } from './db/schema';
 import { eq } from 'drizzle-orm';
 
+import { sendPasswordResetEmail } from './emails';
+
 export const auth = betterAuth({
   appName: 'DeviceGalaxy',
   secret: BETTER_AUTH_SECRET,
@@ -23,8 +25,21 @@ export const auth = betterAuth({
 
   plugins: [twoFactor(), sveltekitCookies(getRequestEvent), admin()],
 
+  rateLimit: {
+    enabled: true,
+    customRules: {
+      '/request-password-reset': {
+        window: 60,
+        max: 1
+      }
+    }
+  },
+
   emailAndPassword: {
-    enabled: true
+    enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      void sendPasswordResetEmail(user.email, url);
+    }
   },
 
   user: {

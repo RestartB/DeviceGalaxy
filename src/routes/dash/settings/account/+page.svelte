@@ -9,7 +9,6 @@
   const { data } = $props();
 
   let clientWidth = $state(0);
-
   let emailBlurred = $state(true);
 </script>
 
