@@ -76,7 +76,14 @@
     </div>
 
     <div class="flex w-full flex-col gap-2">
-      <label for="password" class="w-full text-start font-semibold">Password</label>
+      <div class="xxxs:items-center xxxs:flex-row flex flex-col justify-between gap-2">
+        <label for="password" class="w-fit text-start font-semibold">Password</label>
+        <a
+          href="/dash/auth/password-reset"
+          class="w-fit shrink-0 text-nowrap text-blue-600 hover:underline dark:text-blue-400"
+          >Forgot password?</a
+        >
+      </div>
       <input
         class="w-full rounded-full border-2 border-zinc-500 bg-zinc-200 p-2 px-4 text-start dark:bg-zinc-700"
         name="password"
