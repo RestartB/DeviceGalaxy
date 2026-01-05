@@ -18,7 +18,7 @@ import { sendPasswordResetEmail } from './emails';
 export const auth = betterAuth({
   appName: 'DeviceGalaxy',
   secret: BETTER_AUTH_SECRET,
-  trustedOrigins: ['https://devicegalaxy.me', 'https://devices.restartb.xyz'],
+  trustedOrigins: ['https://devicegalaxy.me'],
   database: drizzleAdapter(db, {
     provider: 'sqlite'
   }),
