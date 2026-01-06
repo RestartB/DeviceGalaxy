@@ -39,7 +39,7 @@
     "svelte": "^5.46.0",
     "svelte-check": "^4.3.5",
     "sveltekit-rate-limiter": "^0.7.0",
-    "sveltekit-superforms": "^2.29.1",
+    "sveltekit-superforms": "^2.27.4",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.0",
