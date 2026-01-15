@@ -36,9 +36,9 @@
         If any of these rules are violated, <span class="font-bold"
           >your access to DeviceGalaxy may be terminated.</span
         >
-        Please see the <a href="#service-termination">service termination section</a> below for more
-        info. Please note that I may also take action that is deemed necessary to protect DeviceGalaxy,
-        its users and other people, even if it is not explicitly mentioned as a rule above.
+        Please see the <a href="#service-termination">service termination section</a> below for more info.
+        Please note that I may also take action that is deemed necessary to protect DeviceGalaxy, its
+        users and other people, even if it is not explicitly mentioned as a rule above.
       </p>
     </div>
 

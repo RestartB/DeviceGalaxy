@@ -51,9 +51,9 @@
         <div class="flex flex-col gap-4 p-6">
           <p>
             When you delete your account, all data about you will be permanently removed from our
-            systems. <strong>This action is irreversible and cannot be undone.</strong> Data will be
-            permanently removed. If you're ready to do this, confirm your password, then click the delete
-            account button below.
+            systems. <strong>This action is irreversible and cannot be undone.</strong> Data will be permanently
+            removed. If you're ready to do this, confirm your password, then click the delete account
+            button below.
           </p>
           <label for="email" class="text-sm font-medium">Confirm Password</label>
           <input
@@ -91,8 +91,8 @@
   <p>
     When you delete your account, all data about you will be permanently removed from our systems. <strong
       >This action is irreversible and cannot be undone.</strong
-    > Data will be permanently removed. If you're ready to do this, click the button below. You will
-    be required to enter your password to confirm before your account is deleted.
+    > Data will be permanently removed. If you're ready to do this, click the button below. You will be
+    required to enter your password to confirm before your account is deleted.
   </p>
 
   <button

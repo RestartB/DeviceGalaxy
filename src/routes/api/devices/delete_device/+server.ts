@@ -42,7 +42,10 @@ export async function DELETE(event) {
 
     // 10 second cooldown
     if (currentTime.getTime() - lastDeleted.getTime() < 10000) {
-      return json({ error: 'Slow down! Please wait a few seconds before deleting a device.' }, { status: 429 });
+      return json(
+        { error: 'Slow down! Please wait a few seconds before deleting a device.' },
+        { status: 429 }
+      );
     }
 
     // Update last deleted time
@@ -51,11 +54,8 @@ export async function DELETE(event) {
       .set({ lastDeletedTime: currentTime })
       .where(eq(lastActionTimes.userId, session.user.id));
   } else {
-      await db
-        .insert(lastActionTimes)
-        .values({ userId: session.user.id })
-        .onConflictDoNothing();
-    }
+    await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
+  }
 
   const deviceId = event.url.searchParams.get('id');
   if (!deviceId) {

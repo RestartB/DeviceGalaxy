@@ -32,8 +32,8 @@
 
       <div class="flex w-full flex-wrap items-center justify-center gap-2 overflow-y-auto p-6">
         <p>
-          Unfortunately, your account has been suspended. You will not be able to create new devices or
-          share links. All existing share links have been revoked.
+          Unfortunately, your account has been suspended. You will not be able to create new devices
+          or share links. All existing share links have been revoked.
         </p>
       </div>
       <div class="border-t p-6">

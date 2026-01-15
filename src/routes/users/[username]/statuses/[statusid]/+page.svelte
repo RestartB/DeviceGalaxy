@@ -1,2 +1,2 @@
-<h1>Embed Test</h1>
-<p>This is a test page for embedding content.</p>
+<h1>Embed Page</h1>
+<p>This page allows for enhanced embeds inside Discord.</p>

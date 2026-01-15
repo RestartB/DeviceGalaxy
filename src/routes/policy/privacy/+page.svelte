@@ -108,8 +108,8 @@
       <p>
         Please note that the website uses the <a href="https://fonts.google.com/specimen/Figtree"
           >Figtree</a
-        > font. I use Cloudflare Fonts for this, which uses Cloudflare to serve the fonts instead
-        of Google. This helps to improve performance and privacy.
+        > font. I use Cloudflare Fonts for this, which uses Cloudflare to serve the fonts instead of Google.
+        This helps to improve performance and privacy.
       </p>
     </section>
 
