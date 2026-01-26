@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /dash$
+Allow: /dash/auth/login
+Allow: /dash/auth/signup
+Disallow: /dash/
+Disallow: /api/
+Disallow: /share/
+Disallow: /users/
