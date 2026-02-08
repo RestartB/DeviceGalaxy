@@ -30,7 +30,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       const response = await resolve(event);
       return response;
     } else {
-      const newUrl = event.url;
+      const newUrl = new URL(event.url.toString());
       newUrl.hostname = baseDomain;
       return redirect(307, newUrl.toString());
     }
