@@ -1,6 +1,9 @@
+<script lang="ts">
+  let { children } = $props();
+</script>
+
 <svelte:head>
   <meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<h1>Embed Page</h1>
-<p>This page allows for enhanced embeds inside Discord.</p>
+{@render children()}

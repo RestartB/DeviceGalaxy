@@ -10,6 +10,8 @@
 </script>
 
 <svelte:head>
+  <meta name="robots" content="noindex, nofollow" />
+
   {#if data.shareUser && data.device}
     <meta property="og:image" content="" />
     <meta name="twitter:card" content="tweet" />

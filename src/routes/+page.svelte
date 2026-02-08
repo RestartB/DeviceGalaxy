@@ -42,6 +42,8 @@
 
 <svelte:head>
   {#if data.share}
+    <meta name="robots" content="noindex, nofollow" />
+
     <title>DeviceGalaxy - Share</title>
     <meta property="og:title" content="{data.shareUser.name}'s Share" />
     <meta
