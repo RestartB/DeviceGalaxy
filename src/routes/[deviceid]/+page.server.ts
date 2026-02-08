@@ -12,7 +12,7 @@ import {
   shares,
   user
 } from '$lib/server/db/schema';
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
 
 export const load = async (event) => {
@@ -22,13 +22,7 @@ export const load = async (event) => {
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
 
   if (!subdomain) {
-    return redirect(
-      307,
-      event.url
-        .toString()
-        .replace('www.', '')
-        .replace(subdomain + '.', '')
-    );
+    return error(404, 'Not Found');
   }
 
   // Get device ID
