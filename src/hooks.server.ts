@@ -30,13 +30,9 @@ export const handle: Handle = async ({ event, resolve }) => {
       const response = await resolve(event);
       return response;
     } else {
-      return redirect(
-        307,
-        event.url
-          .toString()
-          .replace('www.', '')
-          .replace(subdomain + '.', '')
-      );
+      const newUrl = event.url;
+      newUrl.hostname = baseDomain;
+      return redirect(307, newUrl.toString());
     }
   }
 
