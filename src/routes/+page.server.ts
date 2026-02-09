@@ -8,7 +8,7 @@ import { readdir, stat } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
-import { env } from '$env/dynamic/private'
+import { env } from '$env/dynamic/private';
 import { env as publicEnv } from '$env/dynamic/public';
 
 export const load = async ({ url }) => {
@@ -16,6 +16,9 @@ export const load = async ({ url }) => {
 
   const baseDomain = publicEnv.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
+
+  console.log(baseDomain);
+  console.log(subdomain);
 
   if (subdomain && subdomain !== hostname) {
     const shareUser = await db
