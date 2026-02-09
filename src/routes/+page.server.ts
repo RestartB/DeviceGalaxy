@@ -13,6 +13,7 @@ import { env as publicEnv } from '$env/dynamic/public';
 
 export const load = async ({ url }) => {
   const hostname = url.hostname;
+  console.log(hostname);
 
   const baseDomain = publicEnv.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
