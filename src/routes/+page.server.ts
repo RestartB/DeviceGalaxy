@@ -8,12 +8,13 @@ import { readdir, stat } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
-import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
+import { env } from '$env/dynamic/private'
+import { env as publicEnv } from '$env/dynamic/public';
 
 export const load = async ({ url }) => {
   const hostname = url.hostname;
 
-  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const baseDomain = publicEnv.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
 
   if (subdomain && subdomain !== hostname) {
@@ -42,16 +43,15 @@ export const load = async ({ url }) => {
   const totalDevices = await db.select({ count: count() }).from(userDevices).get();
 
   // Get total amount of files in image directory
-  const imageDirectory = 'user_uploads/device';
   let totalImages = 0;
 
   try {
-    if (existsSync(imageDirectory)) {
+    if (existsSync(env.DATA_PATH)) {
       // get folders
-      const deviceFolders = await readdir(imageDirectory);
+      const deviceFolders = await readdir(env.DATA_PATH);
 
       for (const folder of deviceFolders) {
-        const folderPath = join(imageDirectory, folder);
+        const folderPath = join(env.DATA_PATH, folder);
 
         // check if it's a folder
         const folderStat = await stat(folderPath);

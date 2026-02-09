@@ -5,14 +5,12 @@ import { readFile, unlink } from 'fs/promises';
 import { join } from 'path';
 
 import { auth } from '$lib/server/auth';
-// import { fileURLToPath } from 'url';
-
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
 
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { user } from '$lib/server/db/schema';
+
+import { env } from '$env/dynamic/private';
 
 export async function GET(event) {
   const userId = event.params.userid;
@@ -27,7 +25,7 @@ export async function GET(event) {
     return json({ error: 'User not found' }, { status: 404 });
   }
 
-  const imagePath = join(process.cwd(), 'user_uploads', 'pfp', userData.id + '.webp');
+  const imagePath = join(env.DATA_PATH, 'pfp', userData.id + '.webp');
   if (!existsSync(imagePath)) {
     return json({ error: 'Image not found' }, { status: 404 });
   }
@@ -71,8 +69,8 @@ export async function DELETE(event) {
     const imageName = session.user.image.split('/').pop();
     const safeImageName = imageName ? imageName.split('?')[0] : '';
 
-    if (existsSync(join(process.cwd(), 'user_uploads', 'pfp', safeImageName + '.webp'))) {
-      await unlink(join(process.cwd(), 'user_uploads', 'pfp', safeImageName + '.webp'));
+    if (existsSync(join(env.DATA_PATH, 'pfp', safeImageName + '.webp'))) {
+      await unlink(join(env.DATA_PATH, 'pfp', safeImageName + '.webp'));
     }
 
     return json({ message: 'Profile picture deleted' }, { status: 200 });

@@ -2,14 +2,15 @@ import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
 import * as schema from './schema';
 
-// Import DATABASE_URL directly from the environment
-import { DATABASE_URL } from '$env/static/private';
-import path from 'path';
-if (!DATABASE_URL) throw new Error('DATABASE_URL is not set');
+import { join, resolve } from 'path';
+import { env } from '$env/dynamic/private';
 
-let dbUrl = DATABASE_URL;
+// Import DATABASE_PATH directly from the environment
+if (!env.DATABASE_PATH) throw new Error('DATABASE_PATH is not set');
+
+let dbUrl = join(env.DATABASE_PATH, 'data.db');
 if (!dbUrl.startsWith('file:') && !dbUrl.startsWith('http')) {
-  const absolutePath = path.resolve(dbUrl);
+  const absolutePath = resolve(dbUrl);
   dbUrl = `file://${absolutePath}`;
 }
 

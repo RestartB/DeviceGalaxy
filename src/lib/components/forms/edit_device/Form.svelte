@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { PUBLIC_TURNSTILE_SITE_KEY, PUBLIC_TURNSTILE_ENABLED } from '$env/static/public';
   import { Turnstile } from 'svelte-turnstile';
 
   import { fade } from 'svelte/transition';
@@ -19,6 +18,8 @@
   import Field from './Field.svelte';
   import Submit from '$lib/components/forms/Submit.svelte';
   import NewTagForm from '$lib/components/forms/add_tag/Form.svelte';
+
+  import { env } from '$env/dynamic/public';
 
   export type AttributeLists = {
     cpus: InferSelectModel<typeof cpus>[];
@@ -531,9 +532,9 @@
               </div>
             {/if}
 
-            {#if PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'}
+            {#if env.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'}
               <Turnstile
-                siteKey={PUBLIC_TURNSTILE_SITE_KEY}
+                siteKey={env.PUBLIC_TURNSTILE_SITE_KEY}
                 theme="auto"
                 bind:reset
                 on:callback={(event) => {

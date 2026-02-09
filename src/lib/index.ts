@@ -3,7 +3,7 @@ import { db } from '$lib/server/db';
 import { shares } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 
-import { TURNSTILE_SECRET_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 export async function generateShareId() {
   let trying = true;
@@ -31,7 +31,7 @@ export async function verifyTurnstile(token: string, ip: string): Promise<boolea
   }
 
   const params = new URLSearchParams();
-  params.append('secret', TURNSTILE_SECRET_KEY);
+  params.append('secret', env.TURNSTILE_SECRET_KEY);
   params.append('response', token);
 
   const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';

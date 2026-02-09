@@ -2,10 +2,10 @@ import { redirect, error } from '@sveltejs/kit';
 import type { Handle } from '@sveltejs/kit';
 
 import { passwordResetLimiter } from '$lib/server/limiters/passwordReset';
-import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 export const handle: Handle = async ({ event, resolve }) => {
-  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const baseDomain = env.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const hostname = event.url.hostname;
 
   if (

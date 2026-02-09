@@ -1,13 +1,15 @@
 import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/schema';
+
 import { error, redirect } from '@sveltejs/kit';
-import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
+
+import { env } from '$env/dynamic/public';
 
 export async function GET(event) {
   const hostname = event.url.hostname;
 
-  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const baseDomain = env.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
 
   if (!subdomain || subdomain === hostname) {

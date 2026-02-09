@@ -1,4 +1,4 @@
-import { SMTP2GO_API_KEY, SMTP2GO_TEMPLATE_ID } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 async function sendEmail(options: { to: string; link: string }) {
   const response = await fetch('https://api.smtp2go.com/v3/email/send', {
@@ -8,10 +8,10 @@ async function sendEmail(options: { to: string; link: string }) {
       accept: 'application/json'
     },
     body: JSON.stringify({
-      api_key: SMTP2GO_API_KEY,
+      api_key: env.SMTP2GO_API_KEY,
       sender: 'DeviceGalaxy <noreply@devicegalaxy.me>',
       to: [options.to],
-      template_id: SMTP2GO_TEMPLATE_ID,
+      template_id: env.SMTP2GO_TEMPLATE_ID,
       template_data: {
         reset_link: options.link
       }

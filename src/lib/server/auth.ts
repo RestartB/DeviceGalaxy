@@ -3,7 +3,6 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { twoFactor, admin } from 'better-auth/plugins';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { getRequestEvent } from '$app/server';
-import { BETTER_AUTH_SECRET } from '$env/static/private';
 
 import { existsSync } from 'fs';
 import { unlink, rm } from 'fs/promises';
@@ -15,9 +14,11 @@ import { eq } from 'drizzle-orm';
 
 import { sendPasswordResetEmail } from './emails';
 
+import { env } from '$env/dynamic/private';
+
 export const auth = betterAuth({
   appName: 'DeviceGalaxy',
-  secret: BETTER_AUTH_SECRET,
+  secret: env.BETTER_AUTH_SECRET,
   trustedOrigins: ['https://devicegalaxy.me'],
   database: drizzleAdapter(db, {
     provider: 'sqlite'
@@ -100,8 +101,8 @@ export const auth = betterAuth({
             const imageName = user.image.split('/').pop();
             const safeImageName = imageName ? imageName.split('?')[0] : '';
 
-            if (existsSync(join(process.cwd(), 'user_uploads', 'pfp', safeImageName + '.webp'))) {
-              await unlink(join(process.cwd(), 'user_uploads', 'pfp', safeImageName + '.webp'));
+            if (existsSync(join(env.DATA_PATH, 'pfp', safeImageName + '.webp'))) {
+              await unlink(join(env.DATA_PATH, 'pfp', safeImageName + '.webp'));
             }
 
             // Find all of user's devices and delete any images
@@ -111,8 +112,8 @@ export const auth = betterAuth({
               .where(eq(userDevices.userId, user.id));
 
             for (const device of devices) {
-              if (existsSync(join(process.cwd(), 'user_uploads', 'device', device.id.toString()))) {
-                await rm(join(process.cwd(), 'user_uploads', 'device', device.id.toString()), {
+              if (existsSync(join(env.DATA_PATH, 'device', device.id.toString()))) {
+                await rm(join(env.DATA_PATH, 'device', device.id.toString()), {
                   recursive: true,
                   force: true
                 });

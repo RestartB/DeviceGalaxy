@@ -1,5 +1,4 @@
 import { error } from '@sveltejs/kit';
-import { TAG_LIMIT } from '$env/static/private';
 
 import { superValidate, message, fail } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
@@ -10,6 +9,8 @@ import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and, count } from 'drizzle-orm';
 import { tags, lastActionTimes } from '$lib/server/db/schema';
+
+import { env } from '$env/dynamic/private';
 
 // thank you https://stackoverflow.com/a/41491220
 function colorIsDarkSimple(bgColor: string) {
@@ -80,8 +81,8 @@ export const actions = {
       .where(eq(tags.userId, session.user.id))
       .get();
 
-    if (tagCount && tagCount.count >= parseInt(TAG_LIMIT)) {
-      return error(403, `Tag limit reached. You can only have up to ${TAG_LIMIT} tags.`);
+    if (tagCount && tagCount.count >= parseInt(env.TAG_LIMIT)) {
+      return error(403, `Tag limit reached. You can only have up to ${env.TAG_LIMIT} tags.`);
     }
 
     try {

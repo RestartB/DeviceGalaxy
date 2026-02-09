@@ -1,5 +1,4 @@
 import { error } from '@sveltejs/kit';
-import { PUBLIC_TURNSTILE_ENABLED } from '$env/static/public';
 
 import { superValidate, message, fail } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
@@ -7,6 +6,8 @@ import { newUserSchema } from '$lib/schema/newUser';
 
 import { auth } from '$lib/server/auth';
 import { verifyTurnstile } from '$lib/index';
+
+import { env } from '$env/dynamic/public';
 
 export const load = async () => {
   const newUserForm = await superValidate(zod4(newUserSchema));
@@ -21,7 +22,7 @@ export const actions = {
       return fail(400, { form });
     }
 
-    if (PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
+    if (env.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
       if (form.data['cf-turnstile-response']) {
         // Verify Turnstile token
         const isValid = await verifyTurnstile(

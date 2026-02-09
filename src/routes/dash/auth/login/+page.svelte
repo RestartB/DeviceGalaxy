@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { PUBLIC_TURNSTILE_SITE_KEY, PUBLIC_TURNSTILE_ENABLED } from '$env/static/public';
   import { Turnstile } from 'svelte-turnstile';
 
   import { goto } from '$app/navigation';
@@ -10,6 +9,8 @@
 
   import { LogIn } from '@lucide/svelte';
   import { toast } from 'svelte-sonner';
+
+  import { env } from '$env/dynamic/public';
 
   const { data } = $props();
   let reset = $state<() => void>();
@@ -94,9 +95,9 @@
       {#if $errors.password}<span class="text-red-600">{$errors.password}</span>{/if}
     </div>
 
-    {#if PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'}
+    {#if env.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'}
       <Turnstile
-        siteKey={PUBLIC_TURNSTILE_SITE_KEY}
+        siteKey={env.PUBLIC_TURNSTILE_SITE_KEY}
         bind:reset
         on:callback={(event) => {
           // Required when using client side validation

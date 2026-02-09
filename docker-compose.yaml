@@ -1,0 +1,13 @@
+services:
+  devicegalaxy:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - './data:/data'
+      - './db:/db'
+    env_file:
+      - .env

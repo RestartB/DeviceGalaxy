@@ -1,6 +1,5 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
 
   import Devices from '$lib/components/Devices.svelte';
   import {
@@ -24,13 +23,15 @@
     User
   } from '@lucide/svelte';
 
+  import { env } from '$env/dynamic/public';
+
   // Get session from props
   const { data } = $props();
 
   const hostname = page.url.hostname;
   let hasSubdomain = false;
 
-  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const baseDomain = env.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
 
   if (subdomain && subdomain !== hostname) {

@@ -1,15 +1,16 @@
 <script lang="ts">
   import { goto, onNavigate } from '$app/navigation';
   import { page } from '$app/state';
-  import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
   import { fade, fly } from 'svelte/transition';
   import { prefersReducedMotion } from 'svelte/motion';
-  import type { LayoutData } from '../../routes/$types';
+  import type { LayoutData } from './$types';
 
   import { authClient } from '$lib/client';
 
   import Avatar from '$lib/components/Avatar.svelte';
   import { House, Monitor, Tag, Share, Shield, Cog, LogOut, Menu, LogIn } from '@lucide/svelte';
+
+  import { env } from '$env/dynamic/public';
 
   // Get session from props
   let { data }: { data: LayoutData } = $props();
@@ -22,7 +23,7 @@
   const hostname = page.url.hostname;
   let hasSubdomain = $state(false);
 
-  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const baseDomain = env.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
 
   if (subdomain && subdomain !== hostname) {

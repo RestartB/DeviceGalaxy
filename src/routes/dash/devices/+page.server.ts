@@ -1,6 +1,4 @@
 import { error } from '@sveltejs/kit';
-import { DEVICE_LIMIT } from '$env/static/private';
-import { PUBLIC_TURNSTILE_ENABLED } from '$env/static/public';
 
 import { superValidate, message, fail } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
@@ -31,6 +29,9 @@ import sharp from 'sharp';
 import { existsSync } from 'fs';
 import { writeFile, unlink, mkdir } from 'fs/promises';
 import { join } from 'path';
+
+import { env } from '$env/dynamic/private';
+import { env as publicEnv } from '$env/dynamic/public';
 
 export const load = async () => {
   const newDeviceForm = await superValidate(zod4(newDeviceSchema));
@@ -88,7 +89,7 @@ export const actions = {
       return fail(400, { form });
     }
 
-    if (PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
+    if (publicEnv.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
       if (form.data['cf-turnstile-response']) {
         // Verify Turnstile token
         const isValid = await verifyTurnstile(
@@ -110,8 +111,11 @@ export const actions = {
       .where(eq(userDevices.userId, session.user.id))
       .get();
 
-    if (deviceCount && deviceCount.count >= parseInt(DEVICE_LIMIT)) {
-      return error(403, `Device limit reached. You can only have up to ${DEVICE_LIMIT} devices.`);
+    if (deviceCount && deviceCount.count >= parseInt(env.DEVICE_LIMIT)) {
+      return error(
+        403,
+        `Device limit reached. You can only have up to ${env.DEVICE_LIMIT} devices.`
+      );
     }
 
     // Check that all provided tags exist
@@ -302,7 +306,7 @@ export const actions = {
         const processedImages: string[] = [];
         if (form.data.images && form.data.images.length > 0) {
           for (const image of form.data.images) {
-            const uploadDir = join(process.cwd(), 'user_uploads', 'device', deviceID.toString());
+            const uploadDir = join(env.DATA_PATH, 'device', deviceID.toString());
             await mkdir(uploadDir, { recursive: true });
 
             // Get unique path for image
@@ -390,7 +394,7 @@ export const actions = {
       return fail(400, { form });
     }
 
-    if (PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
+    if (publicEnv.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
       if (form.data['cf-turnstile-response']) {
         // Verify Turnstile token
         const isValid = await verifyTurnstile(
@@ -589,8 +593,7 @@ export const actions = {
           if (imagesToDelete.length > 0) {
             for (const imageId of imagesToDelete) {
               const imagePath = join(
-                process.cwd(),
-                'user_uploads',
+                env.DATA_PATH,
                 'device',
                 existingDevice.id.toString(),
                 imageId + '.webp'
@@ -609,12 +612,7 @@ export const actions = {
         // Upload new images
         if (form.data.newImages && form.data.newImages.length > 0) {
           for (const image of form.data.newImages) {
-            const uploadDir = join(
-              process.cwd(),
-              'user_uploads',
-              'device',
-              existingDevice.id.toString()
-            );
+            const uploadDir = join(env.DATA_PATH, 'device', existingDevice.id.toString());
             await mkdir(uploadDir, { recursive: true });
 
             // Get unique path for image

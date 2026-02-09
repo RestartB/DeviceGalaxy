@@ -1,5 +1,5 @@
 import { z } from 'zod/v4';
-import { PUBLIC_TURNSTILE_ENABLED } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
 export const newUserSchema = z
   .object({
@@ -14,7 +14,7 @@ export const newUserSchema = z
       .min(8, 'Please confirm your password.')
       .max(128, 'Password must be 128 characters or less'),
     'cf-turnstile-response':
-      PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'
+      env.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'
         ? z.string().nonempty('Please complete the Captcha.')
         : z.string().optional()
   })

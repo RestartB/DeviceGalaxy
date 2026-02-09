@@ -19,6 +19,8 @@ import { existsSync } from 'fs';
 import { rm } from 'fs/promises';
 import { join } from 'path';
 
+import { env } from '$env/dynamic/private';
+
 export async function DELETE(event) {
   // Check if the user is authenticated
   const session = await auth.api.getSession({
@@ -102,7 +104,7 @@ export async function DELETE(event) {
       }
 
       // Delete device's image folder
-      const deviceImagePath = join(process.cwd(), 'user_uploads', 'device', deviceId.toString());
+      const deviceImagePath = join(env.DATA_PATH, 'device', deviceId.toString());
       if (existsSync(deviceImagePath)) {
         await rm(deviceImagePath, { recursive: true });
       }

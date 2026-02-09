@@ -4,7 +4,7 @@
   import Fuse from 'fuse.js';
 
   import type { InferSelectModel } from 'drizzle-orm';
-  import type { tags } from '$lib/server/db/schema';
+  import type { tags } from '$lib/server/db/schema.js';
 
   import CreateTagForm from '$lib/components/forms/add_tag/Form.svelte';
   import EditTagForm from '$lib/components/forms/edit_tag/Form.svelte';

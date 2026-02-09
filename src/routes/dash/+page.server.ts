@@ -1,4 +1,4 @@
-import type { PageServerLoad } from '../$types';
+import type { PageServerLoad } from './$types';
 
 import { db } from '$lib/server/db';
 import { userDevices, cpus, gpus, memory, storage, os, brands, tags } from '$lib/server/db/schema';

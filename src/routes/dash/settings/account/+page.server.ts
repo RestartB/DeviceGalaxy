@@ -13,6 +13,8 @@ import sharp from 'sharp';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 
+import { env } from '$env/dynamic/private';
+
 export const load = async () => {
   const updateNameForm = await superValidate(zod4(updateNameSchema));
   const updateEmailForm = await superValidate(zod4(updateEmailSchema));
@@ -90,7 +92,7 @@ export const actions = {
 
     // Create PFP folder if it doesn't exist
     try {
-      await mkdir(join(process.cwd(), 'user_uploads', 'pfp'), {
+      await mkdir(join(env.DATA_PATH, 'pfp'), {
         recursive: true
       });
     } catch (err) {
@@ -117,10 +119,7 @@ export const actions = {
       .toBuffer();
 
     // Save processed image
-    await writeFile(
-      join(process.cwd(), 'user_uploads', 'pfp', session.user.id + '.webp'),
-      processedBuffer
-    );
+    await writeFile(join(env.DATA_PATH, 'pfp', session.user.id + '.webp'), processedBuffer);
 
     // Update user profile picture URL
     await auth.api.updateUser({

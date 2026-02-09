@@ -1,9 +1,9 @@
 import { auth } from '$lib/server/auth';
-import { IPINFO_TOKEN } from '$env/static/private';
-
 import { UAParser } from 'ua-parser-js';
 
 import type { PageServerLoad } from './$types';
+
+import { env } from '$env/dynamic/private';
 
 export const load: PageServerLoad = async (event) => {
   const { session, user } = await event.parent();
@@ -30,7 +30,9 @@ export const load: PageServerLoad = async (event) => {
     Array.from(uniqueIPs).map(async (ip) => {
       try {
         if (ip) {
-          const response = await fetch(`https://api.ipinfo.io/lite/${ip}?token=${IPINFO_TOKEN}`);
+          const response = await fetch(
+            `https://api.ipinfo.io/lite/${ip}?token=${env.IPINFO_TOKEN}`
+          );
           if (!response.ok) {
             throw new Error(`Failed to fetch IP info for ${ip}`);
           }

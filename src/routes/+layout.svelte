@@ -2,19 +2,20 @@
   import '../app.css';
   import { onNavigate } from '$app/navigation';
   import { page } from '$app/state';
-  import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
 
   import { Toaster } from 'svelte-sonner';
   import Header from '$lib/components/Header.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import Suspended from '$lib/components/Suspended.svelte';
 
+  import { env } from '$env/dynamic/public';
+
   let { data, children } = $props();
 
   const hostname = page.url.hostname;
   let hasSubdomain = $state(false);
 
-  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const baseDomain = env.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
 
   if (subdomain && subdomain !== hostname) {

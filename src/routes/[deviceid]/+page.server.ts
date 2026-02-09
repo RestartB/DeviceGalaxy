@@ -13,12 +13,13 @@ import {
   user
 } from '$lib/server/db/schema';
 import { error } from '@sveltejs/kit';
-import { PUBLIC_BASE_DOMAIN } from '$env/static/public';
+
+import { env } from '$env/dynamic/public';
 
 export const load = async (event) => {
   const hostname = event.url.hostname;
 
-  const baseDomain = PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
+  const baseDomain = env.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
 
   if (!subdomain) {

@@ -1,5 +1,4 @@
 import { error } from '@sveltejs/kit';
-import { PUBLIC_TURNSTILE_ENABLED, PUBLIC_BETTER_AUTH_URL } from '$env/static/public';
 
 import { superValidate, fail, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
@@ -9,6 +8,8 @@ import { auth } from '$lib/server/auth';
 import { verifyTurnstile } from '$lib/index';
 
 import { passwordResetLimiter } from '$lib/server/limiters/passwordReset';
+
+import { env } from '$env/dynamic/public';
 
 export const load = async () => {
   const enterEmailForm = await superValidate(zod4(enterEmailSchema));
@@ -28,7 +29,7 @@ export const actions = {
       return fail(400, { form });
     }
 
-    if (PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
+    if (env.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
       if (form.data['cf-turnstile-response']) {
         // Verify Turnstile token
         const isValid = await verifyTurnstile(
@@ -46,7 +47,7 @@ export const actions = {
     await auth.api.requestPasswordReset({
       body: {
         email: form.data.email,
-        redirectTo: PUBLIC_BETTER_AUTH_URL + '/dash/auth/password-reset/finish'
+        redirectTo: env.PUBLIC_BETTER_AUTH_URL + '/dash/auth/password-reset/finish'
       }
     });
 
