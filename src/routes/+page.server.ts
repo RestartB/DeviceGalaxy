@@ -13,13 +13,9 @@ import { env as publicEnv } from '$env/dynamic/public';
 
 export const load = async ({ url }) => {
   const hostname = url.hostname;
-  console.log(hostname);
 
   const baseDomain = publicEnv.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
-
-  console.log(baseDomain);
-  console.log(subdomain);
 
   if (subdomain && subdomain !== hostname) {
     const shareUser = await db
@@ -50,12 +46,13 @@ export const load = async ({ url }) => {
   let totalImages = 0;
 
   try {
-    if (existsSync(env.DATA_PATH)) {
+    const dataPath = join(env.DATA_PATH, 'device')
+    if (existsSync(dataPath)) {
       // get folders
-      const deviceFolders = await readdir(env.DATA_PATH);
+      const deviceFolders = await readdir(dataPath);
 
       for (const folder of deviceFolders) {
-        const folderPath = join(env.DATA_PATH, folder);
+        const folderPath = join(dataPath, folder);
 
         // check if it's a folder
         const folderStat = await stat(folderPath);
