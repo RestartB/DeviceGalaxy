@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
 
-  import titanium from '$lib/images/88x31/titanium.png';
+  import devicegalaxy from '$lib/images/88x31/devicegalaxy.png';
   import restart from '$lib/images/88x31/restart.png';
 </script>
 
@@ -21,7 +21,7 @@
       />
       <div>
         <h1 class="font-bold" translate="no">DeviceGalaxy</h1>
-        <p class="mt-1 text-sm font-light">2025, <span translate="no">Restart</span></p>
+        <p class="mt-1 text-sm font-light">2026, <span translate="no">Restart</span></p>
       </div>
     </div>
 
@@ -34,11 +34,11 @@
           style="image-rendering: pixelated;"
         /></a
       >
-      <a href="https://titaniumbot.me" aria-labelledby="titanium-88x31" title="Titanium"
+      <a href="/" aria-labelledby="devicegalaxy-88x31" title="DeviceGalaxy"
         ><img
-          src={titanium}
-          alt="Titanium's 88x31"
-          id="titanium-88x31"
+          src={devicegalaxy}
+          alt="DeviceGalaxy's 88x31"
+          id="devicegalaxy-88x31"
           style="image-rendering: pixelated;"
         /></a
       >
