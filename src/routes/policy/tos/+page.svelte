@@ -6,7 +6,7 @@
   <div class="flex max-w-5xl flex-col gap-5">
     <div>
       <h1 class="text-4xl font-bold">Terms of Use</h1>
-      <h2 class="text-xl font-semibold">Updated: 21/08/2025</h2>
+      <h2 class="text-xl font-semibold">Updated: 23/02/2026</h2>
     </div>
 
     <p>
@@ -24,7 +24,7 @@
         <li>You should not host NSFW content on DeviceGalaxy.</li>
         <li>
           You should not host illegal content on DeviceGalaxy. Abide by laws inside your country of
-          residence, the countries that you are sharing with, and the United Kingdom.
+          residence, the countries that you are sharing with, the EU and the United Kingdom.
         </li>
         <li>You should not host content that violates the rights of others.</li>
         <li>You should not host content that is hateful, abusive, or harassing.</li>

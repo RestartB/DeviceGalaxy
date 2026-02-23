@@ -6,7 +6,7 @@
   <div class="flex max-w-5xl flex-col gap-5">
     <div>
       <h1 class="text-4xl font-bold">Privacy Policy</h1>
-      <h2 class="text-xl font-semibold">Updated: 21/08/2025</h2>
+      <h2 class="text-xl font-semibold">Updated: 23/02/2026</h2>
     </div>
 
     <p>
@@ -20,9 +20,9 @@
     <section class="flex flex-col gap-2.5" id="data">
       <h2 class="text-xl font-semibold">Host Country</h2>
       <p>
-        DeviceGalaxy is hosted in the United Kingdom. By using DeviceGalaxy, you agree to UK laws
-        and guidelines, as well as the guidelines of your own country, and the ones in the terms of
-        use document.
+        DeviceGalaxy is hosted on Hetzner servers in Helsinki, Finland. By using DeviceGalaxy, you
+        agree to EU law, UK law, as well as the guidelines of your own country, and the ones in the
+        terms of use document.
       </p>
     </section>
 
@@ -82,11 +82,23 @@
       </ul>
     </section>
 
-    <section class="flex flex-col gap-2.5" id="cloudflare">
+    <section class="flex flex-col gap-2.5" id="csam-scanning">
+      <h2 class="text-xl font-semibold">Cloudflare CSAM Scanning</h2>
+      <p>
+        DeviceGalaxy uses the Cloudflare CSAM (Child Sexual Abuse Material) automatic scanning tool,
+        to flag illegal CSAM content that may be uploaded to DeviceGalaxy. For more information,
+        please go to the official <a
+          href="https://developers.cloudflare.com/cache/reference/csam-scanning/"
+          >Cloudflare documentation page.</a
+        >
+      </p>
+    </section>
+
+    <section class="flex flex-col gap-2.5" id="analytics">
       <h2 class="text-xl font-semibold">Cloudflare Analytics</h2>
       <p>
-        I make use of Cloudflare Analytics, a privacy first and lightweight analytics solution, to
-        get insights for DeviceGalaxy. Some of the following data may be collected:
+        DeviceGalaxy uses Cloudflare Analytics, a privacy first and lightweight analytics solution,
+        to get insights on how the service is used. Some of the following data may be collected:
       </p>
       <ul class="list-inside list-disc">
         <li>country</li>
@@ -106,10 +118,10 @@
     <section class="flex flex-col gap-2.5" id="font">
       <h2 class="text-xl font-semibold">Font</h2>
       <p>
-        Please note that the website uses the <a href="https://fonts.google.com/specimen/Figtree"
+        Please note that DeviceGalaxy uses the <a href="https://fonts.google.com/specimen/Figtree"
           >Figtree</a
-        > font. I use Cloudflare Fonts for this, which uses Cloudflare to serve the fonts instead of Google.
-        This helps to improve performance and privacy.
+        > font. Cloudflare Fonts is used for this, which uses Cloudflare to serve the fonts instead of
+        Google. This helps to improve performance and privacy.
       </p>
     </section>
 
