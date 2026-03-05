@@ -1,0 +1,12 @@
+name: Svelte Check
+
+on:
+  push:
+    paths:
+      - '**.svelte'
+      - '**.ts'
+  workflow_dispatch:
+
+jobs:
+  check:
+    uses: ofkm/gha-svelte-check@v1
