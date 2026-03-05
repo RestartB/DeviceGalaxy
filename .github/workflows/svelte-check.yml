@@ -28,4 +28,4 @@ jobs:
       - name: Add Svelte Check annotator
         uses: prgm-dev/svelte-check-pr-annotator@main
       - name: Run Svelte Check
-        run: pnpm run check --output machine --use-new-transformation true
+        run: pnpm run check --output machine
