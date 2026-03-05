@@ -58,6 +58,6 @@
     "sharp": "^0.34.5",
     "svelte-sonner": "^1.0.7",
     "svelte-turnstile": "^0.11.0",
-    "ua-parser-js": "^2.0.7"
+    "ua-parser-js": "^2.0.9"
   }
 }
