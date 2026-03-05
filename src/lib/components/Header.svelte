@@ -3,7 +3,6 @@
   import { page } from '$app/state';
   import { fade, fly } from 'svelte/transition';
   import { prefersReducedMotion } from 'svelte/motion';
-  import type { LayoutData } from './$types';
 
   import { authClient } from '$lib/client';
 
@@ -13,7 +12,7 @@
   import { env } from '$env/dynamic/public';
 
   // Get session from props
-  let { data }: { data: LayoutData } = $props();
+  let { user }: { user: typeof authClient.$Infer.Session.user | null } = $props();
   let menuOpen = $state(false);
 
   onNavigate(() => {
@@ -46,7 +45,7 @@
       />
       <h1 class=" text-xl font-bold" translate="no">DeviceGalaxy</h1>
     </a>
-    {#if data.user}
+    {#if user}
       <nav class="hidden h-full items-center justify-center sm:flex">
         <a
           class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
@@ -69,7 +68,7 @@
         >
           Tags
         </a>
-        {#if data.user && !data.user.suspended}
+        {#if user && !user.suspended}
           <a
             class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
             href="/dash/shares"
@@ -78,7 +77,7 @@
             Shared
           </a>
         {/if}
-        {#if data.user.role === 'admin'}
+        {#if user.role === 'admin'}
           <a
             class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
             href="/dash/admin"
@@ -90,16 +89,16 @@
       </nav>
 
       <div class="ml-auto flex h-full max-w-[50%] items-center justify-end gap-2">
-        {#if data.user}
+        {#if user}
           <Avatar
             size={30}
-            src={data.user.image || ''}
-            name={data.user.name || ''}
+            src={user.image || ''}
+            name={user.name || ''}
             alt="User Avatar"
             className="border-zinc-400"
           />
           <p class="xxxs:block hidden max-w-full truncate font-bold text-nowrap" translate="no">
-            {data.user.name}
+            {user.name}
           </p>
           <div class="hidden h-full sm:flex">
             <a
@@ -149,7 +148,7 @@
       </a>
     {/if}
 
-    {#if menuOpen && data.user}
+    {#if menuOpen && user}
       <div
         class="fixed inset-0 z-60 mt-12 flex items-start justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
         transition:fade={{ duration: 100 }}
@@ -186,7 +185,7 @@
               <Tag size="30" />
               Tags
             </a>
-            {#if data.user && !data.user.suspended}
+            {#if user && !user.suspended}
               <a
                 class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
                 href="/dash/shares"
@@ -195,7 +194,7 @@
                 Shared
               </a>
             {/if}
-            {#if data.user.role === 'admin'}
+            {#if user.role === 'admin'}
               <a
                 class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
                 href="/dash/admin"
@@ -210,12 +209,12 @@
             <div class="flex w-full items-center justify-center gap-2">
               <Avatar
                 size={30}
-                src={data.user.image || ''}
-                name={data.user.name || ''}
+                src={user.image || ''}
+                name={user.name || ''}
                 alt="User Avatar"
                 className="border-zinc-400"
               />
-              <p class="max-w-full truncate text-xl text-nowrap" translate="no">{data.user.name}</p>
+              <p class="max-w-full truncate text-xl text-nowrap" translate="no">{user.name}</p>
             </div>
             <div class="flex w-full items-center justify-center gap-2">
               <a

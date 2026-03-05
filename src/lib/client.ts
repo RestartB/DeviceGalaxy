@@ -1,6 +1,8 @@
 import { createAuthClient } from 'better-auth/svelte';
-import { twoFactorClient, adminClient } from 'better-auth/client/plugins';
+import { twoFactorClient, adminClient, inferAdditionalFields } from 'better-auth/client/plugins';
 import { goto } from '$app/navigation';
+
+import type { auth } from '$lib/server/auth';
 
 export const authClient = createAuthClient({
   plugins: [
@@ -9,7 +11,8 @@ export const authClient = createAuthClient({
         goto('/dash/auth/verify-2fa');
       }
     }),
-    adminClient()
+    adminClient(),
+    inferAdditionalFields<typeof auth>()
   ]
 });
 

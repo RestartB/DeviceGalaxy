@@ -54,7 +54,7 @@
 </svelte:head>
 
 <div class="font-family font-lg h-screen max-h-screen w-full dark:text-white">
-  <Header {data} />
+  <Header user={data.user} />
 
   <div
     class="box-border min-h-screen flex-1 overflow-y-auto p-4 pt-16"

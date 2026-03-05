@@ -1,23 +1,17 @@
 import { json } from '@sveltejs/kit';
-import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
 import { shares } from '$lib/server/db/schema';
 
-export async function DELETE(event) {
-  // Check if the user is authenticated
-  const session = await auth.api.getSession({
-    headers: event.request.headers
-  });
-
-  if (!session) {
+export async function DELETE({ locals }) {
+  if (!locals.user) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     await db
       .delete(shares)
-      .where(and(eq(shares.userId, session.user.id), eq(shares.internal, false)));
+      .where(and(eq(shares.userId, locals.user.id), eq(shares.internal, false)));
 
     return json({ message: 'Shares deleted successfully' }, { status: 200 });
   } catch (error) {

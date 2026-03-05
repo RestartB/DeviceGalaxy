@@ -29,17 +29,12 @@ export const load = async () => {
 };
 
 export const actions = {
-  newTag: async ({ request }) => {
-    // Check if the user is authenticated
-    const session = await auth.api.getSession({
-      headers: request.headers
-    });
-
-    if (!session || !session.user) {
+  newTag: async ({ request, locals }) => {
+    if (!locals.user) {
       return error(401, 'Unauthorized');
     }
 
-    if (session.user.suspended) {
+    if (locals.user.suspended) {
       return error(403, 'Your account is suspended.');
     }
 
@@ -47,7 +42,7 @@ export const actions = {
     const lastTagCreatedTime = await db
       .select({ lastTagCreatedTime: lastActionTimes.lastTagCreatedTime })
       .from(lastActionTimes)
-      .where(eq(lastActionTimes.userId, session.user.id))
+      .where(eq(lastActionTimes.userId, locals.user.id))
       .get();
 
     if (lastTagCreatedTime && lastTagCreatedTime.lastTagCreatedTime) {
@@ -63,9 +58,9 @@ export const actions = {
       await db
         .update(lastActionTimes)
         .set({ lastTagCreatedTime: currentTime })
-        .where(eq(lastActionTimes.userId, session.user.id));
+        .where(eq(lastActionTimes.userId, locals.user.id));
     } else {
-      await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
+      await db.insert(lastActionTimes).values({ userId: locals.user.id }).onConflictDoNothing();
     }
 
     const form = await superValidate(request, zod4(newTagSchema));
@@ -78,7 +73,7 @@ export const actions = {
     const tagCount = await db
       .select({ count: count() })
       .from(tags)
-      .where(eq(tags.userId, session.user.id))
+      .where(eq(tags.userId, locals.user.id))
       .get();
 
     if (tagCount && tagCount.count >= parseInt(env.TAG_LIMIT)) {
@@ -87,7 +82,7 @@ export const actions = {
 
     try {
       await db.insert(tags).values({
-        userId: session.user.id,
+        userId: locals.user.id,
         tagName: form.data.tagName,
         tagColour: (form.data.colourEnabled && form.data.colour) || null,
         tagTextColour:
@@ -106,16 +101,12 @@ export const actions = {
       return error(500, 'Error creating tag');
     }
   },
-  editTag: async ({ request }) => {
-    const session = await auth.api.getSession({
-      headers: request.headers
-    });
-
-    if (!session || !session.user) {
+  editTag: async ({ request, locals }) => {
+    if (!locals.user) {
       return error(401, 'Unauthorized');
     }
 
-    if (session.user.suspended) {
+    if (locals.user.suspended) {
       return error(403, 'Your account is suspended.');
     }
 
@@ -123,7 +114,7 @@ export const actions = {
     const lastTagUpdatedTime = await db
       .select({ lastTagUpdatedTime: lastActionTimes.lastTagUpdatedTime })
       .from(lastActionTimes)
-      .where(eq(lastActionTimes.userId, session.user.id))
+      .where(eq(lastActionTimes.userId, locals.user.id))
       .get();
 
     if (lastTagUpdatedTime && lastTagUpdatedTime.lastTagUpdatedTime) {
@@ -139,9 +130,9 @@ export const actions = {
       await db
         .update(lastActionTimes)
         .set({ lastTagUpdatedTime: currentTime })
-        .where(eq(lastActionTimes.userId, session.user.id));
+        .where(eq(lastActionTimes.userId, locals.user.id));
     } else {
-      await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
+      await db.insert(lastActionTimes).values({ userId: locals.user.id }).onConflictDoNothing();
     }
 
     const form = await superValidate(request, zod4(newTagSchema));
@@ -154,7 +145,7 @@ export const actions = {
       const existingTag = await db
         .select()
         .from(tags)
-        .where(and(eq(tags.id, parseInt(form.id)), eq(tags.userId, session.user.id)))
+        .where(and(eq(tags.id, parseInt(form.id)), eq(tags.userId, locals.user.id)))
         .get();
 
       if (!existingTag) {

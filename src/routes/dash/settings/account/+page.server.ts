@@ -23,13 +23,8 @@ export const load = async () => {
 };
 
 export const actions = {
-  updateName: async ({ request }) => {
-    // Check if the user is authenticated
-    const session = await auth.api.getSession({
-      headers: request.headers
-    });
-
-    if (!session || !session.user) {
+  updateName: async ({ request, locals }) => {
+    if (!locals.user) {
       return error(401, 'Unauthorized');
     }
 
@@ -49,13 +44,8 @@ export const actions = {
 
     return message(form, 'Updated');
   },
-  updateEmail: async ({ request }) => {
-    // Check if the user is authenticated
-    const session = await auth.api.getSession({
-      headers: request.headers
-    });
-
-    if (!session || !session.user) {
+  updateEmail: async ({ request, locals }) => {
+    if (!locals.user) {
       return error(401, 'Unauthorized');
     }
 
@@ -74,13 +64,8 @@ export const actions = {
     });
     return message(form, 'Updated');
   },
-  uploadPFP: async ({ request, url }) => {
-    // Check if the user is authenticated
-    const session = await auth.api.getSession({
-      headers: request.headers
-    });
-
-    if (!session || !session.user) {
+  uploadPFP: async ({ request, url, locals }) => {
+    if (!locals.user) {
       return error(401, 'Unauthorized');
     }
 
@@ -119,13 +104,13 @@ export const actions = {
       .toBuffer();
 
     // Save processed image
-    await writeFile(join(env.DATA_PATH, 'pfp', session.user.id + '.webp'), processedBuffer);
+    await writeFile(join(env.DATA_PATH, 'pfp', locals.user.id + '.webp'), processedBuffer);
 
     // Update user profile picture URL
     await auth.api.updateUser({
       headers: request.headers,
       body: {
-        image: `${url.origin}/api/image/pfp/${session.user.id}?v=${Date.now()}`
+        image: `${url.origin}/api/image/pfp/${locals.user.id}?v=${Date.now()}`
       }
     });
 

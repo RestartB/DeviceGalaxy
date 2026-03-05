@@ -13,6 +13,9 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 COPY .env.example .env
 
+ARG BUILD_SECRET=building
+ENV BETTER_AUTH_SECRET=$BUILD_SECRET
+
 RUN pnpm run build
 RUN rm -r /db
 

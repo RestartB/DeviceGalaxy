@@ -13,13 +13,8 @@ export const load = async () => {
 };
 
 export const actions = {
-  deleteAccount: async ({ request }) => {
-    // Check if the user is authenticated
-    const session = await auth.api.getSession({
-      headers: request.headers
-    });
-
-    if (!session || !session.user) {
+  deleteAccount: async ({ request, locals }) => {
+    if (!locals.user) {
       return error(401, 'Unauthorized');
     }
 

@@ -4,17 +4,12 @@ import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
 import { shares } from '$lib/server/db/schema';
 
-export async function DELETE(event) {
-  // Check if the user is authenticated
-  const session = await auth.api.getSession({
-    headers: event.request.headers
-  });
-
-  if (!session) {
+export async function DELETE({ locals, url }) {
+  if (!locals.user) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const shareId = event.url.searchParams.get('id');
+  const shareId = url.searchParams.get('id');
   if (!shareId) {
     return json({ message: 'Share ID is required' }, { status: 400 });
   }
@@ -24,7 +19,7 @@ export async function DELETE(event) {
     .select()
     .from(shares)
     .where(
-      and(eq(shares.id, shareId), eq(shares.userId, session.user.id), eq(shares.internal, false))
+      and(eq(shares.id, shareId), eq(shares.userId, locals.user.id), eq(shares.internal, false))
     )
     .get();
 
@@ -36,7 +31,7 @@ export async function DELETE(event) {
     await db
       .delete(shares)
       .where(
-        and(eq(shares.id, shareId), eq(shares.userId, session.user.id), eq(shares.internal, false))
+        and(eq(shares.id, shareId), eq(shares.userId, locals.user.id), eq(shares.internal, false))
       );
 
     return json({ message: 'Share deleted successfully' }, { status: 200 });

@@ -16,18 +16,10 @@
   let userId = $state('');
   let newPassword = $state('');
 
-  let userIdsResult: NonNullable<
-    | {
-        users: UserWithRole[];
-        total: number;
-        limit: number | undefined;
-        offset: number | undefined;
-      }
-    | {
-        users: never[];
-        total: number;
-      }
-  > | null = $state(null);
+  let userIdsResult: {
+    users: UserWithRole[];
+    total: number;
+  } | null = $state(null);
   let userIdsError: {
     code?: string | undefined | undefined;
     message?: string | undefined | undefined;

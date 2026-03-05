@@ -1,8 +1,15 @@
 import { redirect, error } from '@sveltejs/kit';
 import type { Handle } from '@sveltejs/kit';
 
+import { auth } from '$lib/server/auth';
+import { initializeDatabase } from '$lib/server/db';
+import { svelteKitHandler } from 'better-auth/svelte-kit';
+import { building } from '$app/environment';
+
 import { passwordResetLimiter } from '$lib/server/limiters/passwordReset';
 import { env } from '$env/dynamic/public';
+
+initializeDatabase();
 
 export const handle: Handle = async ({ event, resolve }) => {
   const baseDomain = env.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
@@ -27,6 +34,14 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
   }
 
-  const response = await resolve(event);
-  return response;
+  const session = await auth.api.getSession({
+    headers: event.request.headers
+  });
+
+  if (session) {
+    event.locals.session = session.session;
+    event.locals.user = session.user;
+  }
+
+  return svelteKitHandler({ event, resolve, auth, building });
 };

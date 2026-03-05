@@ -15,9 +15,9 @@ if (!dbUrl.startsWith('file:') && !dbUrl.startsWith('http')) {
 }
 
 const client = createClient({ url: dbUrl, concurrency: 0 });
-await client.execute('PRAGMA journal_mode = WAL');
 
-async function initializeDatabase() {
+export const db = drizzle(client, { schema });
+export async function initializeDatabase() {
   try {
     await client.execute('PRAGMA journal_mode = WAL');
     await client.execute('PRAGMA synchronous = NORMAL');
@@ -30,6 +30,3 @@ async function initializeDatabase() {
     console.error('Failed to initialize database:', error);
   }
 }
-
-initializeDatabase();
-export const db = drizzle(client, { schema });

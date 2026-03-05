@@ -6,8 +6,6 @@ import { newDeviceSchema } from '$lib/schema/newDevice';
 import { editDeviceSchema } from '$lib/schema/editDevice';
 import { newTagSchema } from '$lib/schema/newTag';
 
-import { auth } from '$lib/server/auth';
-
 import { eq, and, count } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import type { InferSelectModel } from 'drizzle-orm';
@@ -42,19 +40,14 @@ export const load = async () => {
 };
 
 export const actions = {
-  newDevice: async ({ request }) => {
+  newDevice: async ({ request, locals }) => {
     const formData = await request.formData();
 
-    // Check if the user is authenticated
-    const session = await auth.api.getSession({
-      headers: request.headers
-    });
-
-    if (!session || !session.user) {
+    if (!locals.user) {
       return error(401, 'Unauthorized');
     }
 
-    if (session.user.suspended) {
+    if (locals.user.suspended) {
       return error(403, 'Your account is suspended.');
     }
 
@@ -62,7 +55,7 @@ export const actions = {
     const lastCreatedTime = await db
       .select({ lastCreatedTime: lastActionTimes.lastCreatedTime })
       .from(lastActionTimes)
-      .where(eq(lastActionTimes.userId, session.user.id))
+      .where(eq(lastActionTimes.userId, locals.user.id))
       .get();
 
     if (lastCreatedTime && lastCreatedTime.lastCreatedTime) {
@@ -78,9 +71,9 @@ export const actions = {
       await db
         .update(lastActionTimes)
         .set({ lastCreatedTime: currentTime })
-        .where(eq(lastActionTimes.userId, session.user.id));
+        .where(eq(lastActionTimes.userId, locals.user.id));
     } else {
-      await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
+      await db.insert(lastActionTimes).values({ userId: locals.user.id }).onConflictDoNothing();
     }
 
     const form = await superValidate(formData, zod4(newDeviceSchema));
@@ -108,7 +101,7 @@ export const actions = {
     const deviceCount = await db
       .select({ count: count() })
       .from(userDevices)
-      .where(eq(userDevices.userId, session.user.id))
+      .where(eq(userDevices.userId, locals.user.id))
       .get();
 
     if (deviceCount && deviceCount.count >= parseInt(env.DEVICE_LIMIT)) {
@@ -121,7 +114,7 @@ export const actions = {
     // Check that all provided tags exist
     if (form.data.tags && form.data.tags.length > 0) {
       const existingTags = await db.query.tags.findMany({
-        where: eq(userDevices.userId, session.user.id)
+        where: eq(userDevices.userId, locals.user.id)
       });
       const tagValues = existingTags.map((tag) => tag.id);
       const invalidTags = form.data.tags.filter((tag) => !tagValues.includes(tag));
@@ -142,11 +135,15 @@ export const actions = {
       let newBrand: InferSelectModel<typeof brands> | undefined;
 
       await db.transaction(async (tx) => {
+        if (!locals.user) {
+          return error(401, 'Unauthorized');
+        }
+
         // CPU
         if (form.data.cpu) {
           const cpuValue = form.data.cpu.trim().toLowerCase();
           const existingCpu = await tx.query.cpus.findFirst({
-            where: and(eq(cpus.value, cpuValue), eq(cpus.userID, session.user.id))
+            where: and(eq(cpus.value, cpuValue), eq(cpus.userID, locals.user.id))
           });
 
           if (!existingCpu) {
@@ -154,7 +151,7 @@ export const actions = {
             newCPU = await tx
               .insert(cpus)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: cpuValue,
                 displayName: form.data.cpu
               })
@@ -169,7 +166,7 @@ export const actions = {
         if (form.data.gpu) {
           const gpuValue = form.data.gpu.trim().toLowerCase();
           const existingGpu = await tx.query.gpus.findFirst({
-            where: and(eq(gpus.value, gpuValue), eq(gpus.userID, session.user.id))
+            where: and(eq(gpus.value, gpuValue), eq(gpus.userID, locals.user.id))
           });
 
           if (!existingGpu) {
@@ -177,7 +174,7 @@ export const actions = {
             newGPU = await tx
               .insert(gpus)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: gpuValue,
                 displayName: form.data.gpu
               })
@@ -192,7 +189,7 @@ export const actions = {
         if (form.data.memory) {
           const memoryValue = form.data.memory.trim().toLowerCase();
           const existingMemory = await tx.query.memory.findFirst({
-            where: and(eq(memory.value, memoryValue), eq(memory.userID, session.user.id))
+            where: and(eq(memory.value, memoryValue), eq(memory.userID, locals.user.id))
           });
 
           if (!existingMemory) {
@@ -200,7 +197,7 @@ export const actions = {
             newMemory = await tx
               .insert(memory)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: memoryValue,
                 displayName: form.data.memory
               })
@@ -215,7 +212,7 @@ export const actions = {
         if (form.data.storage) {
           const storageValue = form.data.storage.trim().toLowerCase();
           const existingStorage = await tx.query.storage.findFirst({
-            where: and(eq(storage.value, storageValue), eq(storage.userID, session.user.id))
+            where: and(eq(storage.value, storageValue), eq(storage.userID, locals.user.id))
           });
 
           if (!existingStorage) {
@@ -223,7 +220,7 @@ export const actions = {
             newStorage = await tx
               .insert(storage)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: storageValue,
                 displayName: form.data.storage
               })
@@ -238,7 +235,7 @@ export const actions = {
         if (form.data.os) {
           const osValue = form.data.os.trim().toLowerCase();
           const existingOS = await tx.query.os.findFirst({
-            where: and(eq(os.value, osValue), eq(os.userID, session.user.id))
+            where: and(eq(os.value, osValue), eq(os.userID, locals.user.id))
           });
 
           if (!existingOS) {
@@ -246,7 +243,7 @@ export const actions = {
             newOS = await tx
               .insert(os)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: osValue,
                 displayName: form.data.os
               })
@@ -261,7 +258,7 @@ export const actions = {
         if (form.data.brand) {
           const brandValue = form.data.brand.trim().toLowerCase();
           const existingBrand = await tx.query.brands.findFirst({
-            where: and(eq(brands.value, brandValue), eq(brands.userId, session.user.id))
+            where: and(eq(brands.value, brandValue), eq(brands.userId, locals.user.id))
           });
 
           if (!existingBrand) {
@@ -269,7 +266,7 @@ export const actions = {
             newBrand = await tx
               .insert(brands)
               .values({
-                userId: session.user.id,
+                userId: locals.user.id,
                 value: brandValue,
                 displayName: form.data.brand
               })
@@ -284,7 +281,7 @@ export const actions = {
         const insertedRows = await tx
           .insert(userDevices)
           .values({
-            userId: session.user.id,
+            userId: locals.user.id,
             deviceName: form.data.deviceName,
             description: form.data.description,
             additional: form.data.additional,
@@ -347,19 +344,14 @@ export const actions = {
       return error(500, 'Error adding device');
     }
   },
-  editDevice: async ({ request }) => {
+  editDevice: async ({ request, locals }) => {
     const formData = await request.formData();
 
-    // Check if the user is authenticated
-    const session = await auth.api.getSession({
-      headers: request.headers
-    });
-
-    if (!session || !session.user) {
+    if (!locals.user) {
       return error(401, 'Unauthorized');
     }
 
-    if (session.user.suspended) {
+    if (locals.user.suspended) {
       return error(403, 'Your account is suspended.');
     }
 
@@ -367,7 +359,7 @@ export const actions = {
     const lastUpdatedTime = await db
       .select({ lastUpdatedTime: lastActionTimes.lastUpdatedTime })
       .from(lastActionTimes)
-      .where(eq(lastActionTimes.userId, session.user.id))
+      .where(eq(lastActionTimes.userId, locals.user.id))
       .get();
 
     if (lastUpdatedTime && lastUpdatedTime.lastUpdatedTime) {
@@ -383,9 +375,9 @@ export const actions = {
       await db
         .update(lastActionTimes)
         .set({ lastUpdatedTime: currentTime })
-        .where(eq(lastActionTimes.userId, session.user.id));
+        .where(eq(lastActionTimes.userId, locals.user.id));
     } else {
-      await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
+      await db.insert(lastActionTimes).values({ userId: locals.user.id }).onConflictDoNothing();
     }
 
     const form = await superValidate(formData, zod4(editDeviceSchema));
@@ -420,7 +412,7 @@ export const actions = {
       const existingDevice = await db
         .select()
         .from(userDevices)
-        .where(and(eq(userDevices.id, parseInt(form.id)), eq(userDevices.userId, session.user.id)))
+        .where(and(eq(userDevices.id, parseInt(form.id)), eq(userDevices.userId, locals.user.id)))
         .get();
 
       if (!existingDevice) {
@@ -430,7 +422,7 @@ export const actions = {
       // Check that all provided tags exist
       if (form.data.tags && form.data.tags.length > 0) {
         const existingTags = await db.query.tags.findMany({
-          where: eq(userDevices.userId, session.user.id)
+          where: eq(userDevices.userId, locals.user.id)
         });
         const tagValues = existingTags.map((tag) => tag.id);
         const invalidTags = form.data.tags.filter((tag) => !tagValues.includes(tag));
@@ -443,11 +435,15 @@ export const actions = {
       }
 
       await db.transaction(async (tx) => {
+        if (!locals.user) {
+          return error(401, 'Unauthorized');
+        }
+
         // CPU
         if (form.data.cpu) {
           const cpuValue = form.data.cpu.trim().toLowerCase();
           const existingCpu = await tx.query.cpus.findFirst({
-            where: and(eq(cpus.value, cpuValue), eq(cpus.userID, session.user.id))
+            where: and(eq(cpus.value, cpuValue), eq(cpus.userID, locals.user.id))
           });
 
           if (!existingCpu) {
@@ -455,7 +451,7 @@ export const actions = {
             newCPU = await tx
               .insert(cpus)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: cpuValue,
                 displayName: form.data.cpu
               })
@@ -470,7 +466,7 @@ export const actions = {
         if (form.data.gpu) {
           const gpuValue = form.data.gpu.trim().toLowerCase();
           const existingGpu = await tx.query.gpus.findFirst({
-            where: and(eq(gpus.value, gpuValue), eq(gpus.userID, session.user.id))
+            where: and(eq(gpus.value, gpuValue), eq(gpus.userID, locals.user.id))
           });
 
           if (!existingGpu) {
@@ -478,7 +474,7 @@ export const actions = {
             newGPU = await tx
               .insert(gpus)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: gpuValue,
                 displayName: form.data.gpu
               })
@@ -493,7 +489,7 @@ export const actions = {
         if (form.data.memory) {
           const memoryValue = form.data.memory.trim().toLowerCase();
           const existingMemory = await tx.query.memory.findFirst({
-            where: and(eq(memory.value, memoryValue), eq(memory.userID, session.user.id))
+            where: and(eq(memory.value, memoryValue), eq(memory.userID, locals.user.id))
           });
 
           if (!existingMemory) {
@@ -501,7 +497,7 @@ export const actions = {
             newMemory = await tx
               .insert(memory)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: memoryValue,
                 displayName: form.data.memory
               })
@@ -516,7 +512,7 @@ export const actions = {
         if (form.data.storage) {
           const storageValue = form.data.storage.trim().toLowerCase();
           const existingStorage = await tx.query.storage.findFirst({
-            where: and(eq(storage.value, storageValue), eq(storage.userID, session.user.id))
+            where: and(eq(storage.value, storageValue), eq(storage.userID, locals.user.id))
           });
 
           if (!existingStorage) {
@@ -524,7 +520,7 @@ export const actions = {
             newStorage = await tx
               .insert(storage)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: storageValue,
                 displayName: form.data.storage
               })
@@ -539,7 +535,7 @@ export const actions = {
         if (form.data.os) {
           const osValue = form.data.os.trim().toLowerCase();
           const existingOS = await tx.query.os.findFirst({
-            where: and(eq(os.value, osValue), eq(os.userID, session.user.id))
+            where: and(eq(os.value, osValue), eq(os.userID, locals.user.id))
           });
 
           if (!existingOS) {
@@ -547,7 +543,7 @@ export const actions = {
             newOS = await tx
               .insert(os)
               .values({
-                userID: session.user.id,
+                userID: locals.user.id,
                 value: osValue,
                 displayName: form.data.os
               })
@@ -562,7 +558,7 @@ export const actions = {
         if (form.data.brand) {
           const brandValue = form.data.brand.trim().toLowerCase();
           const existingBrand = await tx.query.brands.findFirst({
-            where: and(eq(brands.value, brandValue), eq(brands.userId, session.user.id))
+            where: and(eq(brands.value, brandValue), eq(brands.userId, locals.user.id))
           });
 
           if (!existingBrand) {
@@ -570,7 +566,7 @@ export const actions = {
             newBrand = await tx
               .insert(brands)
               .values({
-                userId: session.user.id,
+                userId: locals.user.id,
                 value: brandValue,
                 displayName: form.data.brand
               })
@@ -659,27 +655,27 @@ export const actions = {
 
         // Delete orphans
         if (existingDevice.cpu !== null && existingDevice.cpu !== undefined) {
-          await deleteOrphans(tx, cpus, existingDevice.cpu, session.user.id, 'cpu');
+          await deleteOrphans(tx, cpus, existingDevice.cpu, locals.user.id, 'cpu');
         }
 
         if (existingDevice.gpu !== null && existingDevice.gpu !== undefined) {
-          await deleteOrphans(tx, gpus, existingDevice.gpu, session.user.id, 'gpu');
+          await deleteOrphans(tx, gpus, existingDevice.gpu, locals.user.id, 'gpu');
         }
 
         if (existingDevice.memory !== null && existingDevice.memory !== undefined) {
-          await deleteOrphans(tx, memory, existingDevice.memory, session.user.id, 'memory');
+          await deleteOrphans(tx, memory, existingDevice.memory, locals.user.id, 'memory');
         }
 
         if (existingDevice.storage !== null && existingDevice.storage !== undefined) {
-          await deleteOrphans(tx, storage, existingDevice.storage, session.user.id, 'storage');
+          await deleteOrphans(tx, storage, existingDevice.storage, locals.user.id, 'storage');
         }
 
         if (existingDevice.os !== null && existingDevice.os !== undefined) {
-          await deleteOrphans(tx, os, existingDevice.os, session.user.id, 'os');
+          await deleteOrphans(tx, os, existingDevice.os, locals.user.id, 'os');
         }
 
         if (existingDevice.brand !== null && existingDevice.brand !== undefined) {
-          await deleteOrphans(tx, brands, existingDevice.brand, session.user.id, 'brand');
+          await deleteOrphans(tx, brands, existingDevice.brand, locals.user.id, 'brand');
         }
       });
 

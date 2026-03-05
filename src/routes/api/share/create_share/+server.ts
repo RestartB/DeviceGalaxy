@@ -1,26 +1,20 @@
 import { json } from '@sveltejs/kit';
-import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
 import { userDevices, shares } from '$lib/server/db/schema';
 import { generateShareId } from '$lib';
 
-export async function POST(event) {
-  // Check if the user is authenticated
-  const session = await auth.api.getSession({
-    headers: event.request.headers
-  });
-
-  if (!session) {
+export async function POST({ locals, request }) {
+  if (!locals.user) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  if (session.user.suspended) {
+  if (locals.user.suspended) {
     return json({ error: 'Account is suspended' }, { status: 403 });
   }
 
   // Get data
-  const { type, deviceID } = await event.request.json();
+  const { type, deviceID } = await request.json();
 
   if (type === undefined || type === null) {
     return json({ error: 'Share type is required' }, { status: 400 });
@@ -40,7 +34,7 @@ export async function POST(event) {
         .insert(shares)
         .values({
           id: shareId,
-          userId: session.user.id,
+          userId: locals.user.id,
           type: typeInt,
           sharedDevice: null,
           sharedTags: null
@@ -72,7 +66,7 @@ export async function POST(event) {
     const device = await db
       .select()
       .from(userDevices)
-      .where(and(eq(userDevices.id, deviceIDInt), eq(userDevices.userId, session.user.id)))
+      .where(and(eq(userDevices.id, deviceIDInt), eq(userDevices.userId, locals.user.id)))
       .limit(1);
     if (device.length === 0) {
       return json({ error: 'Device not found' }, { status: 404 });
@@ -85,7 +79,7 @@ export async function POST(event) {
         .insert(shares)
         .values({
           id: shareId,
-          userId: session.user.id,
+          userId: locals.user.id,
           type: typeInt,
           sharedDevice: deviceIDInt,
           sharedTags: null

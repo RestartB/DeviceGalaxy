@@ -1,5 +1,4 @@
 import { json } from '@sveltejs/kit';
-import { auth } from '$lib/server/auth';
 
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
@@ -11,25 +10,20 @@ import { userDevices, shares } from '$lib/server/db/schema';
 
 import { env } from '$env/dynamic/private';
 
-export async function GET(event) {
-  // Check if the user is authenticated
-  const session = await auth.api.getSession({
-    headers: event.request.headers
-  });
-
+export async function GET({ locals, url, params }) {
   // Get share ID
-  const shareId = event.url.searchParams.get('share');
+  const shareId = url.searchParams.get('share');
 
-  if (!session && !shareId) {
+  if (!locals.user && !shareId) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const deviceId = event.params.deviceid;
+  const deviceId = params.deviceid;
   if (!deviceId) {
     return json({ message: 'Device ID is required' }, { status: 400 });
   }
 
-  const imageId = event.params.imageid;
+  const imageId = params.imageid;
   if (!imageId) {
     return json({ message: 'Image ID is required' }, { status: 400 });
   }
@@ -52,11 +46,11 @@ export async function GET(event) {
       .from(userDevices)
       .where(and(eq(userDevices.id, parseInt(deviceId)), eq(userDevices.userId, share.userId)))
       .get();
-  } else if (session) {
+  } else if (locals.user) {
     device = await db
       .select()
       .from(userDevices)
-      .where(and(eq(userDevices.id, parseInt(deviceId)), eq(userDevices.userId, session.user.id)))
+      .where(and(eq(userDevices.id, parseInt(deviceId)), eq(userDevices.userId, locals.user.id)))
       .get();
   }
 

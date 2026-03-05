@@ -46,7 +46,7 @@ export const load = async ({ url }) => {
   let totalImages = 0;
 
   try {
-    const dataPath = join(env.DATA_PATH, 'device')
+    const dataPath = join(env.DATA_PATH, 'device');
     if (existsSync(dataPath)) {
       // get folders
       const deviceFolders = await readdir(dataPath);

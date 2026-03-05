@@ -1,16 +1,10 @@
 import { json } from '@sveltejs/kit';
-import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, and, sql } from 'drizzle-orm';
 import { userDevices, tags, lastActionTimes } from '$lib/server/db/schema';
 
-export async function DELETE(event) {
-  // Check if the user is authenticated
-  const session = await auth.api.getSession({
-    headers: event.request.headers
-  });
-
-  if (!session) {
+export async function DELETE({ locals, url }) {
+  if (!locals.user) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -18,7 +12,7 @@ export async function DELETE(event) {
   const lastTagDeletedTime = await db
     .select({ lastTagDeletedTime: lastActionTimes.lastTagDeletedTime })
     .from(lastActionTimes)
-    .where(eq(lastActionTimes.userId, session.user.id))
+    .where(eq(lastActionTimes.userId, locals.user.id))
     .get();
 
   if (lastTagDeletedTime && lastTagDeletedTime.lastTagDeletedTime) {
@@ -37,12 +31,12 @@ export async function DELETE(event) {
     await db
       .update(lastActionTimes)
       .set({ lastTagDeletedTime: currentTime })
-      .where(eq(lastActionTimes.userId, session.user.id));
+      .where(eq(lastActionTimes.userId, locals.user.id));
   } else {
-    await db.insert(lastActionTimes).values({ userId: session.user.id }).onConflictDoNothing();
+    await db.insert(lastActionTimes).values({ userId: locals.user.id }).onConflictDoNothing();
   }
 
-  const tagId = event.url.searchParams.get('id');
+  const tagId = url.searchParams.get('id');
   if (!tagId) {
     return json({ message: 'Tag ID is required' }, { status: 400 });
   }
@@ -57,7 +51,7 @@ export async function DELETE(event) {
   const tagExists = await db
     .select()
     .from(tags)
-    .where(and(eq(tags.id, tagIdInt), eq(tags.userId, session.user.id)))
+    .where(and(eq(tags.id, tagIdInt), eq(tags.userId, locals.user.id)))
     .get();
 
   if (!tagExists) {
@@ -66,13 +60,17 @@ export async function DELETE(event) {
 
   try {
     await db.transaction(async (tx) => {
+      if (!locals.user) {
+        return json({ error: 'Unauthorized' }, { status: 401 });
+      }
+
       // Get all devices with id
       const devicesWithTag = await tx
         .select()
         .from(userDevices)
         .where(
           and(
-            eq(userDevices.userId, session.user.id),
+            eq(userDevices.userId, locals.user.id),
             sql`EXISTS (SELECT 1 FROM json_each(${userDevices.tags}) WHERE json_each.value = ${tagIdInt})`
           )
         )

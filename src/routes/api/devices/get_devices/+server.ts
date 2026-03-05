@@ -1,5 +1,4 @@
 import { json } from '@sveltejs/kit';
-import { auth } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import { eq, asc, desc, count, and, inArray, like, sql } from 'drizzle-orm';
 import {
@@ -14,15 +13,10 @@ import {
   shares
 } from '$lib/server/db/schema';
 
-export async function GET(event) {
-  // Check if the user is authenticated
-  const session = await auth.api.getSession({
-    headers: event.request.headers
-  });
+export async function GET({ locals, url }) {
+  const shareId = url.searchParams.get('share');
 
-  const shareId = event.url.searchParams.get('share');
-
-  if (!session && !shareId) {
+  if (!locals.user && !shareId) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -40,42 +34,42 @@ export async function GET(event) {
     }
   }
 
-  const offset = parseInt(event.url.searchParams.get('offset') || '0', 10);
-  const limit = parseInt(event.url.searchParams.get('limit') || '20', 10);
-  const sortType = event.url.searchParams.get('sortType') || 'asc';
-  const searchQuery = event.url.searchParams.get('search');
+  const offset = parseInt(url.searchParams.get('offset') || '0', 10);
+  const limit = parseInt(url.searchParams.get('limit') || '20', 10);
+  const sortType = url.searchParams.get('sortType') || 'asc';
+  const searchQuery = url.searchParams.get('search');
 
   const selectedFilters = {
-    cpu: event.url.searchParams
+    cpu: url.searchParams
       .get('cpu')
       ?.split(',')
       .map((id) => parseInt(id))
       .filter((id) => !isNaN(id)),
-    gpu: event.url.searchParams
+    gpu: url.searchParams
       .get('gpu')
       ?.split(',')
       .map((id) => parseInt(id)),
-    memory: event.url.searchParams
+    memory: url.searchParams
       .get('memory')
       ?.split(',')
       .map((id) => parseInt(id))
       .filter((id) => !isNaN(id)),
-    storage: event.url.searchParams
+    storage: url.searchParams
       .get('storage')
       ?.split(',')
       .map((id) => parseInt(id))
       .filter((id) => !isNaN(id)),
-    os: event.url.searchParams
+    os: url.searchParams
       .get('os')
       ?.split(',')
       .map((id) => parseInt(id))
       .filter((id) => !isNaN(id)),
-    brand: event.url.searchParams
+    brand: url.searchParams
       .get('brand')
       ?.split(',')
       .map((id) => parseInt(id))
       .filter((id) => !isNaN(id)),
-    tags: event.url.searchParams
+    tags: url.searchParams
       .get('tags')
       ?.split(',')
       .map((id) => parseInt(id))
@@ -103,9 +97,9 @@ export async function GET(event) {
     if (share) {
       conditions.push(eq(userDevices.userId, share.userId));
       userId = share.userId;
-    } else if (session?.user) {
-      conditions.push(eq(userDevices.userId, session.user.id));
-      userId = session.user.id;
+    } else if (locals.user) {
+      conditions.push(eq(userDevices.userId, locals.user.id));
+      userId = locals.user.id;
     }
 
     if (searchQuery) {

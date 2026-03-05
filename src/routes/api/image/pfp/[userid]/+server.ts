@@ -4,16 +4,14 @@ import { existsSync } from 'fs';
 import { readFile, unlink } from 'fs/promises';
 import { join } from 'path';
 
-import { auth } from '$lib/server/auth';
-
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { user } from '$lib/server/db/schema';
 
 import { env } from '$env/dynamic/private';
 
-export async function GET(event) {
-  const userId = event.params.userid;
+export async function GET({ params }) {
+  const userId = params.userid;
   if (!userId) {
     return json({ message: 'User ID is required' }, { status: 400 });
   }
@@ -42,31 +40,26 @@ export async function GET(event) {
   });
 }
 
-export async function DELETE(event) {
-  // Check if the user is authenticated
-  const session = await auth.api.getSession({
-    headers: event.request.headers
-  });
-
-  if (!session) {
+export async function DELETE({ locals, params }) {
+  if (!locals.user) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const userId = event.params.userid;
+  const userId = params.userid;
   if (!userId) {
     return json({ message: 'User ID is required' }, { status: 400 });
   }
 
-  if (userId !== session.user.id) {
+  if (userId !== locals.user.id) {
     return json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  if (!session.user.image) {
+  if (!locals.user.image) {
     return json({ error: 'No profile picture found' }, { status: 404 });
   }
 
   try {
-    const imageName = session.user.image.split('/').pop();
+    const imageName = locals.user.image.split('/').pop();
     const safeImageName = imageName ? imageName.split('?')[0] : '';
 
     if (existsSync(join(env.DATA_PATH, 'pfp', safeImageName + '.webp'))) {
