@@ -22,6 +22,10 @@ jobs:
           node-version: 25
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install
-      - name: Run svelte check
-        run: pnpm run check
+        run: |
+          pnpm install
+          pnpm svelte-kit sync
+      - name: Add Svelte Check annotator
+        uses: prgm-dev/svelte-check-pr-annotator@main
+      - name: Run Svelte Check
+        run: pnpm run check --output machine --use-new-transformation true
