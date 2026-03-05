@@ -21,6 +21,8 @@ jobs:
         with:
           node-version: 25
           cache: "pnpm"
+      - name: Prepare blank env file
+        run: cp .env.example .env
       - name: Install dependencies
         run: |
           pnpm install
