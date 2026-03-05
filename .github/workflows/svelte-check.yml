@@ -9,4 +9,19 @@ on:
 
 jobs:
   check:
-    uses: ofkm/gha-svelte-check@v1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run svelte check
+        run: pnpm run check
