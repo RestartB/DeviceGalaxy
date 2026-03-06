@@ -315,15 +315,15 @@
 <div class="flex w-full max-w-480 flex-col gap-4 {subdomain ? 'p-4' : ''}">
   <div class="flex flex-col gap-2">
     {#if shareID}
-      <h1 class="text-4xl font-bold">
+      <h1 class="flex items-center gap-2 text-4xl font-bold">
         <Avatar
-          size={30}
+          size={35}
           src={data.shareUser.image || ''}
           name={data.shareUser.name || ''}
           alt="User Avatar"
-          className="border-zinc-400 inline"
+          className="border-zinc-400 shrink-0"
         />
-        <span translate="no">{data.shareUser.name}</span>'s Devices
+        <span><span translate="no">{data.shareUser.name}</span>'s Devices</span>
       </h1>
     {:else}
       <h1 class="text-4xl font-bold">Devices</h1>
