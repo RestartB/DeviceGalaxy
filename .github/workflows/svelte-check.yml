@@ -24,9 +24,7 @@ jobs:
       - name: Prepare blank env file
         run: cp .env.example .env
       - name: Install dependencies
-        run: |
-          pnpm install
-          pnpm svelte-kit sync
+        run: pnpm install
       - name: Add Svelte Check annotator
         uses: prgm-dev/svelte-check-pr-annotator@main
       - name: Run Svelte Check
