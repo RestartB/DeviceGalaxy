@@ -350,30 +350,32 @@
               >create your galaxy?</span
             >
           </h2>
-          {#if data.user}
-            <a
-              href="/dash"
-              class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-            >
-              <LayoutDashboard size="20" class="shrink-0" />
-              Go to Dashboard
-            </a>
-          {:else}
-            <a
-              href="/dash/auth/login"
-              class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-            >
-              <LogIn size="20" class="shrink-0" />
-              Log in
-            </a>
-            <a
-              href="/dash/auth/signup"
-              class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-            >
-              <UserPlus size="20" class="shrink-0" />
-              Sign up
-            </a>
-          {/if}
+          <div class="flex w-full flex-wrap items-center justify-center gap-2">
+            {#if data.user}
+              <a
+                href="/dash"
+                class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+              >
+                <LayoutDashboard size="20" class="shrink-0" />
+                Go to Dashboard
+              </a>
+            {:else}
+              <a
+                href="/dash/auth/login"
+                class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+              >
+                <LogIn size="20" class="shrink-0" />
+                Log in
+              </a>
+              <a
+                href="/dash/auth/signup"
+                class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+              >
+                <UserPlus size="20" class="shrink-0" />
+                Sign up
+              </a>
+            {/if}
+          </div>
         </div>
       </div>
     </div>
