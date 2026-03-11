@@ -9,7 +9,8 @@ import { verifyTurnstile } from '$lib/index';
 
 import { passwordResetLimiter } from '$lib/server/limiters/passwordReset';
 
-import { env } from '$env/dynamic/public';
+import { env as publicEnv } from '$env/dynamic/public';
+import { env } from '$env/dynamic/private';
 
 export const load = async () => {
   const enterEmailForm = await superValidate(zod4(enterEmailSchema));
@@ -29,7 +30,7 @@ export const actions = {
       return fail(400, { form });
     }
 
-    if (env.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
+    if (publicEnv.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
       if (form.data['cf-turnstile-response']) {
         // Verify Turnstile token
         const isValid = await verifyTurnstile(
@@ -47,7 +48,7 @@ export const actions = {
     await auth.api.requestPasswordReset({
       body: {
         email: form.data.email,
-        redirectTo: env.PUBLIC_BETTER_AUTH_URL + '/dash/auth/password-reset/finish'
+        redirectTo: env.BETTER_AUTH_URL + '/dash/auth/password-reset/finish'
       }
     });
 
