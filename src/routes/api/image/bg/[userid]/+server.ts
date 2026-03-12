@@ -23,8 +23,8 @@ export async function GET({ params }) {
     return json({ error: 'Image not found' }, { status: 404 });
   }
 
-  const imagePath = join(env.DATA_PATH, 'pfp', userData.id + '.webp');
-  if (!existsSync(imagePath)) {
+  const imagePath = join(env.DATA_PATH, 'bg', userData.id + '.webp');
+  if (!userData.backgroundImage || !existsSync(imagePath)) {
     return json({ error: 'Image not found' }, { status: 404 });
   }
 
@@ -54,22 +54,22 @@ export async function DELETE({ locals, params }) {
     return json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  if (!locals.user.image) {
-    return json({ error: 'No profile picture found' }, { status: 404 });
+  if (!locals.user.backgroundImage) {
+    return json({ error: 'No background found' }, { status: 404 });
   }
 
-  await db.update(user).set({ image: null }).where(eq(user.id, userId));
+  await db.update(user).set({ backgroundImage: '' }).where(eq(user.id, userId));
 
   try {
-    if (existsSync(join(env.DATA_PATH, 'pfp', locals.user.id + '.webp'))) {
-      await unlink(join(env.DATA_PATH, 'pfp', locals.user.id + '.webp'));
+    if (existsSync(join(env.DATA_PATH, 'bg', locals.user.id + '.webp'))) {
+      await unlink(join(env.DATA_PATH, 'bg', locals.user.id + '.webp'));
     } else {
-      return json({ error: 'No profile picture found' }, { status: 404 });
+      return json({ error: 'No background found' }, { status: 404 });
     }
 
-    return json({ message: 'Profile picture deleted' }, { status: 200 });
+    return json({ message: 'Background deleted' }, { status: 200 });
   } catch (error) {
-    console.error('Error deleting profile picture:', error);
-    return json({ error: 'Failed to delete profile picture' }, { status: 500 });
+    console.error('Error deleting background:', error);
+    return json({ error: 'Failed to delete background' }, { status: 500 });
   }
 }

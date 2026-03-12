@@ -163,7 +163,9 @@ export const actions = {
     }
 
     // Delete the associated share
-    await db.delete(shares).where(eq(shares.id, locals.user.subdomainShareId));
+    if (locals.user.subdomainShareId) {
+      await db.delete(shares).where(eq(shares.id, locals.user.subdomainShareId));
+    }
 
     // Update user's subdomain to null
     const updated = await db

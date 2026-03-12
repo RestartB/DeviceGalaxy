@@ -1,18 +1,11 @@
 <script lang="ts">
   import UpdateNameForm from '$lib/components/forms/update_name/Form.svelte';
   import UpdateEmailForm from '$lib/components/forms/update_email/Form.svelte';
-  import UpdatePFPForm from '$lib/components/forms/update_pfp/Form.svelte';
-
-  import Avatar from '$lib/components/Avatar.svelte';
 
   // Get session from props
   const { data } = $props();
-
-  let clientWidth = $state(0);
   let emailBlurred = $state(true);
 </script>
-
-<svelte:body bind:clientWidth />
 
 <div class="flex flex-col gap-4">
   <h3 class="text-2xl font-bold">Account Settings</h3>
@@ -46,23 +39,5 @@
     <UpdateNameForm sourceForm={data.updateNameForm} user={data.user} />
   </div>
 
-  <hr class="w-full text-zinc-200 dark:text-zinc-700" />
 
-  <div class="flex flex-col gap-2">
-    <h4 class="text-xl font-bold">Profile Picture</h4>
-    <h5 class="font-semibold">Edit your profile picture.</h5>
-
-    <div class="flex items-center gap-2">
-      <Avatar
-        size={clientWidth > 640 ? 120 : 60}
-        src={data.user?.image || ''}
-        name={data.user?.name || ''}
-        alt="User Avatar"
-        className="border-zinc-400"
-        textClass="text-3xl sm:text-6xl"
-      />
-
-      <UpdatePFPForm sourceForm={data.profilePictureForm} user={data.user} />
-    </div>
-  </div>
 </div>

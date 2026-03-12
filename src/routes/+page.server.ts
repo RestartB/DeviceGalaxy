@@ -18,8 +18,16 @@ export const load = async ({ url }) => {
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
 
   if (subdomain && subdomain !== hostname) {
+    // Get user's info
     const shareUser = await db
-      .select({ id: user.id, name: user.name, description: user.description, image: user.image })
+      .select({
+        id: user.id,
+        name: user.name,
+        description: user.description,
+        image: user.image,
+        backgroundImage: user.backgroundImage,
+        backgroundImageBlurPx: user.backgroundImageBlurPx
+      })
       .from(user)
       .where(eq(user.subdomain, subdomain))
       .get();

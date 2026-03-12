@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { twoFactor, admin } from 'better-auth/plugins';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
+import { createAuthMiddleware, APIError } from 'better-auth/api';
 import { getRequestEvent } from '$app/server';
 
 import { existsSync } from 'fs';
@@ -49,42 +50,52 @@ export const auth = betterAuth({
         type: 'string',
         label: 'Background Image',
         description: 'URL of the background image for the user profile',
-        default: ''
+        defaultValue: '',
+        required: true,
+        input: false
       },
       backgroundImageBlurPx: {
         type: 'number',
         label: 'Background Image Blur',
         description: 'Blur level for the background image in pixels',
-        default: 0
+        defaultValue: 0,
+        required: false,
+        input: false
       },
       description: {
         type: 'string',
         label: 'Description',
         description: 'Description to show on share links',
-        default: ''
+        defaultValue: '',
+        required: false
       },
       subdomain: {
         type: 'string',
         label: 'Subdomain',
+        required: false,
         input: false
       },
       subdomainShareId: {
         type: 'string',
         label: 'Subdomain Share ID',
+        required: false,
         input: false
       },
       discordDomainVerifyToken: {
         type: 'string',
         label: 'Discord Domain Verify Token',
+        required: false,
         input: false
       },
       suspended: {
         type: 'boolean',
         defaultValue: false,
+        required: true,
         input: false
       },
       suspendReason: {
         type: 'string',
+        required: false,
         input: false
       }
     },
@@ -125,5 +136,19 @@ export const auth = betterAuth({
         }
       }
     }
+  },
+
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== '/sign-up/email' && ctx.path !== '/update-user') {
+        return;
+      }
+      if (ctx.body?.image) {
+        throw new APIError('BAD_REQUEST', {
+          message: 'image is not allowed to be set',
+          code: 'FIELD_NOT_ALLOWED'
+        });
+      }
+    })
   }
 });

@@ -162,7 +162,7 @@
     </button>
     {#if data.accountShares && data.accountShares.length > 0}
       <ul class="flex flex-col gap-2">
-        {#each data.accountShares as share, index}
+        {#each data.accountShares as share, index (share.id)}
           <li class="flex w-full items-center justify-between gap-2">
             <div>
               <a
@@ -200,7 +200,7 @@
     </div>
     {#if data.deviceShares && data.deviceShares.length > 0}
       <ul class="flex flex-col gap-2">
-        {#each data.deviceShares as share, index}
+        {#each data.deviceShares as share, index (share.id)}
           <li class="flex w-full items-center justify-between gap-2">
             <div>
               <h3 class="text-xl font-semibold" translate="no">{share.deviceName}</h3>

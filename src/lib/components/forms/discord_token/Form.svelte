@@ -87,7 +87,7 @@
             name="token"
             type="text"
             class="w-full rounded-lg border p-2"
-            placeholder={'Enter token...'}
+            placeholder="Enter token..."
             bind:value={$form.token}
           />
 

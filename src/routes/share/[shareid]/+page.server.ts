@@ -29,9 +29,16 @@ export const load = async (event) => {
     return error(404, 'Share not found');
   }
 
-  // Get user's name and PFP
+  // Get user's info
   const shareUser = await db
-    .select({ id: user.id, name: user.name, description: user.description, image: user.image })
+    .select({
+      id: user.id,
+      name: user.name,
+      description: user.description,
+      image: user.image,
+      backgroundImage: user.backgroundImage,
+      backgroundImageBlurPx: user.backgroundImageBlurPx
+    })
     .from(user)
     .where(eq(user.id, share.userId))
     .get();

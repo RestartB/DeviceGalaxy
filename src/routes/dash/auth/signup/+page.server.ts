@@ -42,10 +42,7 @@ export const actions = {
       body: {
         email: form.data.email,
         name: form.data.name,
-        password: form.data.password,
-        description: '',
-        backgroundImage: '',
-        backgroundImageBlurPx: 0
+        password: form.data.password
       },
       asResponse: true
     });

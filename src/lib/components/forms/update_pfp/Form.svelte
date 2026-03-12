@@ -1,6 +1,5 @@
 <script lang="ts">
   import { toast } from 'svelte-sonner';
-  import { authClient } from '$lib/client';
 
   import { zod4Client } from 'sveltekit-superforms/adapters';
   import { superForm, fileProxy } from 'sveltekit-superforms/client';
@@ -47,7 +46,6 @@
         throw new Error('Failed to reset avatar');
       }
 
-      await authClient.updateUser({ image: null });
       window.location.reload();
     } catch (error) {
       toast.error('Failed to reset avatar. Please try again.');
@@ -84,12 +82,12 @@
       />
     </div>
     {#if $errors.image}
-      {#each $errors.image as error}
+      {#each $errors.image as error (error)}
         <p class="text-sm text-red-500">{error}</p>
       {/each}
     {/if}
     {#if $errors._errors}
-      {#each $errors._errors as error}
+      {#each $errors._errors as error (error)}
         <p class="text-sm text-red-500">{error}</p>
       {/each}
     {/if}
@@ -98,6 +96,7 @@
     <button
       class="w-fit cursor-pointer overflow-hidden rounded-lg border-2 border-zinc-400 bg-red-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-red-300 dark:bg-red-700 dark:text-zinc-200 dark:hover:bg-red-600"
       onclick={resetAvatar}
+      type="button"
     >
       Reset Avatar
     </button>

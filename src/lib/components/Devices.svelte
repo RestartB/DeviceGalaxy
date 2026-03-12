@@ -95,7 +95,7 @@
   let showApplyFilters = $state(false);
   let showResetFilters = $derived(Object.values(activeFilters).some((filter) => filter.length > 0));
 
-  let page = $state(1);
+  let currentPage = $state(1);
   let maxPages = $derived(Math.ceil(totalDevices / 40));
 
   let currentSearch = $state('');
@@ -107,7 +107,7 @@
 
     loadingDevices = true;
     try {
-      let url = `/api/devices/get_devices?offset=${(page - 1) * 40}&limit=40`;
+      let url = `/api/devices/get_devices?offset=${(currentPage - 1) * 40}&limit=40`;
 
       const hasActiveFilters = Object.values(activeFilters).some((filter) => filter.length > 0);
 
@@ -195,8 +195,8 @@
     }
   }
 
-  function deleteDevice(id: number) {
-    fetch(`/api/devices/delete_device?id=${id}`, { method: 'DELETE' })
+  async function deleteDevice(id: number) {
+    await fetch(`/api/devices/delete_device?id=${id}`, { method: 'DELETE' })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
@@ -213,15 +213,15 @@
   }
 
   function previousPage() {
-    if (page > 0) {
-      page -= 1;
+    if (currentPage > 0) {
+      currentPage -= 1;
       refreshAll();
     }
   }
 
   function nextPage() {
-    if (page < maxPages) {
-      page += 1;
+    if (currentPage < maxPages) {
+      currentPage += 1;
       refreshAll();
     }
   }
@@ -312,6 +312,13 @@
   />
 {/if}
 
+{#if data.shareUser && data.shareUser.backgroundImage}
+  <div
+    class="background fixed top-0 left-0 -z-10 h-full w-full bg-cover bg-center bg-no-repeat after:pointer-events-none after:absolute after:top-0 after:left-0 after:h-full after:w-full after:backdrop-brightness-120 after:content-['']"
+    style={`background-image: url('${data.shareUser.backgroundImage}'); --background-blur: ${data.shareUser.backgroundImageBlurPx || 0}px;`}
+  ></div>
+{/if}
+
 <div class="flex w-full max-w-480 flex-col gap-4 {subdomain ? 'p-4' : ''}">
   <div class="flex flex-col gap-2">
     {#if shareID}
@@ -370,7 +377,7 @@
         if (e.key === 'Enter') {
           if (search.trim().toLocaleLowerCase() !== currentSearch) {
             currentSearch = search.trim().toLocaleLowerCase();
-            page = 1;
+            currentPage = 1;
             refreshAll();
           }
         }
@@ -383,7 +390,7 @@
         aria-label="Search for {search}"
         onclick={() => {
           currentSearch = search.trim().toLocaleLowerCase();
-          page = 1;
+          currentPage = 1;
           refreshAll();
         }}
       >
@@ -501,7 +508,7 @@
     </div>
   {:else}
     <div class="flex w-full flex-wrap justify-center gap-4">
-      {#each devices as device}
+      {#each devices as device (device.id)}
         <DeviceCard
           {device}
           bind:editPopupOpen
@@ -521,16 +528,26 @@
           onclick={previousPage}
           class="cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
           aria-label="Previous Page"
-          disabled={page <= 1}><MoveLeft size="20" /></button
+          disabled={currentPage <= 1}><MoveLeft size="20" /></button
         >
-        <span>Page {page} of {maxPages}</span>
+        <span>Page {currentPage} of {maxPages}</span>
         <button
           onclick={nextPage}
           class="cursor-pointer rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-zinc-800"
           aria-label="Next Page"
-          disabled={page >= maxPages}><MoveRight size="20" /></button
+          disabled={currentPage >= maxPages}><MoveRight size="20" /></button
         >
       </div>
     {/if}
   {/if}
 </div>
+
+<style>
+  .background::after {
+    backdrop-filter: blur(var(--background-blur, 0px));
+  }
+
+  .background {
+    opacity: 0.3;
+  }
+</style>

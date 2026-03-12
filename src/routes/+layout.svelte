@@ -13,16 +13,10 @@
   let { data, children } = $props();
 
   const hostname = page.url.hostname;
-  let hasSubdomain = $state(false);
-
   const baseDomain = env.PUBLIC_BASE_DOMAIN || 'devicegalaxy.me';
   const subdomain = hostname.replace(`.${baseDomain}`, '').replace(baseDomain, '');
 
-  if (subdomain && subdomain !== hostname) {
-    hasSubdomain = true;
-  } else {
-    hasSubdomain = false;
-  }
+  const hasSubdomain = $state(subdomain && subdomain !== hostname ? true : false);
 
   onNavigate((navigation) => {
     if (!document.startViewTransition) return;

@@ -64,10 +64,10 @@
     searchedTags = results.map((result) => result.item);
   }
 
-  function deleteTag(tag: InferSelectModel<typeof tags>) {
+  async function deleteTag(tag: InferSelectModel<typeof tags>) {
     if (!tag || !tag.id) return;
 
-    fetch(`/api/tags/delete_tag?id=${tag.id}`, {
+    await fetch(`/api/tags/delete_tag?id=${tag.id}`, {
       method: 'DELETE'
     })
       .then((response) => {
@@ -141,9 +141,9 @@
         <button
           type="submit"
           class="w-full cursor-pointer rounded-md bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-600 disabled:hover:bg-red-500"
-          onclick={() => {
+          onclick={async () => {
             if (!toDelete) return;
-            deleteTag(toDelete);
+            await deleteTag(toDelete);
           }}>Delete Tag</button
         >
       </div>

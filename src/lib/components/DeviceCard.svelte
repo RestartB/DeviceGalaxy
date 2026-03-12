@@ -139,7 +139,7 @@
       {/if}
 
       {#if device.tags && device.tags.length > 0}
-        {#each device.tags as tag}
+        {#each device.tags as tag (tag.id)}
           <div
             class="flex h-fit w-fit items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 p-2 px-4 dark:bg-zinc-800"
             style="background-color: {tag.tagColour}; color: {tag.tagTextColour};"
@@ -210,11 +210,11 @@
       {/if}
       <button
         class="flex w-full cursor-pointer items-center justify-center gap-2 text-red-700 dark:text-red-200"
-        onclick={() => {
+        onclick={async () => {
           if (!confirmDelete) {
             confirmDelete = true;
           } else {
-            deleteDevice(device.id);
+            await deleteDevice(device.id);
           }
         }}
       >

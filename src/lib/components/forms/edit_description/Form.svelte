@@ -14,7 +14,7 @@
     oldDescription
   }: {
     sourceForm: SuperValidated<Infer<schemaType>>;
-    oldDescription: string | null;
+    oldDescription: string | null | undefined;
   } = $props();
 
   const { form, errors, allErrors, message, submitting, timeout, enhance } = superForm(sourceForm, {

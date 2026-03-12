@@ -19,13 +19,13 @@ export const user = sqliteTable('user', {
   banned: integer('banned', { mode: 'boolean' }).default(false),
   banReason: text('ban_reason'),
   banExpires: integer('ban_expires', { mode: 'timestamp_ms' }),
-  backgroundImage: text('background_image'),
-  backgroundImageBlurPx: integer('background_image_blur_px'),
-  description: text('description'),
+  backgroundImage: text('background_image').default('').notNull(),
+  backgroundImageBlurPx: integer('background_image_blur_px').default(0),
+  description: text('description').default(''),
   subdomain: text('subdomain'),
   subdomainShareId: text('subdomain_share_id'),
   discordDomainVerifyToken: text('discord_domain_verify_token'),
-  suspended: integer('suspended', { mode: 'boolean' }).default(false),
+  suspended: integer('suspended', { mode: 'boolean' }).default(false).notNull(),
   suspendReason: text('suspend_reason')
 });
 
