@@ -19,6 +19,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     hostname !== baseDomain &&
     event.url.pathname !== '/' &&
     !event.url.pathname.startsWith('/api/') &&
+    !event.url.pathname.startsWith('/.well-known/') &&
     event.url.pathname.split('/')[1] &&
     isNaN(Number(event.url.pathname.split('/')[1]))
   ) {
