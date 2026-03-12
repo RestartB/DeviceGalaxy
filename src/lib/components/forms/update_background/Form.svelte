@@ -150,5 +150,11 @@
         Save
       </button>
     {/if}
+
+    {#if $errors._errors}
+      {#each $errors._errors as error (error)}
+        <p class="text-sm text-red-500">{error}</p>
+      {/each}
+    {/if}
   </form>
 </div>
