@@ -1,14 +1,12 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import { toast } from 'svelte-sonner';
+  import { enhance } from '$app/forms';
 
   import { authClient } from '$lib/client';
   import type { UserWithRole } from 'better-auth/plugins';
 
   import { X } from '@lucide/svelte';
-
-  // Get session from props
-  const { data } = $props();
 
   let resetPasswordPopup = $state(false);
   let userEmailInput = $state('');
@@ -26,6 +24,8 @@
     status: number;
     statusText: string;
   } | null = $state(null);
+
+  let migrateResult: { success: boolean; message: string } | null = $state(null);
 
   function changePassword() {
     if (userId === '' || newPassword === '') return;
@@ -148,5 +148,41 @@
     <p>User ID: {userIdsResult.users[0].id} ({userIdsResult.users[0].email})</p>
   {:else}
     <p>User not found.</p>
+  {/if}
+
+  <form
+    method="POST"
+    action="?/migrate"
+    use:enhance={() => {
+      migrateResult = null;
+      return async ({ result, update }) => {
+        await update();
+
+        if (result.type === 'success') {
+          const payload = result.data as { success?: boolean; message?: string };
+          if (payload?.success) {
+            migrateResult = { success: true, message: payload.message ?? 'Migration complete' };
+            toast.success(migrateResult.message);
+          } else {
+            toast.error('Migration finished, but no success payload was returned');
+          }
+        } else if (result.type === 'failure') {
+          toast.error('Migration failed');
+        } else if (result.type === 'error') {
+          toast.error('Server error while running migration');
+        }
+      };
+    }}
+  >
+    <button
+      type="submit"
+      class="w-fit cursor-pointer rounded-lg border-2 border-zinc-400 bg-amber-200 p-2 font-semibold transition-colors hover:bg-amber-300 dark:bg-amber-700 dark:hover:bg-amber-600"
+    >
+      Run Timestamp Migration
+    </button>
+  </form>
+
+  {#if migrateResult}
+    <p class="text-green-600">{migrateResult.message}</p>
   {/if}
 </div>
