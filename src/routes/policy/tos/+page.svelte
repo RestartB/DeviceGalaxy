@@ -58,7 +58,7 @@
 
       <p>
         For more information, please see the <a
-          href="https://github.com/RestartB/DeviceGalaxy/blob/main/LICENSE"
+          href="https://github.com/RestartB/DeviceGalaxy/blob/master/LICENSE"
           target="_blank">licence file</a
         > on the GitHub repository for more information.
       </p>
