@@ -48,7 +48,7 @@
     "zod": "^4.3.6"
   },
   "dependencies": {
-    "@better-auth/drizzle-adapter": "^1.5.3",
+    "@better-auth/drizzle-adapter": "^1.5.5",
     "@libsql/client": "^0.17.0",
     "@lucide/svelte": "^0.577.0",
     "@types/cloudflare-turnstile": "^0.2.2",
