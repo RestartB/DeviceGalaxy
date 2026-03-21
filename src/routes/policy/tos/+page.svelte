@@ -6,7 +6,7 @@
   <div class="flex max-w-5xl flex-col gap-5">
     <div>
       <h1 class="text-4xl font-bold">Terms of Use</h1>
-      <h2 class="text-xl font-semibold">Updated: 23/02/2026</h2>
+      <h2 class="text-xl font-semibold">Updated: 21/03/2026</h2>
     </div>
 
     <p>
@@ -61,6 +61,16 @@
           href="https://github.com/RestartB/DeviceGalaxy/blob/main/LICENSE"
           target="_blank">licence file</a
         > on the GitHub repository for more information.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-2.5" id="age">
+      <h2 class="text-xl font-semibold">Minimum Age</h2>
+      <p>
+        By using DeviceGalaxy, you confirm that you are at least 13 years old (or the age of
+        majority in your jurisdiction). I do not knowingly collect personal information from users
+        under this age. If I discover that you are below the required age, your account and all
+        associated information will be deleted from DeviceGalaxy systems without exception.
       </p>
     </div>
 
