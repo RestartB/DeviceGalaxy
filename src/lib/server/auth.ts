@@ -20,7 +20,7 @@ import { env } from '$env/dynamic/private';
 export const auth = betterAuth({
   appName: 'DeviceGalaxy',
   secret: env.BETTER_AUTH_SECRET,
-  trustedOrigins: ['https://devicegalaxy.me'],
+  trustedOrigins: [env.BETTER_AUTH_URL],
   database: drizzleAdapter(db, {
     provider: 'sqlite'
   }),

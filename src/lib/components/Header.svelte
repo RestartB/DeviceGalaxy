@@ -97,7 +97,7 @@
             alt="User Avatar"
             className="border-zinc-400"
           />
-          <p class="xxxs:block hidden max-w-full truncate font-bold text-nowrap" translate="no">
+          <p class="hidden max-w-full truncate font-bold text-nowrap xxxs:block" translate="no">
             {user.name}
           </p>
           <div class="hidden h-full sm:flex">
@@ -113,7 +113,7 @@
               title="Sign Out"
               onclick={() => {
                 authClient.signOut();
-                goto('/dash/auth/login');
+                goto('/dash/auth/login', { invalidateAll: true });
               }}
             >
               <LogOut size="20" />
@@ -136,7 +136,7 @@
         href={`https://${baseDomain}/dash`}
       >
         <House size="20" />
-        <p class="xxxs:block hidden">Dashboard</p>
+        <p class="hidden xxxs:block">Dashboard</p>
       </a>
     {:else}
       <a
@@ -228,7 +228,7 @@
                 class="flex h-full flex-1 items-center justify-center gap-2 rounded-lg border-2 border-zinc-400 bg-zinc-300 p-2 font-semibold dark:bg-zinc-700"
                 onclick={() => {
                   authClient.signOut();
-                  goto('/dash/auth/login');
+                  goto('/dash/auth/login', { invalidateAll: true });
                 }}
               >
                 <LogOut size="20" />
