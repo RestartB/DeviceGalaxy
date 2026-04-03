@@ -29,7 +29,7 @@
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^25",
     "drizzle-kit": "^0.31.10",
-    "eslint": "^10.0.2",
+    "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.16.0",
     "globals": "^17.4.0",
