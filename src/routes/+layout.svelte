@@ -47,7 +47,7 @@
   {/if}
 </svelte:head>
 
-<div class="font-family font-lg h-screen max-h-screen w-full dark:text-white">
+<div class="font-lg h-screen max-h-screen w-full font-family dark:text-white">
   <Header user={data.user} />
 
   <div

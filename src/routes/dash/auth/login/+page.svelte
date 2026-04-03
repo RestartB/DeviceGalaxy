@@ -77,7 +77,7 @@
     </div>
 
     <div class="flex w-full flex-col gap-2">
-      <div class="xxxs:items-center xxxs:flex-row flex flex-col justify-between gap-2">
+      <div class="flex flex-col justify-between gap-2 xxxs:flex-row xxxs:items-center">
         <label for="password" class="w-fit text-start font-semibold">Password</label>
         <a
           href="/dash/auth/password-reset"

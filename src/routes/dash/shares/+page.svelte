@@ -60,7 +60,7 @@
     }}
   >
     <Clipboard size="20" />
-    <span class="xs:block hidden">Copy</span>
+    <span class="hidden xs:block">Copy</span>
   </button>
 {/snippet}
 
@@ -73,7 +73,7 @@
     }}
   >
     <X size="20" />
-    <span class="xs:block hidden">Revoke</span>
+    <span class="hidden xs:block">Revoke</span>
   </button>
 {/snippet}
 

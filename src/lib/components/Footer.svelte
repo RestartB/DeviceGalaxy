@@ -12,7 +12,7 @@
   <div
     class="flex h-fit w-full max-w-5xl flex-wrap items-center justify-center gap-4 md:justify-between md:gap-2.5"
   >
-    <div class="xxs:justify-start flex w-60 items-center justify-center gap-2.5">
+    <div class="flex w-60 items-center justify-center gap-2.5 xxs:justify-start">
       <enhanced:img
         src="$lib/images/logo/logo_square.svg"
         alt="DeviceGalaxy Logo"
@@ -44,7 +44,7 @@
       >
     </div>
 
-    <nav class="xxs:justify-end flex h-full w-60 flex-wrap justify-center gap-5">
+    <nav class="flex h-full w-60 flex-wrap justify-center gap-5 xxs:justify-end">
       <ul class="flex h-full flex-col text-base">
         <li>
           <h1 class="font-bold">Navigation</h1>

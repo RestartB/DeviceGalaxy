@@ -19,7 +19,7 @@
         class="w-fit cursor-pointer overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 dark:bg-zinc-700"
         onclick={() => (emailBlurred = !emailBlurred)}
       >
-        <p class="w-full blur-sm transition-all" class:blur-sm={emailBlurred}>
+        <p class="w-full transition-all" class:blur-sm={emailBlurred}>
           {data.user?.email}
         </p>
       </button>
@@ -38,6 +38,4 @@
 
     <UpdateNameForm sourceForm={data.updateNameForm} user={data.user} />
   </div>
-
-
 </div>
