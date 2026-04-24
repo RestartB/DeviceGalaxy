@@ -14,10 +14,9 @@ If you don't want to self host, you can use the instance that I host at https://
 
 DeviceGalaxy can be ran as a Docker container. This ensures the same base OS and packages for DeviceGalaxy to use, no matter your system. To use it, follow these steps:
 
-1. pull the repo from GitHub
-2. copy the example `.env.example` file to `.env`. if using docker compose, ensure that the `DATABASE_PATH` and `DATA_PATH` are set to the default values inside the example file
-3. if using docker compose, run `docker compose build` to build the container. otherwise, run `docker build`
-4. if using docker compose, run `docker compose up -d` to run devicegalaxy. otherwise, run the docker container manually. devicegalaxy runs on port `3000`
+1. download the `docker-compose.yml` file and `.env.example` file. Inside the example env file, set all required variables, then rename the file to `.env`.
+2. inside the compose file, change the external port / labels / version to your requirements.
+3. run `docker compose up -d` to pull and run DeviceGalaxy in detached mode.
 
 ### Self hosting (bare metal)
 
