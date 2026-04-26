@@ -57,7 +57,7 @@
       onmousedown={(event) => event.preventDefault()}
       transition:fade={{ duration: 100 }}
     >
-      {#each fuzzyResults as result}
+      {#each fuzzyResults as result (result.item.id)}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
         <li

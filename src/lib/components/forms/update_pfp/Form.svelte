@@ -4,7 +4,7 @@
   import { zod4Client } from 'sveltekit-superforms/adapters';
   import { superForm, fileProxy } from 'sveltekit-superforms/client';
   import type { SuperValidated, Infer } from 'sveltekit-superforms';
-  import { profilePictureSchema } from '$lib/schema/profilePicture.js';
+  import { profilePictureSchema } from '$lib/schema/profilePicture';
 
   import { Save } from '@lucide/svelte';
 

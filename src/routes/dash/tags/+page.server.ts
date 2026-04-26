@@ -4,13 +4,12 @@ import { superValidate, message, fail } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { newTagSchema } from '$lib/schema/newTag';
 
-import { auth } from '$lib/server/auth';
-
 import { db } from '$lib/server/db';
 import { eq, and, count } from 'drizzle-orm';
-import { tags, lastActionTimes } from '$lib/server/db/schema';
+import { tags } from '$lib/server/db/schema';
 
 import { env } from '$env/dynamic/private';
+import { tagActionLimiter } from '$lib/server/limiters/passwordReset';
 
 // thank you https://stackoverflow.com/a/41491220
 function colorIsDarkSimple(bgColor: string) {
@@ -29,41 +28,19 @@ export const load = async () => {
 };
 
 export const actions = {
-  newTag: async ({ request, locals }) => {
-    if (!locals.user) {
+  newTag: async (event) => {
+    if (!event.locals.user) {
       return error(401, 'Unauthorized');
     }
 
-    if (locals.user.suspended) {
+    if (event.locals.user.suspended) {
       return error(403, 'Your account is suspended.');
     }
 
-    // Get last tag created time
-    const lastTagCreatedTime = await db
-      .select({ lastTagCreatedTime: lastActionTimes.lastTagCreatedTime })
-      .from(lastActionTimes)
-      .where(eq(lastActionTimes.userId, locals.user.id))
-      .get();
+    if (await tagActionLimiter.isLimited(event))
+      throw error(429, 'Slow down, please wait a few seconds before trying again.');
 
-    if (lastTagCreatedTime && lastTagCreatedTime.lastTagCreatedTime) {
-      const lastCreated = new Date(lastTagCreatedTime.lastTagCreatedTime);
-      const currentTime = new Date();
-
-      // 10 second cooldown
-      if (currentTime.getTime() - lastCreated.getTime() < 10000) {
-        return error(429, 'Slow down! Please wait a few seconds before creating another tag.');
-      }
-
-      // Update last created time
-      await db
-        .update(lastActionTimes)
-        .set({ lastTagCreatedTime: currentTime })
-        .where(eq(lastActionTimes.userId, locals.user.id));
-    } else {
-      await db.insert(lastActionTimes).values({ userId: locals.user.id }).onConflictDoNothing();
-    }
-
-    const form = await superValidate(request, zod4(newTagSchema));
+    const form = await superValidate(event.request, zod4(newTagSchema));
 
     if (!form.valid) {
       return fail(400, { form });
@@ -73,7 +50,7 @@ export const actions = {
     const tagCount = await db
       .select({ count: count() })
       .from(tags)
-      .where(eq(tags.userId, locals.user.id))
+      .where(eq(tags.userId, event.locals.user.id))
       .get();
 
     if (tagCount && tagCount.count >= parseInt(env.TAG_LIMIT)) {
@@ -82,7 +59,7 @@ export const actions = {
 
     try {
       await db.insert(tags).values({
-        userId: locals.user.id,
+        userId: event.locals.user.id,
         tagName: form.data.tagName,
         tagColour: (form.data.colourEnabled && form.data.colour) || null,
         tagTextColour:
@@ -101,41 +78,19 @@ export const actions = {
       return error(500, 'Error creating tag');
     }
   },
-  editTag: async ({ request, locals }) => {
-    if (!locals.user) {
+  editTag: async (event) => {
+    if (!event.locals.user) {
       return error(401, 'Unauthorized');
     }
 
-    if (locals.user.suspended) {
+    if (event.locals.user.suspended) {
       return error(403, 'Your account is suspended.');
     }
 
-    // Get last tag updated time
-    const lastTagUpdatedTime = await db
-      .select({ lastTagUpdatedTime: lastActionTimes.lastTagUpdatedTime })
-      .from(lastActionTimes)
-      .where(eq(lastActionTimes.userId, locals.user.id))
-      .get();
+    if (await tagActionLimiter.isLimited(event))
+      throw error(429, 'Slow down, please wait a few seconds before trying again.');
 
-    if (lastTagUpdatedTime && lastTagUpdatedTime.lastTagUpdatedTime) {
-      const lastUpdated = new Date(lastTagUpdatedTime.lastTagUpdatedTime);
-      const currentTime = new Date();
-
-      // 10 second cooldown
-      if (currentTime.getTime() - lastUpdated.getTime() < 10000) {
-        return error(429, 'Slow down! Please wait a few seconds before creating another tag.');
-      }
-
-      // Update last created time
-      await db
-        .update(lastActionTimes)
-        .set({ lastTagUpdatedTime: currentTime })
-        .where(eq(lastActionTimes.userId, locals.user.id));
-    } else {
-      await db.insert(lastActionTimes).values({ userId: locals.user.id }).onConflictDoNothing();
-    }
-
-    const form = await superValidate(request, zod4(newTagSchema));
+    const form = await superValidate(event.request, zod4(newTagSchema));
 
     if (!form.valid) {
       return fail(400, { form });
@@ -145,7 +100,7 @@ export const actions = {
       const existingTag = await db
         .select()
         .from(tags)
-        .where(and(eq(tags.id, parseInt(form.id)), eq(tags.userId, locals.user.id)))
+        .where(and(eq(tags.id, parseInt(form.id)), eq(tags.userId, event.locals.user.id)))
         .get();
 
       if (!existingTag) {

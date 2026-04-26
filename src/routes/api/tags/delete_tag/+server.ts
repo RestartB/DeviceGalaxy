@@ -1,42 +1,18 @@
-import { json } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { eq, and, sql } from 'drizzle-orm';
-import { userDevices, tags, lastActionTimes } from '$lib/server/db/schema';
+import { userDevices, tags } from '$lib/server/db/schema';
+import { tagActionLimiter } from '$lib/server/limiters/passwordReset';
 
-export async function DELETE({ locals, url }) {
-  if (!locals.user) {
+export async function DELETE(event) {
+  if (!event.locals.user) {
     return json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Get last deleted time
-  const lastTagDeletedTime = await db
-    .select({ lastTagDeletedTime: lastActionTimes.lastTagDeletedTime })
-    .from(lastActionTimes)
-    .where(eq(lastActionTimes.userId, locals.user.id))
-    .get();
+  if (await tagActionLimiter.isLimited(event))
+    throw error(429, 'Slow down, please wait a few seconds before trying again.');
 
-  if (lastTagDeletedTime && lastTagDeletedTime.lastTagDeletedTime) {
-    const lastDeleted = new Date(lastTagDeletedTime.lastTagDeletedTime);
-    const currentTime = new Date();
-
-    // 10 second cooldown
-    if (currentTime.getTime() - lastDeleted.getTime() < 10000) {
-      return json(
-        { error: 'Slow down! Please wait a few seconds before deleting a tag.' },
-        { status: 429 }
-      );
-    }
-
-    // Update last deleted time
-    await db
-      .update(lastActionTimes)
-      .set({ lastTagDeletedTime: currentTime })
-      .where(eq(lastActionTimes.userId, locals.user.id));
-  } else {
-    await db.insert(lastActionTimes).values({ userId: locals.user.id }).onConflictDoNothing();
-  }
-
-  const tagId = url.searchParams.get('id');
+  const tagId = event.url.searchParams.get('id');
   if (!tagId) {
     return json({ message: 'Tag ID is required' }, { status: 400 });
   }
@@ -51,7 +27,7 @@ export async function DELETE({ locals, url }) {
   const tagExists = await db
     .select()
     .from(tags)
-    .where(and(eq(tags.id, tagIdInt), eq(tags.userId, locals.user.id)))
+    .where(and(eq(tags.id, tagIdInt), eq(tags.userId, event.locals.user.id)))
     .get();
 
   if (!tagExists) {
@@ -60,7 +36,7 @@ export async function DELETE({ locals, url }) {
 
   try {
     await db.transaction(async (tx) => {
-      if (!locals.user) {
+      if (!event.locals.user) {
         return json({ error: 'Unauthorized' }, { status: 401 });
       }
 
@@ -70,7 +46,7 @@ export async function DELETE({ locals, url }) {
         .from(userDevices)
         .where(
           and(
-            eq(userDevices.userId, locals.user.id),
+            eq(userDevices.userId, event.locals.user.id),
             sql`EXISTS (SELECT 1 FROM json_each(${userDevices.tags}) WHERE json_each.value = ${tagIdInt})`
           )
         )
