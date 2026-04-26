@@ -1,8 +1,7 @@
 services:
   devicegalaxy:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: restartb/devicegalaxy:latest
+    container_name: devicegalaxy
     restart: unless-stopped
     ports:
       - '3000:3000'
