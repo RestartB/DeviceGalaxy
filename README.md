@@ -23,10 +23,10 @@ DeviceGalaxy can be ran as a Docker container. This ensures the same base OS and
 If you want to self host your own instance of DeviceGalaxy, follow these instructions:
 
 1. pull the repo from GitHub
-2. run `npm install` to install dependencies
+2. run `pnpm install` to install dependencies
 3. copy the example `.env.example` file to `.env`, then fill in the required information
-4. run `npm run db:push` to create the database and required tables
-5. run `npm run build` to build the project
+4. run `pnpm db:migrate` to create the database and required tables
+5. run `pnpm build` to build the project
 6. run `node --env-file=.env build` to run the server
 
 ## Developing
@@ -34,9 +34,9 @@ If you want to self host your own instance of DeviceGalaxy, follow these instruc
 If you wish to contribute to DeviceGalaxy, here's how to run the dev server:
 
 1. pull the repo from GitHub
-2. run `npm install` to install dependencies
+2. run `pnpm install` to install dependencies
 3. copy the example `.env.example` file to `.env`, then fill in the required information
-4. run `npm run db:push` to create the database and required tables
-5. run `npm run dev` to start the Vite dev server
+4. run `pnpm db:migrate` to create the database and required tables
+5. run `pnpm dev` to start the Vite dev server
 
-It is recommended to format your code using Prettier, and lint with eslint.
+If you modify the database schema, use `pnpm db:generate` to create a new migration file. Make sure to check it first to ensure it looks correct, then use `pnpm db:migrate` to apply it. It is recommended to format your code using Prettier, and lint with eslint.
