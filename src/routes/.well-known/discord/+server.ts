@@ -26,5 +26,10 @@ export async function GET(event) {
     throw error(403, 'Discord domain verification token not found');
   }
 
-  return new Response(userRecord.discordDomainVerifyToken, { status: 200 });
+  return new Response(userRecord.discordDomainVerifyToken, {
+    status: 200,
+    headers: {
+      'X-Robots-Tag': 'noindex'
+    }
+  });
 }
