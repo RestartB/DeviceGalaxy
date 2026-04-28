@@ -2,8 +2,6 @@ name: Build and push Docker image
 
 on:
   push:
-    branches:
-      - 'master'
     tags:
       - 'v*'
 
@@ -33,7 +31,6 @@ jobs:
           flavor: |
             latest=auto
           tags: |
-            type=ref,event=branch
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}.{{minor}}
             type=semver,pattern=v{{major}}
