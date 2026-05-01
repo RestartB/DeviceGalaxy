@@ -6,7 +6,7 @@
   <div class="flex max-w-5xl flex-col gap-5">
     <div>
       <h1 class="text-4xl font-bold">Privacy Policy</h1>
-      <h2 class="text-xl font-semibold">Updated: 23/02/2026</h2>
+      <h2 class="text-xl font-semibold">Updated: 30/04/2026</h2>
     </div>
 
     <p>
@@ -92,6 +92,25 @@
           >Cloudflare documentation page.</a
         >
       </p>
+    </section>
+
+    <section class="flex flex-col gap-2.5" id="backups">
+      <h2 class="text-xl font-semibold">Backups</h2>
+      <p>
+        To ensure that data can be restored in the case of data loss, we make use of the Duplicati
+        backup tool. This creates encrypted backups using the AES-256 algorithm that are stored in a
+        private Backblaze B2 storage bucket.
+      </p>
+      <p>
+        Since we implemented this backup policy on 30/04/2026, our backup history will build up over
+        time. Older backups are automatically deleted, but we will always retain at least one
+        backup. Once enough time has passed, our maximum retention schedule will be:
+      </p>
+      <ul class="list-inside list-disc">
+        <li>One backup for each of the last 7 days</li>
+        <li>One backup for each of the last 4 weeks</li>
+        <li>One backup for each of the last 12 months</li>
+      </ul>
     </section>
 
     <section class="flex flex-col gap-2.5" id="analytics">

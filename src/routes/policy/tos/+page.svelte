@@ -6,7 +6,7 @@
   <div class="flex max-w-5xl flex-col gap-5">
     <div>
       <h1 class="text-4xl font-bold">Terms of Use</h1>
-      <h2 class="text-xl font-semibold">Updated: 21/03/2026</h2>
+      <h2 class="text-xl font-semibold">Updated: 01/05/2026</h2>
     </div>
 
     <p>
@@ -21,15 +21,19 @@
       <h2 class="text-xl font-semibold">Terms of Use</h2>
       <p>You must abide by the following guidelines when using DeviceGalaxy:</p>
       <ul class="list-inside list-disc">
-        <li>You should not host NSFW content on DeviceGalaxy.</li>
+        <li>You must not host NSFW content on DeviceGalaxy.</li>
         <li>
-          You should not host illegal content on DeviceGalaxy. Abide by laws inside your country of
+          You must not host illegal content on DeviceGalaxy. Abide by laws inside your country of
           residence, the countries that you are sharing with, the EU and the United Kingdom.
         </li>
-        <li>You should not host content that violates the rights of others.</li>
-        <li>You should not host content that is hateful, abusive, or harassing.</li>
-        <li>You should not use DeviceGalaxy to spam or scam others.</li>
-        <li>You should not attempt to overload or attack DeviceGalaxy.</li>
+        <li>You must not host content that violates the rights of others.</li>
+        <li>You must not host content that is hateful, abusive, or harassing.</li>
+        <li>You must not use DeviceGalaxy to scam or send spam to others.</li>
+        <li>You must not attempt to overload or attack DeviceGalaxy.</li>
+        <li>
+          You should not attempt to interact with DeviceGalaxy API endpoints directly. DeviceGalaxy
+          API endpoints are designed for internal usage only.
+        </li>
       </ul>
 
       <p>
