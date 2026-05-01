@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.6.9",
-    "@libsql/client": "^0.17.2",
+    "@libsql/client": "^0.17.3",
     "@lucide/svelte": "^1.11.0",
     "@types/cloudflare-turnstile": "^0.2.2",
     "better-auth": "1.6.9",
