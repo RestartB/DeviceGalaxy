@@ -2,7 +2,7 @@
 FROM --platform=$BUILDPLATFORM node:25-alpine AS builder
 
 WORKDIR /app
-COPY package*.json pnpm-lock.yaml ./
+COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml svelte.config.js tsconfig.json ./
 
 RUN npm install -g pnpm
 ENV PNPM_HOME="/pnpm"
