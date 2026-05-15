@@ -1,5 +1,5 @@
 # builder
-FROM --platform=$BUILDPLATFORM node:25-alpine AS builder
+FROM --platform=$BUILDPLATFORM node:24-alpine AS builder
 
 WORKDIR /app
 COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml svelte.config.js tsconfig.json ./
@@ -22,7 +22,7 @@ RUN rm -r /db
 
 
 # runner
-FROM --platform=$TARGETPLATFORM node:25-alpine
+FROM --platform=$TARGETPLATFORM node:24-alpine
 
 WORKDIR /app
 
