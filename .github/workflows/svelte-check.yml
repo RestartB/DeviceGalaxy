@@ -16,17 +16,22 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 11
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 25
+          node-version: 24
           cache: 'pnpm'
+
       - name: Prepare blank env file
         run: cp .env.example .env
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Add Svelte Check annotator
         uses: prgm-dev/svelte-check-pr-annotator@main
+
       - name: Run Svelte Check
         run: pnpm run check --output machine
