@@ -4,7 +4,5 @@
     "config:recommended",
     "schedule:daily"
   ],
-  "enabledManagers": ["npm"],
-  "minimumReleaseAge": "7 days",
-  "internalChecksFilter": "strict"
+  "minimumReleaseAge": "7 days"
 }
