@@ -1,0 +1,8 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "schedule:daily"
+  ],
+  "minimumReleaseAge": "7 days"
+}
