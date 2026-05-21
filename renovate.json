@@ -4,5 +4,6 @@
     "config:recommended",
     "schedule:daily"
   ],
-  "minimumReleaseAge": "7 days"
+  "minimumReleaseAge": "7 days",
+  "rangeStrategy": "pin"
 }
