@@ -3,3 +3,4 @@ allowBuilds:
   esbuild: true
   prisma: true
   sharp: true
+minimumReleaseAge: 4320
