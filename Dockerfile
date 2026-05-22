@@ -9,7 +9,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 RUN mkdir -p /db && touch /db/data.db
-RUN pnpm install --frozen-lockfile
+RUN pnpm ci
 
 COPY . .
 COPY .env.example .env
