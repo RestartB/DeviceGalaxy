@@ -4,5 +4,6 @@
     "config:best-practices",
     "schedule:daily"
   ],
-  "rangeStrategy": "pin"
+  "rangeStrategy": "pin",
+  "minimumReleaseAge": "3 days"
 }
