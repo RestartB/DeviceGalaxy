@@ -4,4 +4,8 @@ pnpm-lock.yaml
 yarn.lock
 bun.lock
 bun.lockb
-src/lib/server/emails
+
+# Miscellaneous
+/static/
+/drizzle/
+/src/lib/server/emails
