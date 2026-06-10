@@ -1,6 +1,6 @@
 services:
   devicegalaxy:
-    image: restartb/devicegalaxy:latest@sha256:bb7679e8ee93119b762ddd818e112c27930e08c9998c9f96ab6b736c1ebb1247
+    image: restartb/devicegalaxy:latest
     container_name: devicegalaxy
     restart: unless-stopped
     ports:
