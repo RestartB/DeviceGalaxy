@@ -38,11 +38,13 @@
     {#if !page.url.pathname.startsWith('/policy')}
       <title>DeviceGalaxy</title>
     {/if}
-    <meta content="#6463FF" data-react-helmet="true" name="theme-color" />
+
+    <meta name="theme-color" content="#6463FF" data-react-helmet="true" />
+    <meta name="description" content="Manage and share your galaxy of devices." />
 
     <meta property="og:title" content="DeviceGalaxy" />
-    <meta name="og:description" content="Manage and share your galaxy of devices." />
-    <meta content="https://devicegalaxy.me/favicon.png" property="og:image" />
+    <meta property="og:description" content="Manage and share your galaxy of devices." />
+    <meta property="og:image" content="https://devicegalaxy.me/favicon.png"  />
     <meta name="twitter:card" content="summary" />
   {/if}
 </svelte:head>

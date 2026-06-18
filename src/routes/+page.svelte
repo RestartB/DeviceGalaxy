@@ -43,17 +43,23 @@
 
 <svelte:head>
   {#if data.share}
-    <meta name="robots" content="noindex, nofollow" />
-
     <title>DeviceGalaxy - Share</title>
-    <meta property="og:title" content="{data.shareUser.name}'s Share" />
+    <meta name="robots" content="noindex, nofollow" />
     <meta
-      name="og:description"
+      name="description"
       content={data.shareUser.description
         ? data.shareUser.description
         : `View ${data.shareUser.name}'s shared devices on DeviceGalaxy.`}
     />
-    <meta content="DeviceGalaxy" property="og:site_name" />
+
+    <meta property="og:title" content="{data.shareUser.name}'s Share" />
+    <meta
+      property="og:description"
+      content={data.shareUser.description
+        ? data.shareUser.description
+        : `View ${data.shareUser.name}'s shared devices on DeviceGalaxy.`}
+    />
+    <meta property="og:site_name" content="DeviceGalaxy" />
     <meta
       property="og:image"
       content={data.shareUser.image ? data.shareUser.image : 'https://devicegalaxy.me/favicon.png'}

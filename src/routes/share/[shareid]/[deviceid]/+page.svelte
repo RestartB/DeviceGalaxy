@@ -12,17 +12,18 @@
 <svelte:head>
   {#if data.shareUser && data.device}
     <meta property="og:image" content="" />
-    <meta name="twitter:card" content="tweet" />
 
-    <meta name="og:title" content="{data.device.deviceName} (@{data.shareUser.name})" />
+    <meta property="og:title" content="{data.device.deviceName} (@{data.shareUser.name})" />
     <link
       type="application/activity+json"
       href="{page.url.origin}/users/{data.shareUser.name}/statuses/{statusId}"
     />
 
+    <meta name="twitter:card" content="tweet" />
     <meta name="twitter:image" content={data.shareUser.image} />
     <meta name="twitter:creator" content="@" />
 
+    <meta name="description" content={data.device.description} />
     <meta property="og:description" content={data.device.description} />
   {/if}
 </svelte:head>
