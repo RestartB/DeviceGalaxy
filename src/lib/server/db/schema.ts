@@ -7,7 +7,8 @@ import {
   uuid,
   timestamp,
   unique,
-  primaryKey
+  primaryKey,
+  index
 } from 'drizzle-orm/pg-core';
 import { user } from './auth.schema';
 
@@ -49,7 +50,7 @@ export const deviceTags = pgTable(
       .notNull()
       .references(() => tags.id, { onDelete: 'cascade' })
   },
-  (t) => [primaryKey({ columns: [t.deviceId, t.tagId] })]
+  (t) => [primaryKey({ columns: [t.deviceId, t.tagId] }), index('device_tags_tag_idx').on(t.tagId)]
 );
 
 export const specificationFields = pgTable(
@@ -75,7 +76,10 @@ export const deviceSpecifications = pgTable(
     value: text('value').notNull(),
     position: integer().notNull()
   },
-  (t) => [primaryKey({ columns: [t.deviceId, t.fieldId] })]
+  (t) => [
+    primaryKey({ columns: [t.deviceId, t.fieldId] }),
+    index('device_specs_field_value_idx').on(t.fieldId, t.value)
+  ]
 );
 
 export const shares = pgTable('shares', {

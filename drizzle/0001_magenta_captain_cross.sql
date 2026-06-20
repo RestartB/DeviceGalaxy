@@ -1,0 +1,2 @@
+CREATE INDEX "device_specs_field_value_idx" ON "device_specifications" USING btree ("field_id","value");--> statement-breakpoint
+CREATE INDEX "device_tags_tag_idx" ON "device_tags" USING btree ("tag_id");
