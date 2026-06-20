@@ -1,110 +1,99 @@
-import { sql, relations } from 'drizzle-orm';
-import { sqliteTable, integer, text, index } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
+import {
+  pgTable,
+  integer,
+  boolean,
+  text,
+  uuid,
+  timestamp,
+  unique,
+  primaryKey
+} from 'drizzle-orm/pg-core';
 import { user } from './auth.schema';
 
-export const userDevices = sqliteTable('devices', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
+export const devices = pgTable('devices', {
+  id: uuid('id').defaultRandom().primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
-  deviceName: text('name', { length: 255 }).notNull(),
-  description: text('description', { length: 1024 }).default(''),
-  additional: text('additional', { length: 1024 }).default(''),
-  cpu: integer('cpu'),
-  gpu: integer('gpu'),
-  memory: integer('memory'),
-  storage: integer('storage'),
-  os: integer('os'),
-  brand: integer('brand'),
-  tags: text('tag_ids', { mode: 'json' })
-    .$type<number[]>()
-    .$defaultFn(() => []),
-  internalImages: text('internal_images', { mode: 'json' })
-    .$type<string[]>()
-    .$defaultFn(() => []),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' })
+  deviceName: text('name').notNull(),
+  description: text('description').default('').notNull(),
+  additional: text('additional').default('').notNull(),
+  images: text('images')
+    .array()
+    .default(sql`'{}'::text[]`)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
 });
 
-export const tags = sqliteTable('tags', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
+export const tags = pgTable('tags', {
+  id: uuid('id').defaultRandom().primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
-  tagName: text('tag_name', { length: 40 }).notNull(),
-  tagColour: text('tag_color', { length: 7 }),
-  tagTextColour: text('tag_text_color', { length: 7 }),
-  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
-  updatedAt: integer('updated_at', { mode: 'timestamp' })
+  tagName: text('name').notNull(),
+  tagColour: text('colour').default('').notNull(),
+  tagTextColour: text('text_colour').default('').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull()
 });
 
-export const cpus = sqliteTable('cpus', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  userID: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
-  value: text('name', { length: 255 }).notNull(),
-  displayName: text('display_name', { length: 255 }).notNull()
-});
+export const deviceTags = pgTable(
+  'device_tags',
+  {
+    deviceId: uuid('device_id')
+      .notNull()
+      .references(() => devices.id, { onDelete: 'cascade' }),
+    tagId: uuid('tag_id')
+      .notNull()
+      .references(() => tags.id, { onDelete: 'cascade' })
+  },
+  (t) => [primaryKey({ columns: [t.deviceId, t.tagId] })]
+);
 
-export const gpus = sqliteTable('gpus', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  userID: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
-  value: text('name', { length: 255 }).notNull(),
-  displayName: text('display_name', { length: 255 }).notNull()
-});
+export const specificationFields = pgTable(
+  'specification_fields',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: text('user_id').references(() => user.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    key: text('key').notNull()
+  },
+  (t) => [unique().on(t.userId, t.key).nullsNotDistinct()]
+);
 
-export const memory = sqliteTable('memory', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  userID: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
-  value: text('name', { length: 255 }).notNull(),
-  displayName: text('display_name', { length: 255 }).notNull()
-});
+export const deviceSpecifications = pgTable(
+  'device_specifications',
+  {
+    deviceId: uuid('device_id')
+      .notNull()
+      .references(() => devices.id, { onDelete: 'cascade' }),
+    fieldId: uuid('field_id')
+      .notNull()
+      .references(() => specificationFields.id, { onDelete: 'cascade' }),
+    value: text('value').notNull(),
+    position: integer().notNull()
+  },
+  (t) => [primaryKey({ columns: [t.deviceId, t.fieldId] })]
+);
 
-export const storage = sqliteTable('storage', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  userID: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
-  value: text('name', { length: 255 }).notNull(),
-  displayName: text('display_name', { length: 255 }).notNull()
-});
-
-export const os = sqliteTable('os', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  userID: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
-  value: text('name', { length: 255 }).notNull(),
-  displayName: text('display_name', { length: 255 }).notNull()
-});
-
-export const brands = sqliteTable('brands', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  userId: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
-  value: text('name', { length: 255 }).notNull(),
-  displayName: text('display_name', { length: 255 }).notNull()
-});
-
-export const shares = sqliteTable('shares', {
-  id: text('id').unique(),
+export const shares = pgTable('shares', {
+  id: text('id').primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
   type: integer('type').notNull(),
-  sharedDevice: integer('shared_device').references(() => userDevices.id, { onDelete: 'cascade' }),
-  sharedTags: text('shared_tags', { mode: 'json' })
-    .$type<number[]>()
-    .$defaultFn(() => []),
-  internal: integer('internal', { mode: 'boolean' })
+  sharedDevice: uuid('shared_device').references(() => devices.id, { onDelete: 'cascade' }),
+  sharedTags: text('shared_tags')
+    .array()
+    .default(sql`'{}'::text[]`)
+    .notNull(),
+  internal: boolean('internal')
     .default(false)
     .$defaultFn(() => false)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull()
 });
 
 export * from './auth.schema';

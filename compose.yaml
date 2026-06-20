@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: devicegalaxy
+      POSTGRES_PASSWORD: CHANGE_ME
+      POSTGRES_DB: devicegalaxy
+    volumes:
+      - pgdata:/var/lib/postgresql
+  devicegalaxy:
+    image: restartb/devicegalaxy:latest
+    container_name: devicegalaxy
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    volumes:
+      - './data:/data'
+    env_file:
+      - .env
+volumes:
+  pgdata:
