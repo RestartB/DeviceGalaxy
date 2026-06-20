@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import {
   pgTable,
   integer,
@@ -99,5 +99,24 @@ export const shares = pgTable('shares', {
     .notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull()
 });
+
+export const devicesRelations = relations(devices, ({ many }) => ({
+  specifications: many(deviceSpecifications)
+}));
+
+export const deviceSpecificationsRelations = relations(deviceSpecifications, ({ one }) => ({
+  device: one(devices, {
+    fields: [deviceSpecifications.deviceId],
+    references: [devices.id]
+  }),
+  field: one(specificationFields, {
+    fields: [deviceSpecifications.fieldId],
+    references: [specificationFields.id]
+  })
+}));
+
+export const specificationFieldsRelations = relations(specificationFields, ({ many }) => ({
+  deviceSpecifications: many(deviceSpecifications)
+}));
 
 export * from './auth.schema';
