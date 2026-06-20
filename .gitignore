@@ -23,10 +23,9 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 # SQLite
-*.db*
-/db
+*.db
+*.db-shm
+*.db-wal
 
-# User Uploads
-/static/public
-/user_uploads
-/data
+# IDEs
+.vscode/

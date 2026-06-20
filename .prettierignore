@@ -8,4 +8,3 @@ bun.lockb
 # Miscellaneous
 /static/
 /drizzle/
-/src/lib/server/emails

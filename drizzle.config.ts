@@ -1,13 +1,11 @@
 import { defineConfig } from 'drizzle-kit';
-import { join } from 'path';
 
-if (!process.env.DATABASE_PATH) throw new Error('DATABASE_PATH is not set');
+if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
 
 export default defineConfig({
   schema: './src/lib/server/db/schema.ts',
-  out: './drizzle',
   dialect: 'sqlite',
-  dbCredentials: { url: join(process.env.DATABASE_PATH, 'data.db') },
+  dbCredentials: { url: process.env.DATABASE_URL },
   verbose: true,
   strict: true
 });

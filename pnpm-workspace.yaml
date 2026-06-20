@@ -1,7 +1,5 @@
 allowBuilds:
-  '@prisma/engines': true
+  '@prisma/client': true
+  '@tailwindcss/oxide': true
+  better-sqlite3: true
   esbuild: true
-  prisma: true
-  sharp: true
-minimumReleaseAge: 4320
-engineStrict: true
