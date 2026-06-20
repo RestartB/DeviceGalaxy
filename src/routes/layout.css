@@ -1,1 +1,55 @@
 @import 'tailwindcss';
+
+@theme {
+  --font-figtree: 'Figtree', sans-serif;
+  --breakpoint-sidebar: 840px;
+  --breakpoint-xs: 568px;
+  --breakpoint-xxs: 500px;
+  --color-blurple: #5865f2;
+}
+
+@keyframes slide-to-left {
+  to {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-to-right {
+  to {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-from-left {
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
