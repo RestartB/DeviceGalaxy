@@ -49,7 +49,12 @@
     }
 
     stringValue = stringValue.toLowerCase().trim();
-    if (stringValue === '' || stringValue === 'perm' || stringValue === 'permanent' || stringValue === 'perma') {
+    if (
+      stringValue === '' ||
+      stringValue === 'perm' ||
+      stringValue === 'permanent' ||
+      stringValue === 'perma'
+    ) {
       seconds = undefined;
       return;
     }
@@ -78,8 +83,8 @@
 <input
   type="text"
   class="flex cursor-text items-center gap-2 rounded-lg {border
-    ? 'border-2 border-zinc-700'
-    : ''} bg-zinc-800 p-1 px-2 transition-colors focus:bg-zinc-600 {className}"
+    ? 'border-2 border-zinc-300 dark:border-zinc-700'
+    : ''} bg-zinc-100 dark:bg-zinc-800 p-1 px-2 transition-colors focus:bg-zinc-200 dark:focus:bg-zinc-600 {className}"
   placeholder="e.g. 5m, 1h30m, 2d"
   aria-label={aria}
   bind:value={stringValue}

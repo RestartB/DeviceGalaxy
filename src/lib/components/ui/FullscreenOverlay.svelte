@@ -36,14 +36,18 @@
 </script>
 
 <div
-  class="fixed inset-0 isolate flex flex-col items-center justify-center overflow-hidden bg-black/60 p-4 pt-16 backdrop-blur-lg {className}"
+  class="fixed inset-0 isolate flex flex-col items-center justify-center overflow-hidden bg-white/60 dark:bg-black/60 p-4 pt-16 backdrop-blur-lg {className}"
   style="z-index: {zIndex}"
   transition:fade={{ duration: 100 }}
 >
-  <div class="absolute inset-0 -z-10" onclick={() => (overlayOpen = false)} aria-hidden="true"></div>
+  <div
+    class="absolute inset-0 -z-10"
+    onclick={() => (overlayOpen = false)}
+    aria-hidden="true"
+  ></div>
 
   <div
-    class="flex flex-col gap-4 rounded-xl border-2 border-zinc-600 bg-zinc-800 p-4"
+    class="flex flex-col gap-4 rounded-xl border-2 border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 p-4"
     style="width: min({width}px, 100%); height: min({height}px, calc(100vh - 5rem)); max-height: calc(100vh - 5rem);"
     transition:scale={{ duration: 300, easing: cubicOut, start: 0.9, opacity: 1 }}
   >
@@ -51,7 +55,7 @@
       <h2 class="text-xl font-bold">{title}</h2>
       {@render extraButton?.()}
       <button
-        class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-zinc-700 text-zinc-400 hover:bg-zinc-600"
+        class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-600"
         type="button"
         onclick={() => (overlayOpen = false)}
         aria-label="Close popup"
@@ -61,7 +65,7 @@
     </div>
 
     <div
-      class="flex w-full flex-1 flex-col rounded-xl border-2 border-zinc-600 bg-zinc-700"
+      class="flex w-full flex-1 flex-col rounded-xl border-2 border-zinc-300 dark:border-zinc-700 dark:bg-zinc-700 bg-zinc-200"
       class:overflow-hidden={!overflow}
       class:overflow-auto={overflow}
       style="padding: {padding}px; gap: {gap}px;"

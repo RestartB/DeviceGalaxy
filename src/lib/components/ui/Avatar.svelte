@@ -6,7 +6,7 @@
   <img
     class="inline-block shrink-0 {circle
       ? 'rounded-full'
-      : 'rounded-md'} border-2 border-zinc-600 bg-zinc-700 object-cover {customClass}"
+      : 'rounded-md'} border-2 border-zinc-700 bg-zinc-800 object-cover {customClass}"
     translate="no"
     {src}
     alt={name}
@@ -18,7 +18,7 @@
   <div
     class="inline-flex shrink-0 items-center justify-center align-middle {circle
       ? 'rounded-full'
-      : 'rounded-md'} border-2 border-zinc-600 bg-zinc-700 text-zinc-400 {customClass}"
+      : 'rounded-md'} border-2 border-zinc-700 bg-zinc-800 text-zinc-400 {customClass}"
     style="width: {size}px; height: {size}px; font-size: {size / 2}px;"
     translate="no"
   >

@@ -9,8 +9,12 @@
 <div class="absolute inset-0 pt-12 pb-10">
   <div class="inset-0 flex items-center h-full max-w-7xl mx-auto">
     <div
-      class="m-4 flex gap-2 flex-col bg-zinc-800/80 backdrop-blur-lg border-2 border-zinc-700 p-4 rounded-xl max-w-lg"
+      class="m-4 flex gap-2 flex-col bg-zinc-100 dark:bg-zinc-900 border-2 border-zinc-300 dark:border-zinc-700 p-4 rounded-xl max-w-lg"
     >
+      <h2 class="text-xl font-semibold text-zinc-900/80 dark:text-zinc-100/80 -mb-1">
+        DeviceGalaxy
+      </h2>
+
       {@render children()}
     </div>
   </div>

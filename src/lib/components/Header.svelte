@@ -6,6 +6,9 @@
   import logo from '$lib/assets/logo.svg';
 
   import type { Pathname } from '$app/types';
+  import type { User } from 'better-auth';
+
+  const { user }: { user?: User | undefined } = $props();
 
   let menuOpen = $state(false);
   let width = $state(0);
@@ -44,7 +47,13 @@
       </div>
 
       <nav class="flex h-full shrink-0 items-center">
-        {@render topRowLink('Home', '/')}
+        {#if user}
+          {@render topRowLink('Home', '/')}
+          {@render topRowLink('Devices', '/')}
+          {@render topRowLink('Tags', '/')}
+          {@render topRowLink('Specs', '/')}
+          {@render topRowLink('Shares', '/')}
+        {/if}
       </nav>
     </div>
 
