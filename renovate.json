@@ -5,5 +5,8 @@
     "schedule:daily"
   ],
   "rangeStrategy": "pin",
-  "minimumReleaseAge": "3 days"
+  "minimumReleaseAge": "3 days",
+  "ignoreDeps": [
+    "restartb/devicegalaxy"
+  ]
 }
