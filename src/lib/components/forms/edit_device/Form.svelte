@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { Turnstile } from 'svelte-turnstile';
-
   import { fade } from 'svelte/transition';
 
   import { filesProxy, superForm } from 'sveltekit-superforms';
@@ -48,8 +46,6 @@
     refreshAll: any;
   } = $props();
 
-  let reset = $state<() => void>();
-
   const {
     form,
     errors,
@@ -73,11 +69,6 @@
       console.error('Form submission error:', error);
       toast.error('Failed to update device. Try again later.');
     },
-
-    onUpdated() {
-      // When the form is updated, we reset the turnstile
-      reset?.();
-    }
   });
 
   const files = filesProxy(form, 'newImages');
@@ -531,22 +522,6 @@
                 </ul>
               </div>
             {/if}
-
-            {#if env.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'}
-              <Turnstile
-                siteKey={env.PUBLIC_TURNSTILE_SITE_KEY}
-                theme="auto"
-                bind:reset
-                on:callback={(event) => {
-                  const { token } = event.detail;
-                  $form['cf-turnstile-response'] = token;
-                }}
-              />
-            {/if}
-
-            {#if $errors['cf-turnstile-response']}<span class="text-red-600"
-                >{$errors['cf-turnstile-response']}</span
-              >{/if}
 
             <p class="mt-auto text-base text-zinc-500">
               Once you're happy with the details above, click below to create.

@@ -20,7 +20,6 @@ import { writeFile, unlink, mkdir } from 'fs/promises';
 import { join } from 'path';
 
 import { env } from '$env/dynamic/private';
-import { env as publicEnv } from '$env/dynamic/public';
 import { deviceActionLimiter } from '$lib/server/limiters/passwordReset';
 
 export const load = async () => {
@@ -50,21 +49,6 @@ export const actions = {
 
     if (!form.valid) {
       return fail(400, { form });
-    }
-
-    if (publicEnv.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
-      if (form.data['cf-turnstile-response']) {
-        // Verify Turnstile token
-        const isValid = await verifyTurnstile(
-          form.data['cf-turnstile-response'],
-          event.request.headers.get('cf-connecting-ip') || ''
-        );
-        if (!isValid) {
-          return error(400, 'Invalid Turnstile token. Please try again.');
-        }
-      } else {
-        return error(400, 'Turnstile token is required.');
-      }
     }
 
     // Check device limit
@@ -332,21 +316,6 @@ export const actions = {
 
     if (!form.valid) {
       return fail(400, { form });
-    }
-
-    if (publicEnv.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true') {
-      if (form.data['cf-turnstile-response']) {
-        // Verify Turnstile token
-        const isValid = await verifyTurnstile(
-          form.data['cf-turnstile-response'],
-          event.request.headers.get('cf-connecting-ip') || ''
-        );
-        if (!isValid) {
-          return error(400, 'Invalid Turnstile token. Please try again.');
-        }
-      } else {
-        return error(400, 'Turnstile token is required.');
-      }
     }
 
     try {

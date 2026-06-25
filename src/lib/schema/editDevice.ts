@@ -1,5 +1,4 @@
 import { z } from 'zod/v4';
-import { env } from '$env/dynamic/public';
 
 export const editDeviceSchema = z
   .object({
@@ -28,11 +27,7 @@ export const editDeviceSchema = z
       .max(5, 'You can only select up to 5 new images'),
     oldImages: z.string().array().min(0),
 
-    tags: z.number().array().min(0),
-    'cf-turnstile-response':
-      env.PUBLIC_TURNSTILE_ENABLED.toLowerCase() === 'true'
-        ? z.string().nonempty('Please complete the Captcha.')
-        : z.string().optional()
+    tags: z.number().array().min(0)
   })
   .refine(
     (data) => {
