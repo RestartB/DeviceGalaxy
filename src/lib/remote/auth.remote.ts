@@ -56,10 +56,8 @@ export const signUp = form(
       path: ['passwordConfirm']
     }),
   async ({ name, email, password, turnstileToken }) => {
-    const event = await getRequestEvent();
-
     try {
-      const data = await auth.api.signUpEmail({
+      await auth.api.signUpEmail({
         body: {
           name: name,
           email: email,

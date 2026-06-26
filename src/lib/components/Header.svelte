@@ -2,7 +2,7 @@
   import { resolve } from '$app/paths';
   import { afterNavigate } from '$app/navigation';
 
-  import { LogIn } from '@lucide/svelte';
+  import { LogIn, LogOut } from '@lucide/svelte';
   import logo from '$lib/assets/logo.svg';
 
   import type { Pathname } from '$app/types';
@@ -49,7 +49,7 @@
       <nav class="flex h-full shrink-0 items-center">
         {#if user}
           {@render topRowLink('Home', '/')}
-          {@render topRowLink('Devices', '/')}
+          {@render topRowLink('Devices', '/devices')}
           {@render topRowLink('Tags', '/')}
           {@render topRowLink('Specs', '/')}
           {@render topRowLink('Shares', '/')}
@@ -57,12 +57,24 @@
       </nav>
     </div>
 
-    <a
-      class="mr-4 ml-2 hidden items-center justify-center gap-1 rounded-lg border border-zinc-400 bg-zinc-300 p-1 px-2 transition-colors hover:bg-zinc-200 xs:flex dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-800"
-      href={resolve('/auth/login')}
-    >
-      <LogIn size={20} />
-      Log In
-    </a>
+    {#if user}
+      <form action="/auth/logout" method="POST" class="h-full">
+        <button
+          class="hidden h-full cursor-pointer items-center justify-center gap-2 border-y-transparent border-b-zinc-500 px-4 text-xl font-semibold transition-all hover:border-y-4 xs:flex"
+          title="Log out"
+          type="submit"
+        >
+          <LogOut size={20} class="shrink-0" />
+        </button>
+      </form>
+    {:else}
+      <a
+        class="mr-4 ml-2 hidden items-center justify-center gap-1 rounded-lg border border-zinc-400 bg-zinc-300 p-1 px-2 transition-colors hover:bg-zinc-200 xs:flex dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-800"
+        href={resolve('/auth/login')}
+      >
+        <LogIn size={20} />
+        Log In
+      </a>
+    {/if}
   </div>
 </header>
