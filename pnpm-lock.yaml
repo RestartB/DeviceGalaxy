@@ -37,7 +37,7 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       '@types/node':
-        specifier: ^24
+        specifier: ^24.13.2
         version: 24.13.2
       better-auth:
         specifier: ~1.4.21
