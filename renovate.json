@@ -1,18 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:best-practices",
-    "schedule:daily"
-  ],
+  "extends": ["config:best-practices", "schedule:daily"],
   "rangeStrategy": "pin",
   "minimumReleaseAge": "3 days",
-  "ignoreDeps": [
-    "restartb/devicegalaxy"
-  ],
-  "baseBranches": [
-    "master",
-    "v2"
-  ],
+  "ignoreDeps": ["restartb/devicegalaxy"],
+  "baseBranchPatterns": ["master", "v2"],
   "packageRules": [
     {
       "description": "Automerge non-major updates",
