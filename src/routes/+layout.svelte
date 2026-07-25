@@ -18,9 +18,9 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="flex flex-col min-h-screen">
+<div class="flex min-h-screen flex-col">
   <Header {user} />
-  <main class="h-full flex-1 pt-12 max-w-7xl w-full mx-auto">
+  <main class="mx-auto h-full w-full max-w-7xl flex-1 pt-12">
     {@render children()}
   </main>
   <Footer />

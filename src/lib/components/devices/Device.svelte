@@ -41,7 +41,7 @@
 
 {#if overlayOpen && form}
   <form
-    class="fixed inset-0 isolate flex flex-col items-center justify-center overflow-hidden bg-white/60 dark:bg-black/60 p-4 pt-16 backdrop-blur-lg z-50"
+    class="fixed inset-0 isolate z-50 flex flex-col items-center justify-center overflow-hidden bg-white/60 p-4 pt-16 backdrop-blur-lg dark:bg-black/60"
     transition:fade={{ duration: 100 }}
     {...form}
     enctype="multipart/form-data"
@@ -53,14 +53,14 @@
     ></div>
 
     <div
-      class="overflow-hidden flex flex-col gap-4 rounded-xl border-2 border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 relative"
+      class="relative flex flex-col gap-4 overflow-hidden rounded-xl border-2 border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800"
       style="width: min(1200px, 100%); height: min(1000px, calc(100vh - 5rem)); max-height: calc(100vh - 5rem);"
       transition:scale={{ duration: 300, easing: cubicOut, start: 0.9, opacity: 1 }}
     >
-      <div class="p-4 h-16 z-10 flex w-full shrink-0 items-center justify-between gap-2">
+      <div class="z-10 flex h-16 w-full shrink-0 items-center justify-between gap-2 p-4">
         <h2 class="text-xl font-bold">{device ? device.deviceName : 'Create Device'}</h2>
         <button
-          class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-300 dark:hover:bg-zinc-600"
+          class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-zinc-200 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
           type="button"
           onclick={() => (overlayOpen = false)}
           aria-label="Close popup"
@@ -70,15 +70,15 @@
       </div>
 
       <div
-        class="p-4 pt-16 absolute inset-0 overflow-auto mask-[linear-gradient(to_top,black_92%,transparent)] flex flex-col gap-4"
+        class="absolute inset-0 flex flex-col gap-4 overflow-auto mask-[linear-gradient(to_top,black_92%,transparent)] p-4 pt-16"
       >
         <input
-          class="w-full outline-0 text-3xl"
+          class="w-full text-3xl outline-0"
           placeholder="Enter title..."
           {...form.fields.name.as('text')}
         />
         <textarea
-          class="w-full min-h-8 h-8"
+          class="h-8 min-h-8 w-full"
           placeholder="Enter description..."
           {...form.fields.description.as('text')}></textarea>
 
@@ -91,14 +91,14 @@
           class="hidden"
         />
 
-        <div class="flex items-center gap-2 flex-wrap">
+        <div class="flex flex-wrap items-center gap-2">
           <button
-            class="h-44 w-60 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-700 border rounded-lg p-4 flex items-center justify-center gap-2 flex-col text-center cursor-pointer"
+            class="flex h-44 w-60 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-zinc-200 p-4 text-center hover:bg-zinc-200 dark:border-zinc-700 dark:hover:bg-zinc-700"
             type="button"
             onclick={() => fileInput?.click()}
           >
             <div
-              class="bg-zinc-500 dark:bg-zinc-600 h-12 w-12 flex items-center justify-center rounded-xl"
+              class="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-500 dark:bg-zinc-600"
             >
               <Upload />
             </div>
@@ -109,10 +109,10 @@
           <!-- eslint-disable-next-line svelte/require-each-key -->
           {#each files as file}
             <div
-              class="relative isolate border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden"
+              class="relative isolate overflow-hidden rounded-lg border-zinc-200 dark:border-zinc-700"
             >
               <button
-                class="absolute inset-0 z-10 flex items-center justify-center bg-white/70 dark:bg-black/70 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+                class="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-white/70 opacity-0 transition-opacity hover:opacity-100 dark:bg-black/70"
                 type="button"
                 onclick={() => {
                   files.splice(files.indexOf(file), 1);

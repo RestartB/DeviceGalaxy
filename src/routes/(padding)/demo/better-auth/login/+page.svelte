@@ -12,7 +12,7 @@
     <input
       type="email"
       name="email"
-      class="mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      class="mt-1 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
     />
   </label>
   <label>
@@ -20,22 +20,22 @@
     <input
       type="password"
       name="password"
-      class="mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      class="mt-1 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
     />
   </label>
   <label>
     Name (for registration)
     <input
       name="name"
-      class="mt-1 px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      class="mt-1 rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
     />
   </label>
-  <button class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+  <button class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
     >Login</button
   >
   <button
     formaction="?/signUpEmail"
-    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+    class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
     >Register</button
   >
 </form>

@@ -50,18 +50,18 @@
   </FullscreenOverlay>
 {/if}
 
-<form class="flex gap-2 flex-col" {...logIn}>
+<form class="flex flex-col gap-2" {...logIn}>
   <h1 class="text-4xl font-bold">Log in</h1>
   <p>Welcome back! Please enter your username and password to log in.</p>
 
-  <label class="text-base -mb-1 mt-2" for="email">Email Address</label>
+  <label class="mt-2 -mb-1 text-base" for="email">Email Address</label>
   <Text id="email" {...email.as('email')} />
 
   {#each email.issues() as issue}
     <p class="text-red-600">{issue.message}</p>
   {/each}
 
-  <label class="text-base -mb-1" for="password">Password</label>
+  <label class="-mb-1 text-base" for="password">Password</label>
   <Text id="password" {...password.as('password')} />
 
   {#each password.issues() as issue}
@@ -69,20 +69,20 @@
   {/each}
 
   <p class="text-base">Captcha</p>
-  <div id="turnstile-container" class="h-fit -mb-2"></div>
+  <div id="turnstile-container" class="-mb-2 h-fit"></div>
 
   {#each turnstileToken.issues() as issue}
     <p class="text-red-600">{issue.message}</p>
   {/each}
 
   <a
-    class="my-2 text-blue-600 dark:text-blue-400 dark:hover:text-blue-200 hover:text-blue-800 cursor-pointer w-fit"
+    class="my-2 w-fit cursor-pointer text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
     href={resolve('/auth/signup')}
   >
     Don't have an account? Sign up
   </a>
 
-  <Button class="flex gap-1 items-center justify-center" smallPadding={true} type="submit">
+  <Button class="flex items-center justify-center gap-1" smallPadding={true} type="submit">
     <LogIn size={18} /> Log in
   </Button>
 </form>

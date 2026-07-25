@@ -1,5 +1,8 @@
 <script lang="ts">
-  let { toggled = $bindable(false), class: className = '' }: { toggled?: boolean | null; class?: string } = $props();
+  let {
+    toggled = $bindable(false),
+    class: className = ''
+  }: { toggled?: boolean | null; class?: string } = $props();
 </script>
 
 <button
@@ -8,7 +11,7 @@
   aria-label="Toggle"
 >
   <span
-    class="aspect-square h-4 w-4 rounded-full bg-black dark:bg-white transition-all"
+    class="aspect-square h-4 w-4 rounded-full bg-black transition-all dark:bg-white"
     style="margin-left: {toggled ? 'calc(100% - 1rem)' : '0'}"
   ></span>
 </button>

@@ -84,7 +84,7 @@
   type="text"
   class="flex cursor-text items-center gap-2 rounded-lg {border
     ? 'border-2 border-zinc-300 dark:border-zinc-700'
-    : ''} bg-zinc-100 dark:bg-zinc-800 p-1 px-2 transition-colors focus:bg-zinc-200 dark:focus:bg-zinc-600 {className}"
+    : ''} bg-zinc-100 p-1 px-2 transition-colors focus:bg-zinc-200 dark:bg-zinc-800 dark:focus:bg-zinc-600 {className}"
   placeholder="e.g. 5m, 1h30m, 2d"
   aria-label={aria}
   bind:value={stringValue}

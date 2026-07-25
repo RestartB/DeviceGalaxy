@@ -8,6 +8,9 @@
   }: { children?: Snippet<[]>; class?: string; thisElement?: HTMLDivElement } = $props();
 </script>
 
-<div class={`rounded-xl border-2 border-zinc-700 bg-zinc-800 p-4 ${className}`} bind:this={thisElement}>
+<div
+  class={`rounded-xl border-2 border-zinc-700 bg-zinc-800 p-4 ${className}`}
+  bind:this={thisElement}
+>
   {@render children?.()}
 </div>

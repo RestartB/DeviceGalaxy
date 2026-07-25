@@ -17,7 +17,7 @@
 
 {#snippet statsSquare(title: string, amount: number)}
   <div
-    class="text-start rounded-lg p-2 px-4 border-2 border-zinc-300 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800"
+    class="rounded-lg border-2 border-zinc-300 bg-zinc-200 p-2 px-4 text-start dark:border-zinc-700 dark:bg-zinc-800"
   >
     <p class="font-semibold">{title}</p>
     <p class="font-mono text-3xl">{amount}</p>
@@ -29,7 +29,7 @@
     <h1 class="text-4xl">
       {greeting || 'Hi there, '}
       <span
-        class="bg-linear-to-r from-purple-900 to-purple-700 dark:from-purple-100 dark:to-purple-400 bg-clip-text font-bold text-transparent"
+        class="bg-linear-to-r from-purple-900 to-purple-700 bg-clip-text font-bold text-transparent dark:from-purple-100 dark:to-purple-400"
         translate="no"
       >
         {data.user.name}
@@ -37,7 +37,7 @@
     </h1>
 
     <h3 class="text-xl font-semibold">Stats</h3>
-    <div class="flex gap-4 items-center flex-wrap">
+    <div class="flex flex-wrap items-center gap-4">
       {@render statsSquare('Devices', 100)}
       {@render statsSquare('Tags', 50)}
       {@render statsSquare('Shares', 30)}
