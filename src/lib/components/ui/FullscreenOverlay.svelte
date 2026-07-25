@@ -33,10 +33,16 @@
     class?: string;
     overlayOpen?: boolean;
   } = $props();
+
+  let scrollY = $state(0);
 </script>
 
+<svelte:window bind:scrollY />
+
 <div
-  class="fixed inset-0 isolate flex flex-col items-center justify-center overflow-hidden bg-white/60 p-4 pt-16 backdrop-blur-lg dark:bg-black/60 {className}"
+  class="fixed inset-0 isolate flex flex-col items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60 {className}"
+  class:pt-16={scrollY >= 20}
+  class:pt-20={scrollY < 20}
   style="z-index: {zIndex}"
   transition:fade={{ duration: 100 }}
 >

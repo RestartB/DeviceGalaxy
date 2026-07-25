@@ -7,7 +7,10 @@
 
   let { children, data } = $props();
   const user = $derived(data.user);
+  let scrollY = $state(0);
 </script>
+
+<svelte:window bind:scrollY />
 
 <svelte:head>
   <script
@@ -20,7 +23,7 @@
 
 <div class="flex min-h-screen flex-col">
   <Header {user} />
-  <main class="mx-auto h-full w-full max-w-7xl flex-1 pt-12">
+  <main class="mx-auto h-full w-full max-w-7xl flex-1 pt-20">
     {@render children()}
   </main>
   <Footer />

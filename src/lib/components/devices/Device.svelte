@@ -13,6 +13,8 @@
     overlayOpen = $bindable()
   }: { device?: InferSelectModel<typeof devices> | undefined; overlayOpen: boolean } = $props();
 
+  let scrollY = $state(0);
+
   let form: typeof createDevice | undefined = $derived(device ? undefined : createDevice);
   let fileInput: HTMLInputElement | undefined = $state();
   let files: File[] = $derived(
@@ -39,9 +41,13 @@
   }
 </script>
 
+<svelte:window bind:scrollY />
+
 {#if overlayOpen && form}
   <form
-    class="fixed inset-0 isolate z-50 flex flex-col items-center justify-center overflow-hidden bg-white/60 p-4 pt-16 backdrop-blur-lg dark:bg-black/60"
+    class="fixed inset-0 isolate z-50 flex flex-col items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+    class:pt-16={scrollY >= 20}
+    class:pt-20={scrollY < 20}
     transition:fade={{ duration: 100 }}
     {...form}
     enctype="multipart/form-data"

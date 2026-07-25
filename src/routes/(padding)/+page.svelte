@@ -49,5 +49,75 @@
     <h3 class="text-xl font-semibold">Recently modified</h3>
 
     <h3 class="text-xl font-semibold">Recently shared</h3>
+
+    <h3 class="text-xl font-semibold">Stats</h3>
+    <div class="flex flex-wrap items-center gap-4">
+      {@render statsSquare('Devices', 100)}
+      {@render statsSquare('Tags', 50)}
+      {@render statsSquare('Shares', 30)}
+      {@render statsSquare('Share Views', 20864)}
+    </div>
+
+    <h3 class="text-xl font-semibold">Recently added</h3>
+
+    <h3 class="text-xl font-semibold">Recently modified</h3>
+
+    <h3 class="text-xl font-semibold">Recently shared</h3>
+
+    <h3 class="text-xl font-semibold">Stats</h3>
+    <div class="flex flex-wrap items-center gap-4">
+      {@render statsSquare('Devices', 100)}
+      {@render statsSquare('Tags', 50)}
+      {@render statsSquare('Shares', 30)}
+      {@render statsSquare('Share Views', 20864)}
+    </div>
+
+    <h3 class="text-xl font-semibold">Recently added</h3>
+
+    <h3 class="text-xl font-semibold">Recently modified</h3>
+
+    <h3 class="text-xl font-semibold">Recently shared</h3>
+
+    <h3 class="text-xl font-semibold">Stats</h3>
+    <div class="flex flex-wrap items-center gap-4">
+      {@render statsSquare('Devices', 100)}
+      {@render statsSquare('Tags', 50)}
+      {@render statsSquare('Shares', 30)}
+      {@render statsSquare('Share Views', 20864)}
+    </div>
+
+    <h3 class="text-xl font-semibold">Recently added</h3>
+
+    <h3 class="text-xl font-semibold">Recently modified</h3>
+
+    <h3 class="text-xl font-semibold">Recently shared</h3>
+
+    <h3 class="text-xl font-semibold">Stats</h3>
+    <div class="flex flex-wrap items-center gap-4">
+      {@render statsSquare('Devices', 100)}
+      {@render statsSquare('Tags', 50)}
+      {@render statsSquare('Shares', 30)}
+      {@render statsSquare('Share Views', 20864)}
+    </div>
+
+    <h3 class="text-xl font-semibold">Recently added</h3>
+
+    <h3 class="text-xl font-semibold">Recently modified</h3>
+
+    <h3 class="text-xl font-semibold">Recently shared</h3>
+
+    <h3 class="text-xl font-semibold">Stats</h3>
+    <div class="flex flex-wrap items-center gap-4">
+      {@render statsSquare('Devices', 100)}
+      {@render statsSquare('Tags', 50)}
+      {@render statsSquare('Shares', 30)}
+      {@render statsSquare('Share Views', 20864)}
+    </div>
+
+    <h3 class="text-xl font-semibold">Recently added</h3>
+
+    <h3 class="text-xl font-semibold">Recently modified</h3>
+
+    <h3 class="text-xl font-semibold">Recently shared</h3>
   </div>
 {/if}
