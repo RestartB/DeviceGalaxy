@@ -9,6 +9,10 @@
   "ignoreDeps": [
     "restartb/devicegalaxy"
   ],
+  "baseBranches": [
+    "master",
+    "v2"
+  ]
   "packageRules": [
     {
       "description": "Automerge non-major updates",
