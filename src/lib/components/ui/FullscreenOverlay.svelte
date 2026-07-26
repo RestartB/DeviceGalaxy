@@ -54,7 +54,6 @@
     style="
       width: min({width}px, 100%);
       height: min({height}px, calc(100vh - 5rem));
-      scrollbar-gutter: stable;
     "
   >
     <div
@@ -63,7 +62,7 @@
              dark:border-zinc-700 dark:bg-zinc-800/70"
     >
       {#if Icon}
-        <Icon size={24} />
+        <Icon size={24} class="shrink-0" />
       {/if}
 
       <h2 class="text-xl font-bold mr-auto">{title}</h2>

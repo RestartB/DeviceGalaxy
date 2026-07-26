@@ -1,5 +1,5 @@
-import { error, redirect } from '@sveltejs/kit';
-import { query, form, getRequestEvent } from '$app/server';
+import { error } from '@sveltejs/kit';
+import { form, getRequestEvent } from '$app/server';
 import { auth } from '$lib/server/auth';
 
 import { z } from 'zod';
@@ -14,7 +14,10 @@ export const logIn = form(
     turnstileToken: z.string('Please complete the Captcha.')
   }),
   async ({ email, password, turnstileToken }) => {
-    const event = await getRequestEvent();
+    const event = getRequestEvent();
+    if (event.locals.user) {
+      return error(403, 'Already signed in');
+    }
 
     try {
       const data = await auth.api.signInEmail({
@@ -56,6 +59,11 @@ export const signUp = form(
       path: ['passwordConfirm']
     }),
   async ({ name, email, password, turnstileToken }) => {
+    const event = getRequestEvent();
+    if (event.locals.user) {
+      return error(403, 'Already signed in');
+    }
+
     try {
       await auth.api.signUpEmail({
         body: {

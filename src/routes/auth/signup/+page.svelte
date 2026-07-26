@@ -83,7 +83,7 @@
     Have an account already? Log in
   </a>
 
-  <Button class="flex items-center justify-center gap-1" smallPadding={true} type="submit">
+  <Button smallPadding={true} type="submit">
     <UserPlus size={18} /> Sign up
   </Button>
 </form>

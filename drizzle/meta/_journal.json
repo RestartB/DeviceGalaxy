@@ -15,6 +15,13 @@
       "when": 1781972301155,
       "tag": "0001_magenta_captain_cross",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785090844065,
+      "tag": "0002_complete_black_widow",
+      "breakpoints": true
     }
   ]
 }
