@@ -57,7 +57,7 @@
 {/snippet}
 
 <header
-  class="fixed z-100 h-20 w-full border-b-zinc-300 text-lg backdrop-blur-lg transition-all dark:border-b-zinc-700"
+  class="fixed z-40 h-20 w-full border-b-zinc-300 text-lg backdrop-blur-lg transition-all dark:border-b-zinc-700"
   style="view-transition-name: header"
   bind:this={headerElement}
 >

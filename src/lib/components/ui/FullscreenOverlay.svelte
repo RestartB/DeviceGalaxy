@@ -2,17 +2,18 @@
   import { fade, scale } from 'svelte/transition';
   import { cubicOut } from 'svelte/easing';
 
-  import { X } from '@lucide/svelte';
+  import { X, type LucideIcon } from '@lucide/svelte';
   import type { Snippet } from 'svelte';
 
   let {
     children,
     extraButton,
     bottomRow,
+    Icon,
     title,
     width = 466,
     height = 564,
-    padding = 0,
+    padding = 16,
     gap = 0,
     zIndex = 50,
     overflow = true,
@@ -23,6 +24,7 @@
     children?: Snippet<[]>;
     extraButton?: Snippet<[]>;
     bottomRow?: Snippet<[]>;
+    Icon?: LucideIcon;
     title?: string;
     width?: number;
     height?: number;
@@ -33,18 +35,12 @@
     class?: string;
     overlayOpen?: boolean;
   } = $props();
-
-  let scrollY = $state(0);
 </script>
-
-<svelte:window bind:scrollY />
 
 <div
   class="fixed inset-0 isolate flex flex-col items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60 {className}"
-  class:pt-16={scrollY >= 20}
-  class:pt-20={scrollY < 20}
   style="z-index: {zIndex}"
-  transition:fade={{ duration: 100 }}
+  transition:fade|global={{ duration: 100 }}
 >
   <div
     class="absolute inset-0 -z-10"
@@ -53,13 +49,26 @@
   ></div>
 
   <div
-    class="flex flex-col gap-4 rounded-xl border-2 border-zinc-300 bg-zinc-100 p-4 dark:border-zinc-700 dark:bg-zinc-800"
-    style="width: min({width}px, 100%); height: min({height}px, calc(100vh - 5rem)); max-height: calc(100vh - 5rem);"
-    transition:scale={{ duration: 300, easing: cubicOut, start: 0.9, opacity: 1 }}
+    transition:scale|global={{ duration: 300, easing: cubicOut, start: 0.9, opacity: 1 }}
+    class="relative overflow-auto rounded-xl border-2 border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800"
+    style="
+      width: min({width}px, 100%);
+      height: min({height}px, calc(100vh - 5rem));
+      scrollbar-gutter: stable;
+    "
   >
-    <div class="flex w-full shrink-0 items-center justify-between gap-2">
-      <h2 class="text-xl font-bold">{title}</h2>
+    <div
+      class="sticky top-0 z-10 flex items-center gap-4
+             border-b-2 border-zinc-300 bg-zinc-100/70 p-4 backdrop-blur-md
+             dark:border-zinc-700 dark:bg-zinc-800/70"
+    >
+      {#if Icon}
+        <Icon size={24} />
+      {/if}
+
+      <h2 class="text-xl font-bold mr-auto">{title}</h2>
       {@render extraButton?.()}
+
       <button
         class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-zinc-200 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
         type="button"
@@ -71,9 +80,8 @@
     </div>
 
     <div
-      class="flex w-full flex-1 flex-col rounded-xl border-2 border-zinc-300 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-700"
+      class="flex w-full flex-col"
       class:overflow-hidden={!overflow}
-      class:overflow-auto={overflow}
       style="padding: {padding}px; gap: {gap}px;"
     >
       {@render children?.()}

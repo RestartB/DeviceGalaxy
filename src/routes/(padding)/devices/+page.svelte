@@ -3,6 +3,8 @@
   import FullscreenOverlay from '$lib/components/ui/FullscreenOverlay.svelte';
   import Button from '$lib/components/ui/inputs/Button.svelte';
 
+  import { TriangleAlert } from '@lucide/svelte';
+
   let overlayOpen = $state(false);
   let normalOverlayOpen = $state(false);
 </script>
@@ -12,7 +14,34 @@
 {/if}
 
 {#if normalOverlayOpen}
-  <FullscreenOverlay bind:overlayOpen={normalOverlayOpen} title="test">
+  <FullscreenOverlay bind:overlayOpen={normalOverlayOpen} title="test" Icon={TriangleAlert}>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
+    <p>this is a test</p>
     <p>this is a test</p>
   </FullscreenOverlay>
 {/if}
