@@ -112,23 +112,16 @@ export const share = pgTable('shares', {
   createdAt: timestamp('created_at').defaultNow().notNull()
 });
 
-export const devicesRelations = relations(device, ({ many }) => ({
-  specifications: many(deviceSpecification)
+export const specificationFieldsRelations = relations(specificationField, ({ many }) => ({
+  values: many(specificationValue),
+  deviceSpecifications: many(deviceSpecification)
 }));
 
-export const deviceSpecificationsRelations = relations(deviceSpecification, ({ one }) => ({
-  device: one(device, {
-    fields: [deviceSpecification.deviceId],
-    references: [device.id]
-  }),
+export const specificationValuesRelations = relations(specificationValue, ({ one }) => ({
   field: one(specificationField, {
-    fields: [deviceSpecification.fieldId],
+    fields: [specificationValue.fieldId],
     references: [specificationField.id]
   })
-}));
-
-export const specificationFieldsRelations = relations(specificationField, ({ many }) => ({
-  deviceSpecifications: many(deviceSpecification)
 }));
 
 export * from './auth.schema';

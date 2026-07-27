@@ -1,16 +1,7 @@
 import { error } from '@sveltejs/kit';
-import { query, form, getRequestEvent } from '$app/server';
-import { auth } from '$lib/server/auth';
+import { form, getRequestEvent } from '$app/server';
 
-import { z } from 'zod';
-import { device } from '$lib/server/db/schema';
-
-const deviceSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  specs: z.array(z.object({ id: z.uuidv4(), value: z.uuidv4() }).required()).default([]),
-  images: z.array(z.file().mime('image/')).max(5, 'Please select up to 5 images.')
-});
+import { deviceSchema } from '$lib/schema/device';
 
 export const createDevice = form(deviceSchema, async ({ name, description, specs, images }) => {
   const event = getRequestEvent();
