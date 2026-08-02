@@ -3,12 +3,7 @@ import { db } from '$lib/server/db';
 import { userDevices, cpus, gpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 type TableWithUserField =
-  | typeof cpus
-  | typeof gpus
-  | typeof memory
-  | typeof storage
-  | typeof os
-  | typeof brands;
+  typeof cpus | typeof gpus | typeof memory | typeof storage | typeof os | typeof brands;
 type DatabaseType = typeof db;
 type TransactionType = Parameters<Parameters<DatabaseType['transaction']>[0]>[0];
 

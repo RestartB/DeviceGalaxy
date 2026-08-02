@@ -12,7 +12,6 @@ import type { InferSelectModel } from 'drizzle-orm';
 import { userDevices, cpus, gpus, memory, storage, os, brands } from '$lib/server/db/schema';
 
 import deleteOrphans from '$lib/deleteOrphans';
-import { verifyTurnstile } from '$lib';
 
 import sharp from 'sharp';
 import { existsSync } from 'fs';
@@ -359,7 +358,7 @@ export const actions = {
         }
 
         // CPU
-        if (form.data.cpu) {
+        if (form.data.cpu?.trim()) {
           const cpuValue = form.data.cpu.trim().toLowerCase();
           const existingCpu = await tx.query.cpus.findFirst({
             where: and(eq(cpus.value, cpuValue), eq(cpus.userID, event.locals.user.id))
@@ -379,10 +378,12 @@ export const actions = {
           } else {
             newCPU = existingCpu;
           }
+        } else {
+          newCPU = undefined;
         }
 
         // GPU
-        if (form.data.gpu) {
+        if (form.data.gpu?.trim()) {
           const gpuValue = form.data.gpu.trim().toLowerCase();
           const existingGpu = await tx.query.gpus.findFirst({
             where: and(eq(gpus.value, gpuValue), eq(gpus.userID, event.locals.user.id))
@@ -402,10 +403,12 @@ export const actions = {
           } else {
             newGPU = existingGpu;
           }
+        } else {
+          newGPU = undefined;
         }
 
         // Memory
-        if (form.data.memory) {
+        if (form.data.memory?.trim()) {
           const memoryValue = form.data.memory.trim().toLowerCase();
           const existingMemory = await tx.query.memory.findFirst({
             where: and(eq(memory.value, memoryValue), eq(memory.userID, event.locals.user.id))
@@ -425,10 +428,12 @@ export const actions = {
           } else {
             newMemory = existingMemory;
           }
+        } else {
+          newMemory = undefined;
         }
 
         // Storage
-        if (form.data.storage) {
+        if (form.data.storage?.trim()) {
           const storageValue = form.data.storage.trim().toLowerCase();
           const existingStorage = await tx.query.storage.findFirst({
             where: and(eq(storage.value, storageValue), eq(storage.userID, event.locals.user.id))
@@ -448,10 +453,12 @@ export const actions = {
           } else {
             newStorage = existingStorage;
           }
+        } else {
+          newStorage = undefined;
         }
 
         // OS
-        if (form.data.os) {
+        if (form.data.os?.trim()) {
           const osValue = form.data.os.trim().toLowerCase();
           const existingOS = await tx.query.os.findFirst({
             where: and(eq(os.value, osValue), eq(os.userID, event.locals.user.id))
@@ -471,10 +478,12 @@ export const actions = {
           } else {
             newOS = existingOS;
           }
+        } else {
+          newOS = undefined;
         }
 
         // Brand
-        if (form.data.brand) {
+        if (form.data.brand?.trim()) {
           const brandValue = form.data.brand.trim().toLowerCase();
           const existingBrand = await tx.query.brands.findFirst({
             where: and(eq(brands.value, brandValue), eq(brands.userId, event.locals.user.id))
@@ -494,6 +503,8 @@ export const actions = {
           } else {
             newBrand = existingBrand;
           }
+        } else {
+          newBrand = undefined;
         }
 
         const processedImages = form.data.oldImages || [];
@@ -560,12 +571,12 @@ export const actions = {
             deviceName: form.data.deviceName,
             description: form.data.description,
             additional: form.data.additional,
-            cpu: newCPU?.id,
-            gpu: newGPU?.id,
-            memory: newMemory?.id,
-            storage: newStorage?.id,
-            os: newOS?.id,
-            brand: newBrand?.id,
+            cpu: newCPU?.id ?? null,
+            gpu: newGPU?.id ?? null,
+            memory: newMemory?.id ?? null,
+            storage: newStorage?.id ?? null,
+            os: newOS?.id ?? null,
+            brand: newBrand?.id ?? null,
             internalImages: processedImages,
             tags: form.data.tags,
             updatedAt: new Date()
