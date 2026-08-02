@@ -21,10 +21,10 @@ const client = createClient({ url: dbUrl, concurrency: 0 });
 export const db = drizzle(client, { schema });
 export async function initializeDatabase() {
   try {
-    console.log("Running database migrations...")
+    console.log('Running database migrations...');
     await migrate(db, { migrationsFolder: 'drizzle' });
 
-    console.log("Enabling WAL...")
+    console.log('Enabling WAL...');
     await client.execute('PRAGMA journal_mode = WAL');
     await client.execute('PRAGMA synchronous = NORMAL');
     await client.execute('PRAGMA cache_size = 1000000');
@@ -34,6 +34,6 @@ export async function initializeDatabase() {
     console.log('Database initialized successfully');
   } catch (error) {
     console.error('Failed to initialize database:', error);
-    exit(1)
+    exit(1);
   }
 }

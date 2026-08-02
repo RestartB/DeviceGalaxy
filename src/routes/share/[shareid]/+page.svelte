@@ -63,7 +63,7 @@
         property="og:description"
         content="View {data.shareUser.name}'s shared devices on DeviceGalaxy."
       />
-      
+
       <meta
         property="og:image"
         content={data.shareUser.image

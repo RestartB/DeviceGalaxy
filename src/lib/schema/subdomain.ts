@@ -64,8 +64,8 @@ export const subdomainSchema = z.object({
           'unsubscribe',
           'contact',
           'feedback',
-          "em776103",
-          "link"
+          'em776103',
+          'link'
         ];
         return !reserved.includes(val);
       },

@@ -44,7 +44,7 @@
 
     <meta property="og:title" content="DeviceGalaxy" />
     <meta property="og:description" content="Manage and share your galaxy of devices." />
-    <meta property="og:image" content="https://devicegalaxy.me/favicon.png"  />
+    <meta property="og:image" content="https://devicegalaxy.me/favicon.png" />
     <meta name="twitter:card" content="summary" />
   {/if}
 </svelte:head>

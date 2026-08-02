@@ -59,8 +59,7 @@
     placeholder="Add a description..."
     name="description"
     rows="3"
-    bind:value={$form.description}
-  ></textarea>
+    bind:value={$form.description}></textarea>
 
   {#if $errors.description}
     <p class="text-sm text-red-500">{$errors.description}</p>

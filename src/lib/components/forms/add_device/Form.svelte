@@ -64,7 +64,7 @@
       onError: (error) => {
         console.error('Form submission error:', error);
         toast.error('Failed to create device. Try again later.');
-      },
+      }
     });
 
   const files = filesProxy(form, 'images');
@@ -171,8 +171,7 @@
               id="description"
               name="description"
               class="min-h-20 w-full rounded-lg border p-2"
-              bind:value={$form.description}
-            ></textarea>
+              bind:value={$form.description}></textarea>
             {#if $errors.description}<span class="text-red-600">{$errors.description}</span>{/if}
             <div>
               <label for="additional" class="text-sm font-medium">Additional Notes</label>
@@ -182,8 +181,7 @@
               id="additional"
               name="additional"
               class="min-h-20 w-full rounded-lg border p-2"
-              bind:value={$form.additional}
-            ></textarea>
+              bind:value={$form.additional}></textarea>
             {#if $errors.additional}<span class="text-red-600">{$errors.additional}</span>{/if}
           </div>
 
