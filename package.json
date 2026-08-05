@@ -22,7 +22,7 @@
     "@better-auth/cli": "1.4.21",
     "@eslint/js": "10.0.1",
     "@sveltejs/adapter-node": "5.5.7",
-    "@sveltejs/kit": "2.70.1",
+    "@sveltejs/kit": "2.70.2",
     "@sveltejs/vite-plugin-svelte": "7.2.0",
     "@tailwindcss/vite": "4.3.3",
     "@types/cloudflare-turnstile": "0.2.2",
