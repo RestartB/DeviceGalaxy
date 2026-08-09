@@ -27,7 +27,7 @@
     "@tailwindcss/vite": "4.3.3",
     "@types/cloudflare-turnstile": "0.2.2",
     "@types/node": "24.13.3",
-    "better-auth": "1.6.25",
+    "better-auth": "1.6.26",
     "drizzle-kit": "0.31.10",
     "drizzle-orm": "0.45.2",
     "eslint": "10.8.0",
