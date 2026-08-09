@@ -75,7 +75,7 @@
 </svelte:head>
 
 {#if data.share.type === 0}
-  <div class="w-full p-4">
+  <div class="flex w-full justify-center p-4">
     <Devices {data} shareID={data.share.id} />
   </div>
 {:else if data.share.type === 1}
