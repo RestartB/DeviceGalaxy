@@ -51,7 +51,7 @@
   "dependencies": {
     "@better-auth/drizzle-adapter": "1.6.26",
     "@libsql/client": "0.17.4",
-    "@lucide/svelte": "1.28.0",
+    "@lucide/svelte": "1.29.0",
     "@types/cloudflare-turnstile": "0.2.2",
     "better-auth": "1.6.26",
     "dotenv": "17.4.2",
