@@ -32,7 +32,7 @@
     "drizzle-orm": "0.45.2",
     "eslint": "10.10.0",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-svelte": "3.22.0",
+    "eslint-plugin-svelte": "3.23.0",
     "globals": "17.7.0",
     "postgres": "3.4.9",
     "prettier": "3.9.6",
