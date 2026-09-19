@@ -49,11 +49,11 @@
     "zod": "4.6.5"
   },
   "dependencies": {
-    "@better-auth/drizzle-adapter": "1.6.29",
+    "@better-auth/drizzle-adapter": "1.7.5",
     "@libsql/client": "0.18.0",
     "@lucide/svelte": "1.46.0",
     "@types/cloudflare-turnstile": "0.2.2",
-    "better-auth": "1.6.29",
+    "better-auth": "1.7.5",
     "dotenv": "17.4.2",
     "drizzle-orm": "0.45.2",
     "fuse.js": "7.5.0",
