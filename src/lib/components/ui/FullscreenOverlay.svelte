@@ -65,7 +65,7 @@
         <Icon size={24} class="shrink-0" />
       {/if}
 
-      <h2 class="text-xl font-bold mr-auto">{title}</h2>
+      <h2 class="mr-auto text-xl font-bold">{title}</h2>
       {@render extraButton?.()}
 
       <button
