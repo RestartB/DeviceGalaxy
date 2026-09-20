@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1781971718642,
-      "tag": "0000_stormy_sauron",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1781972301155,
-      "tag": "0001_magenta_captain_cross",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1785090844065,
-      "tag": "0002_complete_black_widow",
+      "when": 1789940411271,
+      "tag": "0000_jazzy_champions",
       "breakpoints": true
     }
   ]

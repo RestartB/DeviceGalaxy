@@ -1,17 +1,3 @@
-CREATE TABLE "device_specifications" (
-	"device_id" uuid NOT NULL,
-	"field_id" uuid NOT NULL,
-	"value" text NOT NULL,
-	"position" integer NOT NULL,
-	CONSTRAINT "device_specifications_device_id_field_id_pk" PRIMARY KEY("device_id","field_id")
-);
---> statement-breakpoint
-CREATE TABLE "device_tags" (
-	"device_id" uuid NOT NULL,
-	"tag_id" uuid NOT NULL,
-	CONSTRAINT "device_tags_device_id_tag_id_pk" PRIMARY KEY("device_id","tag_id")
-);
---> statement-breakpoint
 CREATE TABLE "devices" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" text NOT NULL,
@@ -21,6 +7,20 @@ CREATE TABLE "devices" (
 	"images" text[] DEFAULT '{}'::text[] NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "device_specifications" (
+	"device_id" uuid NOT NULL,
+	"field_id" uuid NOT NULL,
+	"value_id" uuid NOT NULL,
+	"position" integer NOT NULL,
+	CONSTRAINT "device_specifications_device_id_field_id_pk" PRIMARY KEY("device_id","field_id")
+);
+--> statement-breakpoint
+CREATE TABLE "device_tags" (
+	"device_id" uuid NOT NULL,
+	"tag_id" uuid NOT NULL,
+	CONSTRAINT "device_tags_device_id_tag_id_pk" PRIMARY KEY("device_id","tag_id")
 );
 --> statement-breakpoint
 CREATE TABLE "shares" (
@@ -39,6 +39,14 @@ CREATE TABLE "specification_fields" (
 	"name" text NOT NULL,
 	"key" text NOT NULL,
 	CONSTRAINT "specification_fields_user_id_key_unique" UNIQUE NULLS NOT DISTINCT("user_id","key")
+);
+--> statement-breakpoint
+CREATE TABLE "specification_values" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" text,
+	"field_id" uuid NOT NULL,
+	"value" text NOT NULL,
+	CONSTRAINT "specification_values_field_id_value_unique" UNIQUE NULLS NOT DISTINCT("field_id","value")
 );
 --> statement-breakpoint
 CREATE TABLE "tags" (
@@ -99,17 +107,21 @@ CREATE TABLE "verification" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+ALTER TABLE "devices" ADD CONSTRAINT "devices_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "device_specifications" ADD CONSTRAINT "device_specifications_device_id_devices_id_fk" FOREIGN KEY ("device_id") REFERENCES "public"."devices"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "device_specifications" ADD CONSTRAINT "device_specifications_field_id_specification_fields_id_fk" FOREIGN KEY ("field_id") REFERENCES "public"."specification_fields"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "device_specifications" ADD CONSTRAINT "device_specifications_value_id_specification_values_id_fk" FOREIGN KEY ("value_id") REFERENCES "public"."specification_values"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "device_tags" ADD CONSTRAINT "device_tags_device_id_devices_id_fk" FOREIGN KEY ("device_id") REFERENCES "public"."devices"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "device_tags" ADD CONSTRAINT "device_tags_tag_id_tags_id_fk" FOREIGN KEY ("tag_id") REFERENCES "public"."tags"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "devices" ADD CONSTRAINT "devices_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "shares" ADD CONSTRAINT "shares_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "shares" ADD CONSTRAINT "shares_shared_device_devices_id_fk" FOREIGN KEY ("shared_device") REFERENCES "public"."devices"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "specification_fields" ADD CONSTRAINT "specification_fields_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "specification_values" ADD CONSTRAINT "specification_values_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "specification_values" ADD CONSTRAINT "specification_values_field_id_specification_fields_id_fk" FOREIGN KEY ("field_id") REFERENCES "public"."specification_fields"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "tags" ADD CONSTRAINT "tags_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "device_tags_tag_idx" ON "device_tags" USING btree ("tag_id");--> statement-breakpoint
 CREATE INDEX "account_userId_idx" ON "account" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "session_userId_idx" ON "session" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "verification_identifier_idx" ON "verification" USING btree ("identifier");
