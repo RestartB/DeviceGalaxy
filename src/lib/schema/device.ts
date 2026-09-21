@@ -2,7 +2,7 @@ import z from 'zod';
 import { specValueSchema } from './spec';
 
 export const deviceSchema = z.object({
-  name: z.string(),
+  name: z.string().trim().min(1, 'Please enter a title.'),
   description: z.string(),
   specs: z.array(specValueSchema).default([]),
   images: z.array(z.file().mime('image/')).max(5, 'Please select up to 5 images.')

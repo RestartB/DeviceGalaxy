@@ -5,7 +5,7 @@
   import SelectSpecField from '../specs/SelectSpecField.svelte';
   import SelectSpec from '../specs/SelectSpec.svelte';
   import Button from '../ui/inputs/Button.svelte';
-  import { Upload, Trash, Pencil, Laptop, Plus, X } from '@lucide/svelte';
+  import { Save, Upload, Trash, Pencil, Laptop, Plus, X, CircleAlert } from '@lucide/svelte';
 
   import type { device, specificationField, specificationValue } from '$lib/server/db/schema';
   import type { SpecValueSchema } from '$lib/schema/spec';
@@ -32,6 +32,11 @@
   let fileInput: HTMLInputElement | undefined = $state();
   let files: File[] = $derived(
     (form?.fields.images.value() ?? []).filter((file): file is File => file !== undefined)
+  );
+
+  let errorOverlayOpen = $state(false);
+  let errorMessage = $state(
+    'An error occurred while submitting the data. Please try again in a moment.'
   );
 
   function imagePreview(node: HTMLImageElement, file: File) {
@@ -103,8 +108,50 @@
   {/if}
 {/if}
 
+{#if errorOverlayOpen}
+  <FullscreenOverlay
+    title="Error"
+    Icon={CircleAlert}
+    zIndex={60}
+    bind:overlayOpen={errorOverlayOpen}
+  >
+    <p>{errorMessage}</p>
+  </FullscreenOverlay>
+{/if}
+
+{#snippet extraButton()}
+  <button
+    class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
+    type="submit"
+    onclick={() => (overlayOpen = false)}
+    aria-label={existingDevice ? 'Save' : 'Create'}
+  >
+    {#if existingDevice}
+      <Save size={20} />
+    {:else}
+      <Pencil size={20} />
+    {/if}
+    {existingDevice ? 'Save' : 'Create'}
+  </button>
+{/snippet}
+
 {#if form}
-  <form {...form} enctype="multipart/form-data">
+  <form
+    {...form.enhance(async (form) => {
+      try {
+        if (!(await form.submit()) || !form.result || !form.result.success) {
+          return;
+        }
+        form.element.reset();
+        overlayOpen = false;
+      } catch (error) {
+        console.error(error);
+        errorMessage = String(error);
+        errorOverlayOpen = true;
+      }
+    })}
+    enctype="multipart/form-data"
+  >
     <FullscreenOverlay
       bind:overlayOpen
       width={1200}
@@ -112,6 +159,7 @@
       gap={12}
       title={existingDevice ? existingDevice.name : 'Create Device'}
       Icon={existingDevice ? Laptop : Pencil}
+      {extraButton}
     >
       <input
         class="w-full text-3xl outline-0"
