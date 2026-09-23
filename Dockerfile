@@ -1,5 +1,5 @@
 # builder
-FROM --platform=$BUILDPLATFORM node:24.21.0-alpine@sha256:be80f76cf40ec8e42b9bec49f60a55e0660f30af58d3e5a25530785b30ea67e2 AS builder
+FROM --platform=$BUILDPLATFORM node:24.21.0-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS builder
 
 WORKDIR /app
 COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml svelte.config.js tsconfig.json ./
@@ -22,7 +22,7 @@ RUN rm -r /db
 
 
 # runner
-FROM --platform=$TARGETPLATFORM node:24.21.0-alpine@sha256:be80f76cf40ec8e42b9bec49f60a55e0660f30af58d3e5a25530785b30ea67e2
+FROM --platform=$TARGETPLATFORM node:24.21.0-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1
 
 WORKDIR /app
 
