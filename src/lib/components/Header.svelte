@@ -16,7 +16,9 @@
   let menuOpen = $state(false);
   let width = $state(0);
 
-  afterNavigate(() => {
+  afterNavigate(({ shallow, type }) => {
+    if (shallow && type === 'goto') return;
+
     menuOpen = false;
   });
 
