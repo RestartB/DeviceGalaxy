@@ -18,13 +18,7 @@ export default defineConfig({
           async: true
         }
       },
-      adapter: adapter(),
-      typescript: {
-        config: (config) => ({
-          ...config,
-          include: [...config.include, '../drizzle.config.ts']
-        })
-      }
+      adapter: adapter()
     })
   ]
 });

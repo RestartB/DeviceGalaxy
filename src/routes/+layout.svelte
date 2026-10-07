@@ -23,7 +23,7 @@
 
 <div class="flex min-h-screen flex-col">
   <Header {user} />
-  <main class="mx-auto h-full w-full max-w-7xl flex-1 p-4 pt-20 flex flex-col">
+  <main class="mx-auto flex h-full w-full max-w-7xl flex-1 flex-col p-4 pt-20">
     {@render children()}
   </main>
   <Footer />

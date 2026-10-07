@@ -36,7 +36,7 @@
     }
 
     if (logIn.result.success) {
-      console.log("success")
+      console.log('success');
       await goto(resolve('/'));
     } else {
       if (widgetId) {
