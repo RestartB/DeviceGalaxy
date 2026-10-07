@@ -19,8 +19,7 @@ export const createDevice = form(deviceSchema, async ({ name, description, specs
     return error(401, 'Not logged in');
   }
 
-  let deviceObj;
-  await db.transaction(async (tx) => {
+  const deviceObj = await db.transaction(async (tx) => {
     // make type checker happy
     if (!event.locals.user) {
       return error(401, 'Not logged in');
@@ -32,7 +31,10 @@ export const createDevice = form(deviceSchema, async ({ name, description, specs
       .values({ userId: event.locals.user.id, name, description })
       .returning();
 
-    deviceObj = deviceObjs[0];
+    const createdDevice = deviceObjs[0];
+    if (!createdDevice) {
+      throw Error('Device is missing');
+    }
 
     // insert spec values
     for (const [i, spec] of specs.entries()) {
@@ -41,7 +43,7 @@ export const createDevice = form(deviceSchema, async ({ name, description, specs
       }
 
       await tx.insert(deviceSpecification).values({
-        deviceId: deviceObj.id,
+        deviceId: createdDevice.id,
         fieldId: spec.fieldId,
         valueId: spec.valueId,
         position: i
@@ -49,7 +51,7 @@ export const createDevice = form(deviceSchema, async ({ name, description, specs
     }
 
     const imageIds = [];
-    const uploadDir = join(MEDIA_PATH, 'device', deviceObj.id.toString());
+    const uploadDir = join(MEDIA_PATH, 'device', createdDevice.id.toString());
     try {
       for (const image of images) {
         await mkdir(uploadDir, { recursive: true });
@@ -76,7 +78,7 @@ export const createDevice = form(deviceSchema, async ({ name, description, specs
       }
 
       if (imageIds.length > 0) {
-        await tx.update(device).set({ images: imageIds }).where(eq(device.id, deviceObj.id));
+        await tx.update(device).set({ images: imageIds }).where(eq(device.id, createdDevice.id));
       }
     } catch (error) {
       try {
@@ -86,11 +88,9 @@ export const createDevice = form(deviceSchema, async ({ name, description, specs
       }
       throw error;
     }
+
+    return createdDevice;
   });
 
-  if (deviceObj) {
-    return { success: true, id: deviceObj.id };
-  } else {
-    throw Error('Device is missing');
-  }
+  return { success: true, id: deviceObj.id };
 });

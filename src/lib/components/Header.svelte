@@ -72,11 +72,11 @@
     <div class="flex h-full shrink-0 items-center">
       <nav class="flex h-full shrink-0 items-center justify-center gap-4">
         {#if user}
-          {@render topRowLink('Home', '/')}
-          {@render topRowLink('Devices', '/devices')}
-          {@render topRowLink('Tags', '/')}
-          {@render topRowLink('Specs', '/')}
-          {@render topRowLink('Shares', '/')}
+          {@render topRowLink('Home', '')}
+          {@render topRowLink('Devices', 'devices')}
+          {@render topRowLink('Tags', '')}
+          {@render topRowLink('Specs', '')}
+          {@render topRowLink('Shares', '')}
         {/if}
       </nav>
     </div>

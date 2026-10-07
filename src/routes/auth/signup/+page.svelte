@@ -10,7 +10,7 @@
   import FullscreenOverlay from '#lib/components/ui/FullscreenOverlay.svelte';
   import { UserPlus } from '@lucide/svelte';
 
-  import { TURNSTILE_SITE_KEY } from '$app/env/public';
+  import { TURNSTILE_ENABLED, TURNSTILE_SITE_KEY } from '$app/env/public';
 
   const { name, email, password, passwordConfirm, turnstileToken } = signUp.fields;
 
@@ -18,27 +18,31 @@
   let errorOverlayOpen = $state(false);
 
   onMount(() => {
+    if (!TURNSTILE_ENABLED) {
+      return;
+    }
+
     widgetId = turnstile.render('#turnstile-container', {
       sitekey: TURNSTILE_SITE_KEY,
       'response-field-name': 'turnstileToken'
     });
   });
   onDestroy(() => {
-    if (widgetId) {
+    if (TURNSTILE_ENABLED && widgetId) {
       turnstile.remove(widgetId);
     }
   });
 
-  $effect(async () => {
+  $effect(() => {
     if (!signUp.result) {
       return;
     }
 
     if (signUp.result.success) {
       console.log('success');
-      await goto(resolve('/'));
+      void goto(resolve(''));
     } else {
-      if (widgetId) {
+      if (TURNSTILE_ENABLED && widgetId) {
         turnstile.reset(widgetId);
       }
       errorOverlayOpen = true;
@@ -89,12 +93,14 @@
     <p class="text-red-600">{issue.message}</p>
   {/each}
 
-  <label class="text-base" for="turnstile-container">Captcha</label>
-  <div id="turnstile-container" class="mr-auto -mb-2 h-fit"></div>
+  {#if TURNSTILE_ENABLED}
+    <label class="text-base" for="turnstile-container">Captcha</label>
+    <div id="turnstile-container" class="mr-auto -mb-2 h-fit"></div>
 
-  {#each turnstileToken.issues() as issue (issue.message)}
-    <p class="text-red-600">{issue.message}</p>
-  {/each}
+    {#each turnstileToken.issues() as issue (issue.message)}
+      <p class="text-red-600">{issue.message}</p>
+    {/each}
+  {/if}
 
   <a
     class="my-2 w-fit cursor-pointer text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
