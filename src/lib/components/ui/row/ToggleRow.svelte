@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Toggle from '$lib/components/ui/inputs/Toggle.svelte';
+  import Toggle from '#lib/components/ui/inputs/Toggle.svelte';
   let { toggled = $bindable(false), children } = $props();
 </script>
 

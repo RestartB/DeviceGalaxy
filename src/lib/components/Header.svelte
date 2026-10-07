@@ -3,7 +3,7 @@
   import { afterNavigate } from '$app/navigation';
 
   import { LogIn, LogOut } from '@lucide/svelte';
-  import logo from '$lib/assets/logo.svg';
+  import logo from '#lib/assets/logo.svg';
 
   import type { Path } from '$app/types';
   import type { User } from 'better-auth';

@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { form, getRequestEvent } from '$app/server';
-import { auth } from '$lib/server/auth';
+import { auth } from '#lib/server/auth.js';
 
 import { z } from 'zod';
 

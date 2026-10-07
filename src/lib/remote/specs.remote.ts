@@ -2,8 +2,8 @@ import { error } from '@sveltejs/kit';
 import { form, getRequestEvent } from '$app/server';
 
 import { z } from 'zod';
-import { specificationField, specificationValue } from '$lib/server/db/schema';
-import { db } from '$lib/server/db';
+import { specificationField, specificationValue } from '#lib/server/db/schema.js';
+import { db } from '#lib/server/db/index.js';
 
 const specFieldSchema = z.object({
   name: z.string()

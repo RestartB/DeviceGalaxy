@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { createSpecValue } from '$lib/remote/specs.remote';
+  import { createSpecValue } from '#lib/remote/specs.remote.js';
 
   import { List, Plus } from '@lucide/svelte';
   import FullscreenOverlay from '../ui/FullscreenOverlay.svelte';
 
-  import type { specificationValue } from '$lib/server/db/schema';
+  import type { specificationValue } from '#lib/server/db/schema.js';
 
   let {
     fieldId,

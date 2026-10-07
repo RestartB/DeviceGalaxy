@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Device from '$lib/components/devices/Device.svelte';
-  import Button from '$lib/components/ui/inputs/Button.svelte';
+  import Device from '#lib/components/devices/Device.svelte';
+  import Button from '#lib/components/ui/inputs/Button.svelte';
   import { Pencil, Search, Funnel, CircleAlert } from '@lucide/svelte';
 
   const { data } = $props();

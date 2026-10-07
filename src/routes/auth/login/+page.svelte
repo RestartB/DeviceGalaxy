@@ -2,11 +2,11 @@
   import { onDestroy, onMount } from 'svelte';
   import { resolve } from '$app/paths';
 
-  import { logIn } from '$lib/remote/auth.remote';
+  import { logIn } from '#lib/remote/auth.remote.js';
 
-  import Button from '$lib/components/ui/inputs/Button.svelte';
-  import Text from '$lib/components/ui/inputs/Text.svelte';
-  import FullscreenOverlay from '$lib/components/ui/FullscreenOverlay.svelte';
+  import Button from '#lib/components/ui/inputs/Button.svelte';
+  import Text from '#lib/components/ui/inputs/Text.svelte';
+  import FullscreenOverlay from '#lib/components/ui/FullscreenOverlay.svelte';
   import { LogIn } from '@lucide/svelte';
 
   import { TURNSTILE_SITE_KEY } from '$app/env/public';

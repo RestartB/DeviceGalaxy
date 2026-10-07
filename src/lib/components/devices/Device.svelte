@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { createDevice } from '$lib/remote/devices.remote';
+  import { createDevice } from '#lib/remote/devices.remote.js';
 
-  import FullscreenOverlay from '$lib/components/ui/FullscreenOverlay.svelte';
+  import FullscreenOverlay from '#lib/components/ui/FullscreenOverlay.svelte';
   import SelectSpecField from '../specs/SelectSpecField.svelte';
   import SelectSpec from '../specs/SelectSpec.svelte';
   import Button from '../ui/inputs/Button.svelte';
   import { Save, Upload, Trash, Pencil, Laptop, Plus, X, CircleAlert } from '@lucide/svelte';
 
-  import type { device, specificationField, specificationValue } from '$lib/server/db/schema';
-  import type { SpecValueSchema } from '$lib/schema/spec';
+  import type { device, specificationField, specificationValue } from '#lib/server/db/schema.js';
+  import type { SpecValueSchema } from '#lib/schema/spec.js';
 
   type SpecificationFieldWithValues = typeof specificationField.$inferSelect & {
     values: (typeof specificationValue.$inferSelect)[];

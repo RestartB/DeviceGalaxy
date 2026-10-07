@@ -49,5 +49,9 @@
     "@lucide/svelte": "1.26.0",
     "sharp": "^0.35.4",
     "zod": "4.4.3"
+  },
+  "imports": {
+    "#lib": "./src/lib/index.js",
+    "#lib/*": "./src/lib/*"
   }
 }

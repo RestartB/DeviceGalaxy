@@ -3,11 +3,11 @@
   import { goto } from '$app/navigation';
   import { resolve } from '$app/paths';
 
-  import { signUp } from '$lib/remote/auth.remote';
+  import { signUp } from '#lib/remote/auth.remote.js';
 
-  import Button from '$lib/components/ui/inputs/Button.svelte';
-  import Text from '$lib/components/ui/inputs/Text.svelte';
-  import FullscreenOverlay from '$lib/components/ui/FullscreenOverlay.svelte';
+  import Button from '#lib/components/ui/inputs/Button.svelte';
+  import Text from '#lib/components/ui/inputs/Text.svelte';
+  import FullscreenOverlay from '#lib/components/ui/FullscreenOverlay.svelte';
   import { UserPlus } from '@lucide/svelte';
 
   import { TURNSTILE_SITE_KEY } from '$app/env/public';

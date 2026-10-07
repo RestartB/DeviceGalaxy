@@ -6,7 +6,7 @@ import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { captcha } from 'better-auth/plugins';
 
 import { getRequestEvent } from '$app/server';
-import { db } from '$lib/server/db';
+import { db } from '#lib/server/db/index.js';
 
 export const auth = betterAuth({
   baseURL: ORIGIN,

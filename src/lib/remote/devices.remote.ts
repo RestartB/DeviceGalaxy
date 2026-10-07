@@ -3,9 +3,9 @@ import { form, getRequestEvent } from '$app/server';
 
 import { MEDIA_PATH } from '$app/env/private';
 
-import { deviceSchema } from '$lib/schema/device';
-import { db } from '$lib/server/db';
-import { device, deviceSpecification } from '$lib/server/db/schema';
+import { deviceSchema } from '#lib/schema/device.js';
+import { db } from '#lib/server/db/index.js';
+import { device, deviceSpecification } from '#lib/server/db/schema.js';
 
 import { join } from 'path';
 import { mkdir, rm, writeFile } from 'fs/promises';
