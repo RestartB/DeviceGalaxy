@@ -5,7 +5,7 @@
   import { LogIn, LogOut } from '@lucide/svelte';
   import logo from '$lib/assets/logo.svg';
 
-  import type { Pathname } from '$app/types';
+  import type { Path } from '$app/types';
   import type { User } from 'better-auth';
 
   const { user }: { user?: User | undefined } = $props();
@@ -47,7 +47,7 @@
 
 <svelte:window bind:innerWidth={width} bind:scrollY={scrollPos} />
 
-{#snippet topRowLink(title: string, href: Pathname)}
+{#snippet topRowLink(title: string, href: Path)}
   <a
     href={resolve(href)}
     class="hidden h-full items-center opacity-60 transition-all hover:opacity-100 xs:flex"
@@ -94,10 +94,9 @@
       {:else}
         <a
           class="mr-4 ml-2 hidden items-center justify-center gap-1 rounded-lg border border-zinc-400 bg-zinc-300 p-1 px-2 transition-colors hover:bg-zinc-200 xs:flex dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-800"
-          href={resolve('/auth/login')}
+          href={resolve('auth/login')}
         >
-          <LogIn size={20} />
-          Log In
+          <LogIn size={20} />Log In
         </a>
       {/if}
     </div>

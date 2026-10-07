@@ -9,7 +9,7 @@
   import FullscreenOverlay from '$lib/components/ui/FullscreenOverlay.svelte';
   import { LogIn } from '@lucide/svelte';
 
-  import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+  import { TURNSTILE_SITE_KEY } from '$app/env/public';
   import { goto } from '$app/navigation';
 
   const { email, password, turnstileToken } = logIn.fields;
@@ -19,7 +19,7 @@
 
   onMount(() => {
     widgetId = turnstile.render('#turnstile-container', {
-      sitekey: PUBLIC_TURNSTILE_SITE_KEY,
+      sitekey: TURNSTILE_SITE_KEY,
       'response-field-name': 'turnstileToken'
     });
   });
@@ -85,10 +85,8 @@
 
   <a
     class="my-2 w-fit cursor-pointer text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
-    href={resolve('/auth/signup')}
+    href={resolve('auth/signup')}>Don't have an account? Sign up</a
   >
-    Don't have an account? Sign up
-  </a>
 
   <Button smallPadding={true} type="submit">
     <LogIn size={18} /> Log in

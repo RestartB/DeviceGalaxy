@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { form, getRequestEvent } from '$app/server';
 
-import { env } from '$env/dynamic/private';
+import { MEDIA_PATH } from '$app/env/private';
 
 import { deviceSchema } from '$lib/schema/device';
 import { db } from '$lib/server/db';
@@ -29,12 +29,9 @@ export const createDevice = form(deviceSchema, async ({ name, description, specs
     // create device now, id needed for inserting images
     const deviceObjs = await tx
       .insert(device)
-      .values({
-        userId: event.locals.user.id,
-        name: name,
-        description: description
-      })
+      .values({ userId: event.locals.user.id, name, description })
       .returning();
+
     deviceObj = deviceObjs[0];
 
     // insert spec values
@@ -52,7 +49,7 @@ export const createDevice = form(deviceSchema, async ({ name, description, specs
     }
 
     const imageIds = [];
-    const uploadDir = join(env.MEDIA_PATH, 'device', deviceObj.id.toString());
+    const uploadDir = join(MEDIA_PATH, 'device', deviceObj.id.toString());
     try {
       for (const image of images) {
         await mkdir(uploadDir, { recursive: true });

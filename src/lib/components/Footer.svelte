@@ -17,7 +17,7 @@
     </p>
     <div class="flex flex-wrap items-center gap-2">
       <a
-        href={resolve('/server')}
+        href={resolve('server')}
         class="transition-all hover:font-bold hover:text-zinc-700 hover:dark:text-zinc-300"
       >
         Support Server
