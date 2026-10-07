@@ -10,6 +10,7 @@
   import { LogIn } from '@lucide/svelte';
 
   import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
+  import { goto } from '$app/navigation';
 
   const { email, password, turnstileToken } = logIn.fields;
 
@@ -29,8 +30,15 @@
     }
   });
 
-  $effect(() => {
-    if (logIn.result && !logIn.result.success) {
+  $effect(async () => {
+    if (!logIn.result) {
+      return;
+    }
+
+    if (logIn.result.success) {
+      console.log("success")
+      await goto(resolve('/'));
+    } else {
       if (widgetId) {
         turnstile.reset(widgetId);
       }
@@ -57,21 +65,21 @@
   <label class="mt-2 -mb-1 text-base" for="email">Email Address</label>
   <Text id="email" {...email.as('email')} />
 
-  {#each email.issues() as issue}
+  {#each email.issues() as issue (issue.message)}
     <p class="text-red-600">{issue.message}</p>
   {/each}
 
   <label class="-mb-1 text-base" for="password">Password</label>
   <Text id="password" {...password.as('password')} />
 
-  {#each password.issues() as issue}
+  {#each password.issues() as issue (issue.message)}
     <p class="text-red-600">{issue.message}</p>
   {/each}
 
-  <p class="text-base">Captcha</p>
-  <div id="turnstile-container" class="-mb-2 h-fit"></div>
+  <label class="text-base" for="turnstile-container">Captcha</label>
+  <div id="turnstile-container" class="mr-auto -mb-2 h-fit"></div>
 
-  {#each turnstileToken.issues() as issue}
+  {#each turnstileToken.issues() as issue (issue.message)}
     <p class="text-red-600">{issue.message}</p>
   {/each}
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import Device from '$lib/components/devices/Device.svelte';
   import Button from '$lib/components/ui/inputs/Button.svelte';
-  import { Pencil, Search, Funnel } from '@lucide/svelte';
+  import { Pencil, Search, Funnel, CircleAlert } from '@lucide/svelte';
 
   const { data } = $props();
 
@@ -44,4 +44,9 @@
   >
     <Funnel class="shrink-0" />
   </Button>
+</div>
+
+<div class="p-auto flex items-center justify-center gap-2">
+  <CircleAlert />
+  <p>No devices found</p>
 </div>
