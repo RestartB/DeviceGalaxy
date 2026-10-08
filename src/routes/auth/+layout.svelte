@@ -16,4 +16,8 @@
   :global(label) {
     text-align: left;
   }
+
+  :global(.text-red-600) {
+    text-align: left;
+  }
 </style>

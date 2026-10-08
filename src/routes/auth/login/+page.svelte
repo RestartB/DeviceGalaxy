@@ -54,6 +54,7 @@
 {#if errorOverlayOpen}
   <FullscreenOverlay
     title="Unknown Error"
+    class="text-left"
     padding={16}
     height={250}
     bind:overlayOpen={errorOverlayOpen}

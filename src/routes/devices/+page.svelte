@@ -46,7 +46,7 @@
   </Button>
 </div>
 
-<div class="p-auto flex items-center justify-center gap-2">
+<div class="p-auto flex flex-1 items-center justify-center gap-2">
   <CircleAlert />
   <p>No devices found</p>
 </div>
