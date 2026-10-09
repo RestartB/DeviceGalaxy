@@ -9,6 +9,7 @@
     children,
     extraButton,
     bottomRow,
+    onClose,
     Icon,
     title,
     width = 466,
@@ -24,6 +25,7 @@
     children?: Snippet<[]>;
     extraButton?: Snippet<[]>;
     bottomRow?: Snippet<[]>;
+    onClose?: () => void;
     Icon?: LucideIcon;
     title?: string;
     width?: number;
@@ -44,7 +46,12 @@
 >
   <div
     class="absolute inset-0 -z-10"
-    onclick={() => (overlayOpen = false)}
+    onclick={() => {
+      if (onClose !== undefined) {
+        return onClose();
+      }
+      overlayOpen = false;
+    }}
     aria-hidden="true"
   ></div>
 
@@ -71,7 +78,12 @@
       <button
         class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-zinc-200 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
         type="button"
-        onclick={() => (overlayOpen = false)}
+        onclick={() => {
+          if (onClose !== undefined) {
+            return onClose();
+          }
+          overlayOpen = false;
+        }}
         aria-label="Close popup"
       >
         <X size={24} />

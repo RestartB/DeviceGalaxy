@@ -2,11 +2,10 @@ import { db } from '#lib/server/db/index.js';
 import { device } from '#lib/server/db/schema.js';
 import { eq } from 'drizzle-orm';
 
-import type { PageServerLoad } from './$types';
+import type { LayoutServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: LayoutServerLoad = async ({ locals }) => {
   const user = locals.user;
-
   if (!user) {
     return { specFields: [] };
   }

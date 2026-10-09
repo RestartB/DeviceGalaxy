@@ -2,13 +2,13 @@
   import { createDevice } from '#lib/remote/devices.remote.js';
 
   import FullscreenOverlay from '#lib/components/ui/FullscreenOverlay.svelte';
-  import SelectSpecField from '../specs/SelectSpecField.svelte';
-  import SelectSpec from '../specs/SelectSpec.svelte';
-  import Button from '../ui/inputs/Button.svelte';
+  import SelectSpecField from '#lib/components/specs/SelectSpecField.svelte';
+  import SelectSpec from '#lib/components/specs/SelectSpec.svelte';
+  import Button from '#lib/components/ui/inputs/Button.svelte';
   import { Save, Upload, Trash, Pencil, Laptop, Plus, X, CircleAlert } from '@lucide/svelte';
 
-  import type { device, specificationField, specificationValue } from '#lib/server/db/schema.js';
   import { deviceSchema } from '#lib/schema/device.js';
+  import type { device, specificationField, specificationValue } from '#lib/server/db/schema.js';
   import type { SpecValueSchema } from '#lib/schema/spec.js';
 
   type SpecificationFieldWithValues = typeof specificationField.$inferSelect & {
@@ -18,11 +18,13 @@
   let {
     specFields,
     existingDevice,
-    overlayOpen = $bindable()
+    overlayOpen = $bindable(),
+    onClose = () => (overlayOpen = false)
   }: {
     specFields: SpecificationFieldWithValues[];
     existingDevice?: typeof device.$inferSelect | undefined;
     overlayOpen: boolean;
+    onClose?: () => void;
   } = $props();
 
   let specFieldOverlayOpen = $state(false);
@@ -123,15 +125,15 @@
 {#snippet extraButton()}
   <button
     class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
-    type="submit"
+    type={form ? 'submit' : 'button'}
     aria-label={existingDevice ? 'Save' : 'Create'}
   >
-    {#if existingDevice}
+    {#if existingDevice && form}
       <Save size={20} />
     {:else}
       <Pencil size={20} />
     {/if}
-    {existingDevice ? 'Save' : 'Create'}
+    {existingDevice ? (form ? 'Save' : 'Edit') : 'Create'}
   </button>
 {/snippet}
 
@@ -159,8 +161,9 @@
       width={1200}
       height={1000}
       gap={12}
-      title={existingDevice ? existingDevice.name : 'Create Device'}
+      title={existingDevice ? 'Edit Device' : 'Create Device'}
       Icon={existingDevice ? Laptop : Pencil}
+      {onClose}
       {extraButton}
     >
       <input
@@ -321,4 +324,30 @@
       {/each}
     </FullscreenOverlay>
   </form>
+{:else if existingDevice}
+  <FullscreenOverlay
+    bind:overlayOpen
+    width={1200}
+    height={1000}
+    gap={12}
+    title={existingDevice.name}
+    Icon={Laptop}
+    {onClose}
+    {extraButton}
+  >
+    {#if existingDevice.images.length > 0}
+      <span
+        class="block h-80 w-full rounded-xl bg-cover bg-center"
+        style="background-image: url(/api/v1/image/device/{existingDevice.id}/{existingDevice
+          .images[0]})"
+      ></span>
+    {/if}
+
+    <h1 class="text-3xl">{existingDevice.name}</h1>
+    <p class:opacity-50={!existingDevice.description.trim()}>
+      {existingDevice.description || 'No description provided.'}
+    </p>
+
+    <div class="flex w-full flex-wrap items-center justify-start"></div>
+  </FullscreenOverlay>
 {/if}

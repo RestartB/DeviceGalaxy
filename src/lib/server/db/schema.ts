@@ -113,14 +113,32 @@ export const share = pgTable('shares', {
 });
 
 export const specificationFieldsRelations = relations(specificationField, ({ many }) => ({
-  values: many(specificationValue),
-  deviceSpecifications: many(deviceSpecification)
+  values: many(specificationValue)
 }));
 
 export const specificationValuesRelations = relations(specificationValue, ({ one }) => ({
   field: one(specificationField, {
     fields: [specificationValue.fieldId],
     references: [specificationField.id]
+  })
+}));
+
+export const devicesRelations = relations(device, ({ many }) => ({
+  specifications: many(deviceSpecification)
+}));
+
+export const deviceSpecificationsRelations = relations(deviceSpecification, ({ one }) => ({
+  device: one(device, {
+    fields: [deviceSpecification.deviceId],
+    references: [device.id]
+  }),
+  field: one(specificationField, {
+    fields: [deviceSpecification.fieldId],
+    references: [specificationField.id]
+  }),
+  value: one(specificationValue, {
+    fields: [deviceSpecification.valueId],
+    references: [specificationValue.id]
   })
 }));
 

@@ -19,6 +19,7 @@
   ></script>
 
   <link rel="icon" href={favicon} />
+  <title>DeviceGalaxy</title>
 </svelte:head>
 
 <div class="flex min-h-screen flex-col">
