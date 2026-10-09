@@ -8,6 +8,7 @@
   import { Save, Upload, Trash, Pencil, Laptop, Plus, X, CircleAlert } from '@lucide/svelte';
 
   import type { device, specificationField, specificationValue } from '#lib/server/db/schema.js';
+  import { deviceSchema } from '#lib/schema/device.js';
   import type { SpecValueSchema } from '#lib/schema/spec.js';
 
   type SpecificationFieldWithValues = typeof specificationField.$inferSelect & {
@@ -123,7 +124,6 @@
   <button
     class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
     type="submit"
-    onclick={() => (overlayOpen = false)}
     aria-label={existingDevice ? 'Save' : 'Create'}
   >
     {#if existingDevice}
@@ -137,11 +137,13 @@
 
 {#if form}
   <form
-    {...form.enhance(async (form) => {
+    {...form.preflight(deviceSchema).enhance(async (form) => {
       try {
+        form.validate({ preflightOnly: true });
         if (!(await form.submit()) || !form.result || !form.result.success) {
           return;
         }
+
         form.element.reset();
         overlayOpen = false;
       } catch (error) {
@@ -166,10 +168,19 @@
         placeholder="Enter title..."
         {...form.fields.name.as('text')}
       />
+
+      {#each form.fields.name.issues() as issue (issue.message)}
+        <p class="text-red-600">{issue.message}</p>
+      {/each}
+
       <textarea
         class="h-8 min-h-8 w-full"
         placeholder="Enter description..."
         {...form.fields.description.as('text')}></textarea>
+
+      {#each form.fields.description.issues() as issue (issue.message)}
+        <p class="text-red-600">{issue.message}</p>
+      {/each}
 
       <h3 class="font-semibold">Specs</h3>
 
@@ -298,6 +309,16 @@
           </div>
         {/each}
       </div>
+
+      {#each form.fields.images.issues() as issue (issue.message)}
+        <p class="text-red-600">{issue.message}</p>
+      {/each}
+
+      {#each files as _, index (index)}
+        {#each form.fields.images[index].issues() as issue (issue.message)}
+          <p class="text-red-600">File {index + 1}: {issue.message}</p>
+        {/each}
+      {/each}
     </FullscreenOverlay>
   </form>
 {/if}
