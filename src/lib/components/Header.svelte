@@ -52,7 +52,7 @@
 {#snippet topRowLink(title: string, href: Path)}
   <a
     href={resolve(href)}
-    class="hidden h-full items-center opacity-60 transition-all hover:opacity-100 xs:flex"
+    class="hidden h-full items-center opacity-60 transition-opacity hover:opacity-100 xs:flex"
   >
     {title}
   </a>
@@ -86,7 +86,7 @@
         <p class="font-bold">{user.name}</p>
         <form action="/auth/logout" method="POST" class="h-full">
           <button
-            class="hidden h-full cursor-pointer items-center justify-center gap-2 border-y-transparent border-b-zinc-500 px-4 transition-all hover:border-y-4 xs:flex"
+            class="hidden h-full cursor-pointer items-center justify-center gap-2 px-4 opacity-60 transition-opacity hover:opacity-100 xs:flex"
             title="Log out"
             type="submit"
           >

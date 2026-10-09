@@ -40,13 +40,13 @@
     class="mb-2 flex w-full items-center justify-center gap-2"
   >
     <input
-      class="min-w-35 flex-1 rounded-lg border-2 border-zinc-300 bg-zinc-200 p-1 px-2 dark:border-zinc-600 dark:bg-zinc-700"
+      class="min-w-35 flex-1 rounded-lg border border-zinc-300 bg-zinc-200 p-1 px-2 dark:border-zinc-600 dark:bg-zinc-700"
       placeholder="Enter field name..."
       {...createSpecField.fields.name.as('text')}
     />
     <button
       type="submit"
-      class="flex h-full cursor-pointer items-center justify-center rounded-lg border-2 border-zinc-300 bg-zinc-200 p-1 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-500"
+      class="flex h-full cursor-pointer items-center justify-center rounded-lg border border-zinc-300 bg-zinc-200 p-1 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-500"
       title="Create Field"
     >
       <Plus size={28} />

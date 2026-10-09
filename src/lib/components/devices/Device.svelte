@@ -177,7 +177,7 @@
           <button
             type="button"
             aria-label="Previous image"
-            class="flex cursor-pointer items-center justify-center rounded-full border-2 border-zinc-300 bg-zinc-200 p-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800"
+            class="flex cursor-pointer items-center justify-center rounded-full border border-zinc-300 bg-zinc-200 p-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800"
             disabled={imageIndex === 0}
             onclick={() => (imageIndex -= 1)}
           >
@@ -187,7 +187,7 @@
           <button
             type="button"
             aria-label="Next image"
-            class="flex cursor-pointer items-center justify-center rounded-full border-2 border-zinc-300 bg-zinc-200 p-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800"
+            class="flex cursor-pointer items-center justify-center rounded-full border border-zinc-300 bg-zinc-200 p-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800"
             disabled={imageIndex === existingDevice.images.length - 1}
             onclick={() => (imageIndex += 1)}
           >
@@ -198,7 +198,7 @@
         <button
           type="button"
           aria-label="Close image"
-          class="ml-auto flex cursor-pointer items-center justify-center rounded-full border-2 border-zinc-300 bg-zinc-200 p-1 dark:border-zinc-700 dark:bg-zinc-800"
+          class="ml-auto flex cursor-pointer items-center justify-center rounded-full border border-zinc-300 bg-zinc-200 p-1 dark:border-zinc-700 dark:bg-zinc-800"
           onclick={() => (imageOverlayOpen = false)}
         >
           <X />
@@ -284,7 +284,7 @@
         <li>
           <button
             title="Add specification field..."
-            class="flex w-full cursor-pointer items-center gap-4 rounded-lg border-2 border-zinc-300 bg-zinc-200 p-4 text-center transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-500"
+            class="flex w-full cursor-pointer items-center gap-4 rounded-lg border border-zinc-300 bg-zinc-200 p-4 text-center transition-colors hover:bg-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-600"
             type="button"
             onclick={() => (specFieldOverlayOpen = true)}
           >
@@ -308,7 +308,7 @@
             {/if}
 
             <li
-              class="flex w-full items-center justify-between rounded-lg border-2 border-zinc-200 p-4 dark:border-zinc-700"
+              class="flex w-full items-center justify-between rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
             >
               <div>
                 <p class="mb-2 text-base font-bold text-zinc-900/70 dark:text-zinc-100/70">
@@ -378,13 +378,11 @@
 
       <div class="flex flex-wrap items-center gap-2">
         <button
-          class="flex h-44 w-60 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-zinc-200 p-4 text-center transition-colors hover:bg-zinc-200 dark:border-zinc-700 dark:hover:bg-zinc-700"
+          class="flex h-44 w-60 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-zinc-200 p-4 text-center transition-colors hover:bg-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:hover:bg-zinc-600"
           type="button"
           onclick={() => fileInput?.click()}
         >
-          <div
-            class="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-300 dark:bg-zinc-600"
-          >
+          <div class="flex h-12 w-12 items-center justify-center">
             <Upload />
           </div>
           <p class="font-bold">Upload image</p>
@@ -442,7 +440,7 @@
       ></span>
     {/if}
 
-    <h1 class="text-3xl">{existingDevice.name}</h1>
+    <h1 class="text-3xl font-bold">{existingDevice.name}</h1>
     <p class:opacity-50={!existingDevice.description.trim()}>
       {existingDevice.description.trim() || 'No description provided.'}
     </p>
@@ -453,7 +451,7 @@
       <ul class="flex flex-wrap gap-2">
         {#each existingDevice.specifications as spec (spec.valueId)}
           <li
-            class="flex w-fit flex-col items-start justify-center rounded-lg border-2 border-zinc-200 p-4 dark:border-zinc-700"
+            class="flex w-fit flex-col items-start justify-center rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
           >
             <p class="mb-2 text-base font-bold text-zinc-900/70 dark:text-zinc-100/70">
               {spec.field.name}

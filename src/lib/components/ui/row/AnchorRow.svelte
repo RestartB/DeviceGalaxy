@@ -19,7 +19,7 @@
 </script>
 
 <a
-  class={`flex w-full items-center justify-between gap-2 rounded-xl border-2 border-zinc-700 bg-zinc-800 p-4 text-left transition-colors hover:bg-zinc-700 ${className}`}
+  class={`flex w-full items-center justify-between gap-2 rounded-xl border border-zinc-700 bg-zinc-800 p-4 text-left transition-colors hover:bg-zinc-700 ${className}`}
   {title}
   {href}
   bind:this={thisElement}

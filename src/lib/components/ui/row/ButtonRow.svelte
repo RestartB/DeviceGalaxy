@@ -19,7 +19,7 @@
 </script>
 
 <button
-  class={`block w-full min-w-0 cursor-pointer rounded-xl border-2 border-zinc-700 bg-zinc-800 p-4 text-left transition-colors hover:bg-zinc-700 ${className}`}
+  class={`block w-full min-w-0 cursor-pointer rounded-xl border border-zinc-700 bg-zinc-800 p-4 text-left transition-colors hover:bg-zinc-700 ${className}`}
   bind:this={thisElement}
   {onclick}
   aria-label={label}

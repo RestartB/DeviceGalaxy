@@ -26,7 +26,7 @@
   </Button>
 
   <div
-    class="flex h-12 w-full items-center justify-center gap-1 rounded-lg border-2 border-zinc-300 bg-zinc-200 p-2 pr-4 pl-5 md:min-w-120 dark:border-zinc-700 dark:bg-zinc-800"
+    class="flex h-12 w-full items-center justify-center gap-1 rounded-lg border border-zinc-300 bg-zinc-200 p-2 pr-4 pl-5 md:min-w-120 dark:border-zinc-700 dark:bg-zinc-800"
   >
     <input placeholder="Search devices..." class="w-full" />
     <button

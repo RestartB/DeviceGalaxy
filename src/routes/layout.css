@@ -53,3 +53,12 @@
     opacity: 0;
   }
 }
+
+::view-transition-group(root) {
+  z-index: 1;
+}
+
+::view-transition-group(header),
+::view-transition-group(footer) {
+  z-index: 2;
+}

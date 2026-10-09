@@ -41,7 +41,7 @@
 
 <div
   class="fixed inset-0 isolate flex flex-col items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60 {className}"
-  style="z-index: {zIndex}"
+  style="z-index: {zIndex};"
   transition:fade|global={{ duration: 100 }}
 >
   <div
@@ -57,7 +57,7 @@
 
   <div
     transition:scale|global={{ duration: 300, easing: cubicOut, start: 0.9, opacity: 1 }}
-    class="relative overflow-auto rounded-xl border-2 border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800"
+    class="relative overflow-auto rounded-xl border border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800"
     style="
       width: min({width}px, 100%);
       height: min({height}px, calc(100vh - 5rem));
@@ -65,7 +65,7 @@
   >
     <div
       class="sticky top-0 z-10 flex items-center gap-4
-             border-b-2 border-zinc-300 bg-zinc-100/70 p-4 backdrop-blur-md
+             border-b border-zinc-300 bg-zinc-100/70 p-4 backdrop-blur-md
              dark:border-zinc-700 dark:bg-zinc-800/70"
     >
       {#if Icon}
