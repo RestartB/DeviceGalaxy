@@ -1,15 +1,30 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
+
   import { createDevice } from '#lib/remote/devices.remote.js';
 
   import FullscreenOverlay from '#lib/components/ui/FullscreenOverlay.svelte';
   import SelectSpecField from '#lib/components/specs/SelectSpecField.svelte';
   import SelectSpec from '#lib/components/specs/SelectSpec.svelte';
   import Button from '#lib/components/ui/inputs/Button.svelte';
-  import { Save, Upload, Trash, Pencil, Laptop, Plus, X, CircleAlert } from '@lucide/svelte';
+  import {
+    Save,
+    Upload,
+    Trash,
+    Pencil,
+    Laptop,
+    Plus,
+    X,
+    CircleAlert,
+    Expand,
+    ChevronLeft,
+    ChevronRight
+  } from '@lucide/svelte';
 
   import { deviceSchema } from '#lib/schema/device.js';
-  import type { device, specificationField, specificationValue } from '#lib/server/db/schema.js';
+  import type { specificationField, specificationValue } from '#lib/server/db/schema.js';
   import type { SpecValueSchema } from '#lib/schema/spec.js';
+  import type { DeviceWithSpecifications } from '#lib/types/devices.js';
 
   type SpecificationFieldWithValues = typeof specificationField.$inferSelect & {
     values: (typeof specificationValue.$inferSelect)[];
@@ -22,7 +37,7 @@
     onClose = () => (overlayOpen = false)
   }: {
     specFields: SpecificationFieldWithValues[];
-    existingDevice?: typeof device.$inferSelect | undefined;
+    existingDevice?: DeviceWithSpecifications | undefined;
     overlayOpen: boolean;
     onClose?: () => void;
   } = $props();
@@ -41,6 +56,10 @@
   let errorMessage = $state(
     'An error occurred while submitting the data. Please try again in a moment.'
   );
+
+  let imageOverlayOpen = $state(false);
+  let imageIndex = $state(0);
+  let renderedImageWidth = $state(0);
 
   function imagePreview(node: HTMLImageElement, file: File) {
     let url: string;
@@ -75,7 +94,6 @@
     if (!form || !activeSpec) {
       return;
     }
-    console.log(`updating spec value (spec: ${activeSpec.uuid}, value: ${id})`);
 
     const specs = form.fields.specs.value() || [];
     const index = specs.indexOf(specs.find((sp) => sp?.uuid == activeSpec?.uuid));
@@ -90,6 +108,22 @@
     form.fields.specs.set(specs);
   }
 </script>
+
+<svelte:window
+  onkeyup={(e) => {
+    if (!imageOverlayOpen || !existingDevice) {
+      return;
+    }
+
+    if (e.key === 'ArrowLeft') {
+      imageIndex = Math.max(0, imageIndex - 1);
+    } else if (e.key === 'ArrowRight') {
+      imageIndex = Math.min(existingDevice.images.length - 1, imageIndex + 1);
+    } else if (e.key === 'Escape') {
+      imageOverlayOpen = false;
+    }
+  }}
+/>
 
 {#if specFieldOverlayOpen}
   <SelectSpecField
@@ -120,6 +154,65 @@
   >
     <p>{errorMessage}</p>
   </FullscreenOverlay>
+{/if}
+
+{#if imageOverlayOpen && existingDevice}
+  <div
+    class="fixed inset-0 isolate flex flex-col items-center justify-center overflow-hidden bg-white/60 p-4 backdrop-blur-lg dark:bg-black/60"
+    style="z-index: 100"
+    transition:fade|global={{ duration: 100 }}
+  >
+    <div
+      class="absolute inset-0 -z-10"
+      onclick={() => (imageOverlayOpen = false)}
+      aria-hidden="true"
+    ></div>
+
+    <div class="flex h-full min-h-0 w-full flex-col items-center justify-center gap-2">
+      <div
+        class="flex shrink-0 items-center gap-2"
+        style:width={renderedImageWidth ? `${renderedImageWidth}px` : undefined}
+      >
+        {#if existingDevice.images.length > 1}
+          <button
+            type="button"
+            aria-label="Previous image"
+            class="flex cursor-pointer items-center justify-center rounded-full border-2 border-zinc-300 bg-zinc-200 p-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800"
+            disabled={imageIndex === 0}
+            onclick={() => (imageIndex -= 1)}
+          >
+            <ChevronLeft />
+          </button>
+
+          <button
+            type="button"
+            aria-label="Next image"
+            class="flex cursor-pointer items-center justify-center rounded-full border-2 border-zinc-300 bg-zinc-200 p-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-800"
+            disabled={imageIndex === existingDevice.images.length - 1}
+            onclick={() => (imageIndex += 1)}
+          >
+            <ChevronRight />
+          </button>
+        {/if}
+
+        <button
+          type="button"
+          aria-label="Close image"
+          class="ml-auto flex cursor-pointer items-center justify-center rounded-full border-2 border-zinc-300 bg-zinc-200 p-1 dark:border-zinc-700 dark:bg-zinc-800"
+          onclick={() => (imageOverlayOpen = false)}
+        >
+          <X />
+        </button>
+      </div>
+
+      <img
+        bind:clientWidth={renderedImageWidth}
+        class="block max-h-full min-h-0 w-auto max-w-full shrink object-contain"
+        src="/api/v1/image/device/{existingDevice.id}/{existingDevice.images[imageIndex]}"
+        alt="Fullscreen view"
+      />
+    </div>
+  </div>
 {/if}
 
 {#snippet extraButton()}
@@ -205,9 +298,15 @@
           </button>
         </li>
 
-        {#each form.fields.specs.value() as spec (spec?.uuid)}
+        {#each form.fields.specs.value() as spec, index (spec?.uuid)}
           {@const matchedSpec = specFields.find((sp) => sp.id === spec?.fieldId)}
-          {#if spec && matchedSpec}
+          {#if spec?.uuid && spec.fieldId && matchedSpec}
+            <input {...form.fields.specs[index].uuid.as('hidden', spec.uuid)} />
+            <input {...form.fields.specs[index].fieldId.as('hidden', spec.fieldId)} />
+            {#if spec.valueId}
+              <input {...form.fields.specs[index].valueId.as('hidden', spec.valueId)} />
+            {/if}
+
             <li
               class="flex w-full items-center justify-between rounded-lg border-2 border-zinc-200 p-4 dark:border-zinc-700"
             >
@@ -345,9 +444,53 @@
 
     <h1 class="text-3xl">{existingDevice.name}</h1>
     <p class:opacity-50={!existingDevice.description.trim()}>
-      {existingDevice.description || 'No description provided.'}
+      {existingDevice.description.trim() || 'No description provided.'}
     </p>
 
-    <div class="flex w-full flex-wrap items-center justify-start"></div>
+    {#if existingDevice.specifications.length > 0}
+      <h3 class="font-semibold">Specs</h3>
+
+      <ul class="flex flex-wrap gap-2">
+        {#each existingDevice.specifications as spec (spec.valueId)}
+          <li
+            class="flex w-fit flex-col items-start justify-center rounded-lg border-2 border-zinc-200 p-4 dark:border-zinc-700"
+          >
+            <p class="mb-2 text-base font-bold text-zinc-900/70 dark:text-zinc-100/70">
+              {spec.field.name}
+            </p>
+            <p>{spec.value.value}</p>
+          </li>
+        {/each}
+      </ul>
+    {/if}
+
+    {#if existingDevice.images.length > 0}
+      <h3 class="font-semibold">Images</h3>
+
+      <div class="flex flex-wrap items-center gap-2">
+        {#each existingDevice.images as image, i (image)}
+          <div
+            class="relative isolate overflow-hidden rounded-lg border-zinc-200 dark:border-zinc-700"
+          >
+            <button
+              class="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-white/70 opacity-0 transition-opacity hover:opacity-100 dark:bg-black/70"
+              type="button"
+              onclick={() => {
+                imageIndex = i;
+                imageOverlayOpen = true;
+              }}
+            >
+              <Expand />
+            </button>
+
+            <img
+              src="/api/v1/image/device/{existingDevice.id}/{image}"
+              alt="User uploaded"
+              class="h-44 w-auto"
+            />
+          </div>
+        {/each}
+      </div>
+    {/if}
   </FullscreenOverlay>
 {/if}
