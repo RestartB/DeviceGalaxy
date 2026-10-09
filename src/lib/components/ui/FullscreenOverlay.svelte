@@ -71,23 +71,24 @@
       {#if Icon}
         <Icon size={24} class="shrink-0" />
       {/if}
-
       <h2 class="mr-auto text-xl font-bold">{title}</h2>
-      {@render extraButton?.()}
 
-      <button
-        class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-zinc-200 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
-        type="button"
-        onclick={() => {
-          if (onClose !== undefined) {
-            return onClose();
-          }
-          overlayOpen = false;
-        }}
-        aria-label="Close popup"
-      >
-        <X size={24} />
-      </button>
+      <div class="flex items-center justify-center gap-2">
+        {@render extraButton?.()}
+        <button
+          class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full bg-zinc-200 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
+          type="button"
+          onclick={() => {
+            if (onClose !== undefined) {
+              return onClose();
+            }
+            overlayOpen = false;
+          }}
+          aria-label="Close popup"
+        >
+          <X size={24} />
+        </button>
+      </div>
     </div>
 
     <div

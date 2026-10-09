@@ -5,7 +5,7 @@
 
 <a
   class="h-full min-w-69 cursor-pointer overflow-hidden rounded-lg border border-zinc-300 bg-zinc-200 text-left dark:border-zinc-700 dark:bg-zinc-800"
-  href="/devices/{deviceData.id}"
+  href="/dash/devices/{deviceData.id}"
   title={deviceData.name}
 >
   {#if deviceData.images.length > 0}

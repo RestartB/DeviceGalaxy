@@ -13,7 +13,7 @@
 
   const pages = {
     '/': 1,
-    '/devices': 2
+    '/dash/devices': 2
   };
   type PagePath = keyof typeof pages;
 
@@ -25,9 +25,9 @@
       !navigation.to ||
       !navigation.from ||
       navigation.to.url.pathname === navigation.from?.url.pathname ||
-      navigation.to.url.pathname.startsWith('/devices/') ||
-      (navigation.from.url.pathname.startsWith('/devices/') &&
-        navigation.to.url.pathname.startsWith('/devices'))
+      navigation.to.url.pathname.startsWith('/dash/devices/') ||
+      (navigation.from.url.pathname.startsWith('/dash/devices/') &&
+        navigation.to.url.pathname.startsWith('/dash/devices'))
     ) {
       return;
     }

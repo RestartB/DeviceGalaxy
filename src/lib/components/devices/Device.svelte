@@ -445,13 +445,18 @@
       {existingDevice.description.trim() || 'No description provided.'}
     </p>
 
+    {#if existingDevice.additional.trim()}
+      <h3 class="font-semibold">Additional Info</h3>
+      <p>{existingDevice.additional}</p>
+    {/if}
+
     {#if existingDevice.specifications.length > 0}
       <h3 class="font-semibold">Specs</h3>
 
       <ul class="flex flex-wrap gap-2">
         {#each existingDevice.specifications as spec (spec.valueId)}
           <li
-            class="flex w-fit flex-col items-start justify-center rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
+            class="flex w-fit flex-col items-start justify-center rounded-lg border border-zinc-300 bg-zinc-200 p-4 dark:border-zinc-600 dark:bg-zinc-700"
           >
             <p class="mb-2 text-base font-bold text-zinc-900/70 dark:text-zinc-100/70">
               {spec.field.name}

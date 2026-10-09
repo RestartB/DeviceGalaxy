@@ -21,6 +21,6 @@
     existingDevice={data.device}
     specFields={data.specFields}
     bind:overlayOpen
-    onClose={() => goto('/devices')}
+    onClose={() => goto('/dash/devices')}
   />
 {/if}
