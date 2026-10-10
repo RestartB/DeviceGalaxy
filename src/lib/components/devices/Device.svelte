@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   import { fade } from 'svelte/transition';
 
-  import { createDevice } from '#lib/remote/devices.remote.js';
+  import { deleteDevice, editDevice } from '#lib/remote/devices.remote.js';
 
   import FullscreenOverlay from '#lib/components/ui/FullscreenOverlay.svelte';
   import SelectSpecField from '#lib/components/specs/SelectSpecField.svelte';
@@ -21,7 +23,7 @@
     ChevronRight
   } from '@lucide/svelte';
 
-  import { deviceSchema } from '#lib/schema/device.js';
+  import { editDeviceSchema } from '#lib/schema/device.js';
   import type { specificationField, specificationValue } from '#lib/server/db/schema.js';
   import type { SpecValueSchema } from '#lib/schema/spec.js';
   import type { DeviceWithSpecifications } from '#lib/types/devices.js';
@@ -37,19 +39,25 @@
     onClose = () => (overlayOpen = false)
   }: {
     specFields: SpecificationFieldWithValues[];
-    existingDevice?: DeviceWithSpecifications | undefined;
+    existingDevice: DeviceWithSpecifications;
     overlayOpen: boolean;
     onClose?: () => void;
   } = $props();
+
+  let editMode = $state(false);
 
   let specFieldOverlayOpen = $state(false);
   let specOverlayOpen = $state(false);
   let activeSpec: SpecValueSchema | undefined = $state();
 
-  let form: typeof createDevice | undefined = $derived(existingDevice ? undefined : createDevice);
   let fileInput: HTMLInputElement | undefined = $state();
-  let files: File[] = $derived(
-    (form?.fields.images.value() ?? []).filter((file): file is File => file !== undefined)
+  let images: File[] = $derived(
+    (editDevice.fields.images.value() ?? []).filter((file): file is File => file !== undefined)
+  );
+  let existingImages: string[] = $derived(
+    (editDevice.fields.existingImages.value() ?? []).filter(
+      (image): image is string => image !== undefined
+    )
   );
 
   let errorOverlayOpen = $state(false);
@@ -57,9 +65,33 @@
     'An error occurred while submitting the data. Please try again in a moment.'
   );
 
+  let deleteOverlayOpen = $state(false);
+
   let imageOverlayOpen = $state(false);
   let imageIndex = $state(0);
   let renderedImageWidth = $state(0);
+
+  function updateFormData() {
+    editDevice.fields.name.set(existingDevice.name);
+    editDevice.fields.description.set(existingDevice.description);
+    editDevice.fields.existingImages.set(existingDevice.images);
+
+    let specs = [];
+    let i = 0;
+    for (const spec of existingDevice.specifications) {
+      specs.push({
+        uuid: crypto.randomUUID(),
+        fieldId: spec.fieldId,
+        valueId: spec.valueId,
+        position: i
+      });
+      i += 1;
+    }
+
+    editDevice.fields.specs.set(specs);
+  }
+
+  onMount(() => updateFormData);
 
   function imagePreview(node: HTMLImageElement, file: File) {
     let url: string;
@@ -81,21 +113,17 @@
   }
 
   function addSpecField(id: string) {
-    if (!form) {
-      return;
-    }
-
-    const specs = form.fields.specs.value() || [];
+    const specs = editDevice.fields.specs.value() || [];
     specs.push({ uuid: crypto.randomUUID(), fieldId: id });
-    form.fields.specs.set(specs);
+    editDevice.fields.specs.set(specs);
   }
 
   function addSpecValue(id: string) {
-    if (!form || !activeSpec) {
+    if (!activeSpec) {
       return;
     }
 
-    const specs = form.fields.specs.value() || [];
+    const specs = editDevice.fields.specs.value() || [];
     const index = specs.indexOf(specs.find((sp) => sp?.uuid == activeSpec?.uuid));
     if (index === -1) {
       return;
@@ -105,7 +133,7 @@
     newSpec.valueId = id;
 
     specs.splice(index, 1, newSpec);
-    form.fields.specs.set(specs);
+    editDevice.fields.specs.set(specs);
   }
 </script>
 
@@ -124,6 +152,10 @@
     }
   }}
 />
+
+<svelte:head>
+  <title>{existingDevice.name}</title>
+</svelte:head>
 
 {#if specFieldOverlayOpen}
   <SelectSpecField
@@ -149,10 +181,50 @@
   <FullscreenOverlay
     title="Error"
     Icon={CircleAlert}
-    zIndex={60}
+    zIndex={70}
     bind:overlayOpen={errorOverlayOpen}
   >
     <p>{errorMessage}</p>
+  </FullscreenOverlay>
+{/if}
+
+{#if deleteOverlayOpen}
+  <FullscreenOverlay
+    title="Delete Device"
+    Icon={Trash}
+    zIndex={60}
+    gap={12}
+    bind:overlayOpen={deleteOverlayOpen}
+  >
+    <p>
+      Are you sure you want to delete <b>{existingDevice.name}?</b> This is an irreversible action. Specifications
+      will not be deleted.
+    </p>
+
+    <button
+      class="cursor-pointer rounded-lg border border-zinc-300 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+      onclick={async () => {
+        try {
+          await deleteDevice(existingDevice.id);
+          await goto('/dash/devices', { refreshAll: true });
+        } catch (error) {
+          const errorDataRaw = String(error);
+
+          try {
+            const errorJson = JSON.parse(errorDataRaw);
+            errorMessage =
+              errorJson.message ||
+              'An error occurred while deleting the device. Please try again later.';
+          } catch {
+            errorMessage = 'An error occurred while deleting the device. Please try again later.';
+          }
+
+          errorOverlayOpen = true;
+        }
+      }}
+    >
+      Delete Device
+    </button>
   </FullscreenOverlay>
 {/if}
 
@@ -216,65 +288,104 @@
 {/if}
 
 {#snippet extraButton()}
-  <button
-    class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
-    type={form ? 'submit' : 'button'}
-    aria-label={existingDevice ? 'Save' : 'Create'}
-  >
-    {#if existingDevice && form}
-      <Save size={20} />
-    {:else}
-      <Pencil size={20} />
-    {/if}
-    {existingDevice ? (form ? 'Save' : 'Edit') : 'Create'}
-  </button>
+  {#if editMode}
+    <button
+      class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
+      type="button"
+      aria-label="Cancel"
+      onclick={() => (editMode = false)}
+    >
+      <X size={20} /> Cancel
+    </button>
+    <button
+      class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
+      type="submit"
+      form="edit-device-form"
+      aria-label="Save"
+    >
+      <Save size={20} /> Save
+    </button>
+  {:else}
+    <button
+      class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
+      type="button"
+      aria-label="Delete"
+      onclick={() => (deleteOverlayOpen = true)}
+    >
+      <Trash size={20} /> Delete
+    </button>
+    <button
+      class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
+      type="button"
+      aria-label="Edit"
+      onclick={() => (editMode = true)}
+    >
+      <Pencil size={20} /> Edit
+    </button>
+  {/if}
 {/snippet}
 
-{#if form}
-  <form
-    {...form.preflight(deviceSchema).enhance(async (form) => {
-      try {
-        form.validate({ preflightOnly: true });
-        if (!(await form.submit()) || !form.result || !form.result.success) {
-          return;
-        }
+<FullscreenOverlay
+  bind:overlayOpen
+  width={1200}
+  height={1000}
+  gap={12}
+  title={editMode ? 'Edit Device' : existingDevice.name}
+  Icon={editMode ? Pencil : Laptop}
+  {onClose}
+  {extraButton}
+>
+  {#if editMode}
+    <form
+      id="edit-device-form"
+      {...editDevice.preflight(editDeviceSchema).enhance(async (form) => {
+        try {
+          form.validate({ preflightOnly: true });
+          if (!(await form.submit()) || !form.result || !form.result.success) {
+            return;
+          }
 
-        form.element.reset();
-        overlayOpen = false;
-      } catch (error) {
-        console.error(error);
-        errorMessage = String(error);
-        errorOverlayOpen = true;
-      }
-    })}
-    enctype="multipart/form-data"
-  >
-    <FullscreenOverlay
-      bind:overlayOpen
-      width={1200}
-      height={1000}
-      gap={12}
-      title={existingDevice ? 'Edit Device' : 'Create Device'}
-      Icon={existingDevice ? Laptop : Pencil}
-      {onClose}
-      {extraButton}
+          updateFormData();
+          editMode = false;
+        } catch (error) {
+          console.error(error);
+          errorMessage = String(error);
+          errorOverlayOpen = true;
+        }
+      })}
+      enctype="multipart/form-data"
+      class="space-y-3"
     >
+      <input {...editDevice.fields.id.as('hidden', existingDevice.id)} />
+
+      {#if existingImages.length > 0}
+        <span
+          class="block h-80 w-full rounded-xl bg-cover bg-center"
+          style="background-image: url(/api/v1/image/device/{existingDevice.id}/{existingImages[0]})"
+        ></span>
+      {:else if images.length > 0}
+        <span
+          class="block h-80 w-full rounded-xl bg-cover bg-center"
+          style="background-image: url({URL.createObjectURL(images[0])})"
+        ></span>
+      {/if}
+
       <input
         class="w-full text-3xl outline-0"
         placeholder="Enter title..."
-        {...form.fields.name.as('text')}
+        {...editDevice.fields.name.as('text')}
       />
 
-      {#each form.fields.name.issues() as issue (issue.message)}
+      {#each editDevice.fields.name.issues() as issue (issue.message)}
         <p class="text-red-600">{issue.message}</p>
       {/each}
 
       <textarea
         class="h-8 min-h-8 w-full"
         placeholder="Enter description..."
-        {...form.fields.description.as('text')}></textarea>
+        {...editDevice.fields.description.as('text')}></textarea>
 
-      {#each form.fields.description.issues() as issue (issue.message)}
+      {#each editDevice.fields.description.issues() as issue (issue.message)}
         <p class="text-red-600">{issue.message}</p>
       {/each}
 
@@ -284,8 +395,10 @@
         <li>
           <button
             title="Add specification field..."
-            class="flex w-full cursor-pointer items-center gap-4 rounded-lg border border-zinc-300 bg-zinc-200 p-4 text-center transition-colors hover:bg-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-600"
+            class="flex w-full cursor-pointer items-center gap-4 rounded-lg border border-zinc-300 bg-zinc-200 p-4 text-center transition-colors hover:bg-zinc-300 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-600"
             type="button"
+            disabled={editDevice.fields.specs.value() &&
+              editDevice.fields.specs.value().length >= 10}
             onclick={() => (specFieldOverlayOpen = true)}
           >
             <Plus />
@@ -298,13 +411,13 @@
           </button>
         </li>
 
-        {#each form.fields.specs.value() as spec, index (spec?.uuid)}
+        {#each editDevice.fields.specs.value() as spec, index (spec?.uuid)}
           {@const matchedSpec = specFields.find((sp) => sp.id === spec?.fieldId)}
           {#if spec?.uuid && spec.fieldId && matchedSpec}
-            <input {...form.fields.specs[index].uuid.as('hidden', spec.uuid)} />
-            <input {...form.fields.specs[index].fieldId.as('hidden', spec.fieldId)} />
+            <input {...editDevice.fields.specs[index].uuid.as('hidden', spec.uuid)} />
+            <input {...editDevice.fields.specs[index].fieldId.as('hidden', spec.fieldId)} />
             {#if spec.valueId}
-              <input {...form.fields.specs[index].valueId.as('hidden', spec.valueId)} />
+              <input {...editDevice.fields.specs[index].valueId.as('hidden', spec.valueId)} />
             {/if}
 
             <li
@@ -355,8 +468,8 @@
                 border={false}
                 disablePadding={true}
                 onclick={() => {
-                  form.fields.specs.set(
-                    form.fields.specs.value().filter((sp) => sp?.uuid !== spec.uuid)
+                  editDevice.fields.specs.set(
+                    editDevice.fields.specs.value().filter((sp) => sp?.uuid !== spec.uuid)
                   );
                 }}
               >
@@ -371,15 +484,16 @@
 
       <input
         bind:this={fileInput}
-        {...form.fields.images.as('file multiple')}
+        {...editDevice.fields.images.as('file multiple')}
         accept="image/*"
         class="hidden"
       />
 
       <div class="flex flex-wrap items-center gap-2">
         <button
-          class="flex h-44 w-60 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-zinc-200 p-4 text-center transition-colors hover:bg-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+          class="flex h-44 w-60 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-zinc-200 p-4 text-center transition-colors hover:bg-zinc-300 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-700 dark:hover:bg-zinc-600"
           type="button"
+          disabled={images.length >= 5}
           onclick={() => fileInput?.click()}
         >
           <div class="flex h-12 w-12 items-center justify-center">
@@ -389,8 +503,7 @@
           <p class="text-zinc-900/70 dark:text-zinc-100/70">Max 5MB per image</p>
         </button>
 
-        <!-- eslint-disable-next-line svelte/require-each-key -->
-        {#each files as file}
+        {#each existingImages as image, i (image)}
           <div
             class="relative isolate overflow-hidden rounded-lg border-zinc-200 dark:border-zinc-700"
           >
@@ -398,8 +511,30 @@
               class="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-white/70 opacity-0 transition-opacity hover:opacity-100 dark:bg-black/70"
               type="button"
               onclick={() => {
-                files.splice(files.indexOf(file), 1);
-                form.fields.images.set(files);
+                existingImages.splice(existingImages.indexOf(image), 1);
+                editDevice.fields.existingImages.set(existingImages);
+              }}
+            >
+              <Trash />
+            </button>
+
+            <!-- svelte-ignore a11y_missing_attribute -->
+            <img src="/api/v1/image/device/{existingDevice?.id}/{image}" class="h-44 w-auto" />
+            <input {...editDevice.fields.existingImages[i].as('hidden', image)} />
+          </div>
+        {/each}
+
+        <!-- eslint-disable-next-line svelte/require-each-key -->
+        {#each images as file}
+          <div
+            class="relative isolate overflow-hidden rounded-lg border-zinc-200 dark:border-zinc-700"
+          >
+            <button
+              class="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-white/70 opacity-0 transition-opacity hover:opacity-100 dark:bg-black/70"
+              type="button"
+              onclick={() => {
+                images.splice(images.indexOf(file), 1);
+                editDevice.fields.images.set(images);
               }}
             >
               <Trash />
@@ -410,28 +545,17 @@
         {/each}
       </div>
 
-      {#each form.fields.images.issues() as issue (issue.message)}
+      {#each editDevice.fields.images.issues() as issue (issue.message)}
         <p class="text-red-600">{issue.message}</p>
       {/each}
 
-      {#each files as _, index (index)}
-        {#each form.fields.images[index].issues() as issue (issue.message)}
+      {#each images as _, index (index)}
+        {#each editDevice.fields.images[index].issues() as issue (issue.message)}
           <p class="text-red-600">File {index + 1}: {issue.message}</p>
         {/each}
       {/each}
-    </FullscreenOverlay>
-  </form>
-{:else if existingDevice}
-  <FullscreenOverlay
-    bind:overlayOpen
-    width={1200}
-    height={1000}
-    gap={12}
-    title={existingDevice.name}
-    Icon={Laptop}
-    {onClose}
-    {extraButton}
-  >
+    </form>
+  {:else if existingDevice}
     {#if existingDevice.images.length > 0}
       <span
         class="block h-80 w-full rounded-xl bg-cover bg-center"
@@ -495,5 +619,5 @@
         {/each}
       </div>
     {/if}
-  </FullscreenOverlay>
-{/if}
+  {/if}
+</FullscreenOverlay>

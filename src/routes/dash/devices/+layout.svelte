@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Device from '#lib/components/devices/Device.svelte';
+  import NewDevice from '#lib/components/devices/NewDevice.svelte';
   import Card from '#lib/components/devices/Card.svelte';
   import Button from '#lib/components/ui/inputs/Button.svelte';
   import { Pencil, Search, Funnel, CircleAlert } from '@lucide/svelte';
@@ -9,7 +9,7 @@
 </script>
 
 {#if overlayOpen}
-  <Device specFields={data.specFields} bind:overlayOpen />
+  <NewDevice specFields={data.specFields} bind:overlayOpen />
 {/if}
 
 {@render children?.()}

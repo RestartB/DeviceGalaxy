@@ -13,7 +13,7 @@
     Icon,
     title,
     width = 466,
-    height = 564,
+    height = undefined,
     padding = 16,
     gap = 0,
     zIndex = 50,
@@ -60,7 +60,7 @@
     class="relative overflow-auto rounded-xl border border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800"
     style="
       width: min({width}px, 100%);
-      height: min({height}px, calc(100vh - 5rem));
+      height: min({height ? `${height}px` : 'fit-content'}, calc(100vh - 5rem));
     "
   >
     <div
