@@ -66,7 +66,7 @@
   <div class="mx-auto grid h-full max-w-7xl grid-cols-[1fr_auto_1fr] px-4">
     <div class="flex items-center gap-2">
       <img src={logo} alt="Titanium" class="h-8 w-8 rounded-md" translate="no" />
-      <h1 class="text-lg font-bold" translate="no">DeviceGalaxy</h1>
+      <h1 class="text-lg font-bold hidden sm:block" translate="no">DeviceGalaxy</h1>
     </div>
 
     <div class="flex h-full shrink-0 items-center">
@@ -74,7 +74,6 @@
         {#if user}
           {@render topRowLink('Home', '')}
           {@render topRowLink('Devices', 'dash/devices')}
-          {@render topRowLink('Tags', '')}
           {@render topRowLink('Specs', '')}
           {@render topRowLink('Shares', '')}
         {/if}
@@ -83,7 +82,7 @@
 
     <div class="ml-auto flex items-center justify-center">
       {#if user}
-        <p class="font-bold">{user.name}</p>
+        <p class="font-bold hidden sm:block">{user.name}</p>
         <form action="/auth/logout" method="POST" class="h-full">
           <button
             class="hidden h-full cursor-pointer items-center justify-center gap-2 px-4 opacity-60 transition-opacity hover:opacity-100 xs:flex"

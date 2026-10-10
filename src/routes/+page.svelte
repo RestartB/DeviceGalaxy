@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { on } from 'svelte/events';
+
   import Card from '#lib/components/devices/Card.svelte';
   import { CircleX } from '@lucide/svelte';
+
   import type { Attachment } from 'svelte/attachments';
 
   const { data } = $props();
@@ -19,23 +22,33 @@
   }
 
   const handleFades: Attachment = (element) => {
-    if (element.scrollWidth > element.clientWidth) {
-      element.classList.add('overflow-right');
+    function addFades(
+      event: Event | undefined = undefined,
+      element: Element | undefined = undefined
+    ) {
+      let target = event ? (event.currentTarget as HTMLElement) : element;
+      if (!target) {
+        throw Error('Missing target');
+      }
+
+      const maxScroll = target.scrollWidth - target.clientWidth;
+      const atStart = target.scrollLeft <= 1;
+      const atEnd = target.scrollLeft >= maxScroll - 1;
+      const overflows = maxScroll > 1;
+
+      target.classList.toggle('overflow-left', overflows && !atStart && atEnd);
+      target.classList.toggle('overflow-right', overflows && atStart && !atEnd);
+      target.classList.toggle('overflow-both', overflows && !atStart && !atEnd);
     }
+
+    addFades(undefined, element);
+    const off = on(element, 'scroll', addFades);
+
+    // unload the handler when the component is unmounted
+    return () => {
+      off();
+    };
   };
-
-  function onscroll(event: Event) {
-    const target = event.currentTarget as HTMLElement;
-
-    const maxScroll = target.scrollWidth - target.clientWidth;
-    const atStart = target.scrollLeft <= 1;
-    const atEnd = target.scrollLeft >= maxScroll - 1;
-    const overflows = maxScroll > 1;
-
-    target.classList.toggle('overflow-left', overflows && !atStart && atEnd);
-    target.classList.toggle('overflow-right', overflows && atStart && !atEnd);
-    target.classList.toggle('overflow-both', overflows && !atStart && !atEnd);
-  }
 </script>
 
 {#snippet statsSquare(title: string, amount: number)}
@@ -69,7 +82,7 @@
 
     <h3 class="text-xl font-semibold">Recently added</h3>
     {#if data.newDevices.length > 0}
-      <div class="scroll-fades flex gap-4 overflow-x-auto" {@attach handleFades} {onscroll}>
+      <div class="scroll-fades flex gap-4 overflow-x-auto" {@attach handleFades}>
         {#each data.newDevices as device (device.id)}
           <Card deviceData={device} />
         {/each}
@@ -82,7 +95,7 @@
 
     <h3 class="text-xl font-semibold">Recently modified</h3>
     {#if data.recentDevices.length > 0}
-      <div class="scroll-fades flex gap-4 overflow-x-auto" {@attach handleFades} {onscroll}>
+      <div class="scroll-fades flex gap-4 overflow-x-auto" {@attach handleFades}>
         {#each data.recentDevices as device (device.id)}
           <Card deviceData={device} />
         {/each}
@@ -95,7 +108,7 @@
 
     <h3 class="text-xl font-semibold">Recently shared</h3>
     {#if data.recentShared.length > 0}
-      <div class="scroll-fades flex gap-4 overflow-x-auto" {@attach handleFades} {onscroll}></div>
+      <div class="scroll-fades flex gap-4 overflow-x-auto" {@attach handleFades}></div>
     {:else}
       <div class="flex items-center gap-2 opacity-50">
         <CircleX />No data to show
