@@ -5,11 +5,12 @@
   import SelectSpecField from '#lib/components/specs/SelectSpecField.svelte';
   import SelectSpec from '#lib/components/specs/SelectSpec.svelte';
   import Button from '#lib/components/ui/inputs/Button.svelte';
-  import { Upload, Trash, Pencil, Plus, X, CircleAlert } from '@lucide/svelte';
+  import { Upload, Trash, Pencil, Plus, X, CircleAlert, LoaderCircle } from '@lucide/svelte';
 
   import { newDeviceSchema } from '#lib/schema/device.js';
   import type { specificationField, specificationValue } from '#lib/server/db/schema.js';
   import type { SpecValueSchema } from '#lib/schema/spec.js';
+  import { goto } from '$app/navigation';
 
   type SpecificationFieldWithValues = typeof specificationField.$inferSelect & {
     values: (typeof specificationValue.$inferSelect)[];
@@ -24,6 +25,8 @@
     overlayOpen: boolean;
     onClose?: () => void;
   } = $props();
+
+  let submitLoading = $state(false);
 
   let specFieldOverlayOpen = $state(false);
   let specOverlayOpen = $state(false);
@@ -116,28 +119,40 @@
 
 {#snippet extraButton()}
   <button
-    class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
+    class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
     type="submit"
-    aria-label="Create"
+    disabled={submitLoading ? true : false}
+    aria-label={submitLoading ? 'Loading...' : 'Create'}
   >
-    <Pencil size={20} />Create
+    {#if submitLoading}
+      <LoaderCircle size={20} class="animate-spin" /> Loading...
+    {:else}
+      <Pencil size={20} /> Create
+    {/if}
   </button>
 {/snippet}
 
 <form
   {...createDevice.preflight(newDeviceSchema).enhance(async (form) => {
     try {
+      submitLoading = true;
+
       form.validate({ preflightOnly: true });
       if (!(await form.submit()) || !form.result || !form.result.success) {
+        submitLoading = false;
         return;
       }
 
       form.element.reset();
       overlayOpen = false;
+      submitLoading = false;
+
+      await goto(`/dash/devices/${form.result.id}`);
     } catch (error) {
       console.error(error);
       errorMessage = String(error);
       errorOverlayOpen = true;
+      submitLoading = false;
     }
   })}
   enctype="multipart/form-data"

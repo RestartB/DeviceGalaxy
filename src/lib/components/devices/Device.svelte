@@ -20,7 +20,8 @@
     CircleAlert,
     Expand,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    LoaderCircle
   } from '@lucide/svelte';
 
   import { editDeviceSchema } from '#lib/schema/device.js';
@@ -45,6 +46,7 @@
   } = $props();
 
   let editMode = $state(false);
+  let editLoading = $state(false);
 
   let specFieldOverlayOpen = $state(false);
   let specOverlayOpen = $state(false);
@@ -72,6 +74,8 @@
   let renderedImageWidth = $state(0);
 
   function updateFormData() {
+    editDevice.element?.reset();
+
     editDevice.fields.name.set(existingDevice.name);
     editDevice.fields.description.set(existingDevice.description);
     editDevice.fields.existingImages.set(existingDevice.images);
@@ -298,12 +302,17 @@
       <X size={20} /> Cancel
     </button>
     <button
-      class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
+      class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
       type="submit"
       form="edit-device-form"
-      aria-label="Save"
+      disabled={editLoading ? true : false}
+      aria-label={editLoading ? 'Loading...' : 'Save'}
     >
-      <Save size={20} /> Save
+      {#if editLoading}
+        <LoaderCircle size={20} class="animate-spin" /> Loading...
+      {:else}
+        <Save size={20} /> Save
+      {/if}
     </button>
   {:else}
     <button
@@ -318,7 +327,10 @@
       class="flex h-8 w-fit shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full bg-zinc-200 px-3 text-zinc-500 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600"
       type="button"
       aria-label="Edit"
-      onclick={() => (editMode = true)}
+      onclick={() => {
+        updateFormData();
+        editMode = true;
+      }}
     >
       <Pencil size={20} /> Edit
     </button>
@@ -340,17 +352,22 @@
       id="edit-device-form"
       {...editDevice.preflight(editDeviceSchema).enhance(async (form) => {
         try {
+          editLoading = true;
+
           form.validate({ preflightOnly: true });
           if (!(await form.submit()) || !form.result || !form.result.success) {
+            editLoading = false;
             return;
           }
 
           updateFormData();
           editMode = false;
+          editLoading = false;
         } catch (error) {
           console.error(error);
           errorMessage = String(error);
           errorOverlayOpen = true;
+          editLoading = false;
         }
       })}
       enctype="multipart/form-data"

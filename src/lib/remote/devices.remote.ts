@@ -133,19 +133,11 @@ export const editDevice = form(
         });
       }
 
-      const imageIds = [];
+      let imageIds = [];
       const uploadDir = join(MEDIA_PATH, 'device', deviceData.id.toString());
 
       try {
         for (const image of images) {
-          // existing image, check if it's valid or not
-          if (typeof image === 'string') {
-            if (image in deviceData.images) {
-              imageIds.push(image);
-            }
-            continue;
-          }
-
           await mkdir(uploadDir, { recursive: true });
 
           // Get unique path for image
@@ -170,14 +162,16 @@ export const editDevice = form(
         }
 
         // see which old images were removed
+        const maintainedImages = [];
         for (const oldImage of deviceData.images) {
           if (existingImages.includes(oldImage)) {
-            imageIds.push(oldImage);
+            maintainedImages.push(oldImage);
             continue;
           }
           await rm(join(uploadDir, oldImage + '.webp'), { force: true });
         }
 
+        imageIds = maintainedImages.concat(imageIds);
         await tx.update(device).set({ images: imageIds }).where(eq(device.id, deviceData.id));
       } catch (error) {
         try {
