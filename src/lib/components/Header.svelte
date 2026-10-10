@@ -1,6 +1,6 @@
 <script lang="ts">
   import { resolve } from '$app/paths';
-  import { afterNavigate } from '$app/navigation';
+  import { page } from '$app/state';
 
   import { LogIn, LogOut } from '@lucide/svelte';
   import logo from '#lib/assets/logo.svg';
@@ -12,19 +12,24 @@
 
   let headerElement: HTMLElement | undefined = $state();
   let scrollPos = $state(0);
-
-  let menuOpen = $state(false);
   let width = $state(0);
 
-  afterNavigate(({ shallow, type }) => {
-    if (shallow && type === 'goto') return;
+  const pages = {
+    Devices: '/dash/devices',
+    Specs: '/dash/specs',
+    Shares: '/dash/shares',
+    Settings: '/dash/settings'
+  };
 
-    menuOpen = false;
-  });
+  let currentTitle = $derived.by(() => {
+    if (user && page.url.pathname === '/') {
+      return 'Home';
+    }
 
-  $effect(() => {
-    if (menuOpen && width >= 568) {
-      menuOpen = false;
+    for (const [name, path] of Object.entries(pages)) {
+      if (page.url.pathname.startsWith(path)) {
+        return name;
+      }
     }
   });
 
@@ -52,7 +57,7 @@
 {#snippet topRowLink(title: string, href: Path)}
   <a
     href={resolve(href)}
-    class="hidden h-full items-center opacity-60 transition-opacity hover:opacity-100 xs:flex"
+    class="hidden h-full items-center opacity-60 transition-opacity hover:opacity-100 mob:flex"
   >
     {title}
   </a>
@@ -63,10 +68,14 @@
   style="view-transition-name: header"
   bind:this={headerElement}
 >
-  <div class="mx-auto grid h-full max-w-7xl grid-cols-[1fr_auto_1fr] px-4">
+  <div class="flex h-full w-full items-center px-4 mob:hidden">
+    <h1 class="text-left text-lg font-bold" translate="no">{currentTitle}</h1>
+  </div>
+
+  <div class="mx-auto hidden h-full max-w-7xl grid-cols-[1fr_auto_1fr] px-4 mob:grid">
     <div class="flex items-center gap-2">
       <img src={logo} alt="Titanium" class="h-8 w-8 rounded-md" translate="no" />
-      <h1 class="text-lg font-bold hidden sm:block" translate="no">DeviceGalaxy</h1>
+      <h1 class="hidden text-lg font-bold sm:block" translate="no">DeviceGalaxy</h1>
     </div>
 
     <div class="flex h-full shrink-0 items-center">
@@ -82,10 +91,10 @@
 
     <div class="ml-auto flex items-center justify-center">
       {#if user}
-        <p class="font-bold hidden sm:block">{user.name}</p>
+        <p class="hidden font-bold sm:block">{user.name}</p>
         <form action="/auth/logout" method="POST" class="h-full">
           <button
-            class="hidden h-full cursor-pointer items-center justify-center gap-2 px-4 opacity-60 transition-opacity hover:opacity-100 xs:flex"
+            class="hidden h-full cursor-pointer items-center justify-center gap-2 px-4 opacity-60 transition-opacity hover:opacity-100 mob:flex"
             title="Log out"
             type="submit"
           >
@@ -94,7 +103,7 @@
         </form>
       {:else}
         <a
-          class="mr-4 ml-2 hidden items-center justify-center gap-1 rounded-lg border border-zinc-400 bg-zinc-300 p-1 px-2 transition-colors hover:bg-zinc-200 xs:flex dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-800"
+          class="mr-4 ml-2 hidden items-center justify-center gap-1 rounded-lg border border-zinc-400 bg-zinc-300 p-1 px-2 transition-colors hover:bg-zinc-200 mob:flex dark:border-zinc-600 dark:bg-zinc-700 hover:dark:bg-zinc-800"
           href={resolve('auth/login')}
         >
           <LogIn size={20} />Log In

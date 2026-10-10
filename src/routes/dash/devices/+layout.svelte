@@ -16,7 +16,7 @@
 
 <div class="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2">
   <Button
-    class="h-12 min-w-12 p-0! xxs:min-w-fit xxs:px-4!"
+    class="mob:min-w-fit mob:px-4! h-12 min-w-12 p-0!"
     title="Create device..."
     onclick={() => {
       overlayOpen = true;
@@ -37,7 +37,7 @@
     </button>
   </div>
 
-  <Button class="ml-auto h-12 min-w-12 p-0! xxs:min-w-fit xxs:px-4!" title="Filter devices...">
+  <Button class="mob:min-w-fit mob:px-4! ml-auto h-12 min-w-12 p-0!" title="Filter devices...">
     <Funnel class="shrink-0" />
   </Button>
 </div>

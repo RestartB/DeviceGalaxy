@@ -3,7 +3,7 @@
 </script>
 
 <footer
-  class="border-t-2 border-t-zinc-300 bg-zinc-200 text-base text-zinc-500 dark:border-t-zinc-700 dark:bg-zinc-800"
+  class="hidden border-t-2 border-t-zinc-300 bg-zinc-200 text-base text-zinc-500 mob:block dark:border-t-zinc-700 dark:bg-zinc-800"
   style="view-transition-name: footer"
 >
   <nav class="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-2 p-2 px-4">

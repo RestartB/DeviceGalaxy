@@ -6,6 +6,7 @@
   import favicon from '#lib/assets/favicon.svg';
   import Header from '#lib/components/Header.svelte';
   import Footer from '#lib/components/Footer.svelte';
+  import MobileNav from '#lib/components/MobileNav.svelte';
 
   let { children, data } = $props();
   const user = $derived(data.user);
@@ -75,9 +76,19 @@
 
 <div class="flex min-h-screen flex-col">
   <Header {user} />
+
   <main class="mx-auto flex h-full w-full max-w-7xl flex-1 flex-col p-4 pt-20">
     {@render children()}
   </main>
+
+  {#if user}
+    <div
+      class="pointer-events-none fixed inset-0 flex items-end justify-center p-4 mob:hidden"
+    >
+      <MobileNav />
+    </div>
+  {/if}
+
   <Footer />
 </div>
 
