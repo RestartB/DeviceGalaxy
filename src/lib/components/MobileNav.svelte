@@ -28,7 +28,7 @@
     'dash/devices',
     page.url.pathname === '/dash/devices' || page.url.pathname.startsWith('/dash/devices/')
   )}
-  {@render link(List, '')}
+  {@render link(List, 'dash/specs', page.url.pathname === '/dash/specs')}
   {@render link(Share2, '')}
   {@render link(Settings, '')}
 </nav>

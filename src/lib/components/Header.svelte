@@ -83,7 +83,7 @@
         {#if user}
           {@render topRowLink('Home', '')}
           {@render topRowLink('Devices', 'dash/devices')}
-          {@render topRowLink('Specs', '')}
+          {@render topRowLink('Specs', 'dash/specs')}
           {@render topRowLink('Shares', '')}
         {/if}
       </nav>
