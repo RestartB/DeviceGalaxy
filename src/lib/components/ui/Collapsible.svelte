@@ -7,9 +7,17 @@
 
   const {
     children,
-    title,
+    title = '',
+    class: className = '',
+    topRow = null,
     defaultState = false
-  }: { children?: Snippet<[]>; title: string; defaultState?: boolean } = $props();
+  }: {
+    children?: Snippet<[]>;
+    title?: string;
+    class?: string;
+    topRow?: Snippet | null;
+    defaultState?: boolean;
+  } = $props();
 
   // default open when there's no client side js
   let isOpen = $state(false);
@@ -21,11 +29,15 @@
 
 <div class="w-full">
   <button
-    class="flex w-full cursor-pointer items-center justify-between py-1"
+    class="flex w-full cursor-pointer items-center justify-between gap-2 py-1"
     onclick={() => (isOpen = !isOpen)}
     aria-label="Toggle {title} section"
   >
-    <h3 class="text-left font-bold">{title}</h3>
+    {#if topRow}
+      {@render topRow()}
+    {:else}
+      <h3 class="text-left font-bold">{title}</h3>
+    {/if}
     <ChevronDown
       class="shrink-0 transition-transform duration-400 {isOpen
         ? 'transform-[rotateX(180deg)]'
@@ -34,7 +46,7 @@
   </button>
 
   {#if isOpen}
-    <div class="mt-2" transition:slide={{ easing: cubicInOut }}>
+    <div class="mt-2 {className}" transition:slide={{ easing: cubicInOut }}>
       {@render children?.()}
     </div>
   {/if}
