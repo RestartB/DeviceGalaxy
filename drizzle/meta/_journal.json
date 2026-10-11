@@ -8,6 +8,13 @@
       "when": 1789940411271,
       "tag": "0000_jazzy_champions",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791676613532,
+      "tag": "0001_solid_bloodscream",
+      "breakpoints": true
     }
   ]
 }

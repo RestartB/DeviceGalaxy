@@ -10,10 +10,11 @@ import {
   primaryKey,
   index
 } from 'drizzle-orm/pg-core';
-import { user } from './auth.schema';
+import { user } from './auth-schema';
 
 export const device = pgTable('devices', {
   id: uuid('id').defaultRandom().primaryKey(),
+  classicId: integer('classicId'),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
@@ -142,4 +143,4 @@ export const deviceSpecificationsRelations = relations(deviceSpecification, ({ o
   })
 }));
 
-export * from './auth.schema';
+export * from './auth-schema';
