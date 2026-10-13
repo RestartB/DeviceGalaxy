@@ -14,7 +14,8 @@
 
   const pages = {
     '/': 1,
-    '/dash/devices': 2
+    '/dash/devices': 2,
+    '/dash/specs': 3
   };
   type PagePath = keyof typeof pages;
 
