@@ -206,7 +206,8 @@
     </p>
 
     <button
-      class="cursor-pointer rounded-lg border border-zinc-300 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300 dark:border-zinc-600 dark:bg-zinc-700 dark:hover:bg-zinc-600"
+      class="w-full cursor-pointer rounded-lg border border-zinc-200 bg-red-200 p-2 px-4 transition-colors hover:bg-red-300 dark:border-zinc-700 dark:bg-red-900 dark:hover:bg-red-800"
+      title="Delete"
       onclick={async () => {
         try {
           await deleteDevice(existingDevice.id);
@@ -227,7 +228,7 @@
         }
       }}
     >
-      Delete Device
+      Delete
     </button>
   </FullscreenOverlay>
 {/if}

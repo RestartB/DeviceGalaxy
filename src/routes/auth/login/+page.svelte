@@ -1,16 +1,16 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
   import { resolve } from '$app/paths';
+  import { goto } from '$app/navigation';
 
   import { logIn } from '#lib/remote/auth.remote.js';
 
   import Button from '#lib/components/ui/inputs/Button.svelte';
   import Text from '#lib/components/ui/inputs/Text.svelte';
   import FullscreenOverlay from '#lib/components/ui/FullscreenOverlay.svelte';
-  import { LogIn } from '@lucide/svelte';
+  import { CircleAlert, LogIn } from '@lucide/svelte';
 
   import { TURNSTILE_ENABLED, TURNSTILE_SITE_KEY } from '$app/env/public';
-  import { goto } from '$app/navigation';
 
   const { email, password, turnstileToken } = logIn.fields;
 
@@ -57,6 +57,7 @@
     class="text-left"
     padding={16}
     height={250}
+    Icon={CircleAlert}
     bind:overlayOpen={errorOverlayOpen}
   >
     <p>An error occurred. Please try again later.</p>

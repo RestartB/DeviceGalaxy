@@ -8,7 +8,7 @@
   import Button from '#lib/components/ui/inputs/Button.svelte';
   import Text from '#lib/components/ui/inputs/Text.svelte';
   import FullscreenOverlay from '#lib/components/ui/FullscreenOverlay.svelte';
-  import { UserPlus } from '@lucide/svelte';
+  import { CircleAlert, UserPlus } from '@lucide/svelte';
 
   import { TURNSTILE_ENABLED, TURNSTILE_SITE_KEY } from '$app/env/public';
 
@@ -56,6 +56,7 @@
     class="text-left"
     padding={16}
     height={250}
+    Icon={CircleAlert}
     bind:overlayOpen={errorOverlayOpen}
   >
     <p>An error occurred. Please try again later.</p>
