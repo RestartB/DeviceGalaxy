@@ -14,6 +14,7 @@ export const variables = defineEnvVars({
       return value;
     }
   },
+  SIGNUPS_ENABLED: { public: true, schema: z.stringbool() },
 
   DATABASE_URL: {
     schema: (value: string | undefined) => {

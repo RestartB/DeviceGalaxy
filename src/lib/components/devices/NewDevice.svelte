@@ -181,7 +181,7 @@
     />
 
     {#each createDevice.fields.name.issues() as issue (issue.message)}
-      <p class="text-red-600">{issue.message}</p>
+      <p class="text-red-600 dark:text-red-400">{issue.message}</p>
     {/each}
 
     <textarea
@@ -190,7 +190,7 @@
       {...createDevice.fields.description.as('text')}></textarea>
 
     {#each createDevice.fields.description.issues() as issue (issue.message)}
-      <p class="text-red-600">{issue.message}</p>
+      <p class="text-red-600 dark:text-red-400">{issue.message}</p>
     {/each}
 
     <h3 class="font-semibold">Specs</h3>
@@ -324,12 +324,12 @@
     </div>
 
     {#each createDevice.fields.images.issues() as issue (issue.message)}
-      <p class="text-red-600">{issue.message}</p>
+      <p class="text-red-600 dark:text-red-400">{issue.message}</p>
     {/each}
 
     {#each images as _, index (index)}
       {#each createDevice.fields.images[index].issues() as issue (issue.message)}
-        <p class="text-red-600">File {index + 1}: {issue.message}</p>
+        <p class="text-red-600 dark:text-red-400">File {index + 1}: {issue.message}</p>
       {/each}
     {/each}
   </FullscreenOverlay>

@@ -4,7 +4,7 @@ import { auth } from '#lib/server/auth.js';
 
 import { z } from 'zod';
 
-import { TURNSTILE_ENABLED } from '$app/env/public';
+import { SIGNUPS_ENABLED, TURNSTILE_ENABLED } from '$app/env/public';
 import { APIError } from 'better-auth';
 
 export const logIn = form(
@@ -79,6 +79,10 @@ export const signUp = form(
     const event = getRequestEvent();
     if (event.locals.user) {
       return error(403, 'Already signed in');
+    }
+
+    if (!SIGNUPS_ENABLED) {
+      return error(403, 'Signups are currently disabled.')
     }
 
     try {

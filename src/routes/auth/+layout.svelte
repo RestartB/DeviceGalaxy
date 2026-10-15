@@ -17,7 +17,7 @@
     text-align: left;
   }
 
-  :global(.text-red-600) {
+  :global(.text-red-600 dark:text-red-400) {
     text-align: left;
   }
 </style>
