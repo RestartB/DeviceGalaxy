@@ -2,20 +2,18 @@ import { error } from '@sveltejs/kit';
 import { command, form, getRequestEvent } from '$app/server';
 
 import { z } from 'zod';
+import {
+  editSpecFieldSchema,
+  editSpecValueSchema,
+  newSpecFieldSchema,
+  newSpecValueSchema
+} from '#lib/schema/spec.js';
+
 import { specificationField, specificationValue } from '#lib/server/db/schema.js';
 import { db } from '#lib/server/db/index.js';
 import { and, eq } from 'drizzle-orm';
 
-const specFieldSchema = z.object({
-  name: z.string()
-});
-
-const specValueSchema = z.object({
-  fieldId: z.uuidv4(),
-  value: z.string()
-});
-
-export const createSpecField = form(specFieldSchema, async ({ name }) => {
+export const createSpecField = form(newSpecFieldSchema, async ({ name }) => {
   const event = getRequestEvent();
   if (!event.locals.user) {
     return error(401, 'Not logged in');
@@ -31,6 +29,26 @@ export const createSpecField = form(specFieldSchema, async ({ name }) => {
     .returning();
 
   return spec[0];
+});
+
+export const editSpecField = form(editSpecFieldSchema, async ({ fieldId, name }) => {
+  const event = getRequestEvent();
+  const userId = event.locals.user?.id;
+  if (!userId) {
+    error(401, 'Not logged in');
+  }
+
+  const specField = await db
+    .update(specificationField)
+    .set({ name: name })
+    .where(and(eq(specificationField.userId, userId), eq(specificationField.id, fieldId)))
+    .returning();
+
+  if (specField.length === 0) {
+    return error(404, 'Field not found');
+  }
+
+  return { success: true };
 });
 
 export const deleteSpecField = command(z.uuid(), async (id) => {
@@ -52,7 +70,7 @@ export const deleteSpecField = command(z.uuid(), async (id) => {
   return { success: true };
 });
 
-export const createSpecValue = form(specValueSchema, async ({ fieldId, value }) => {
+export const createSpecValue = form(newSpecValueSchema, async ({ fieldId, value }) => {
   const event = getRequestEvent();
   if (!event.locals.user) {
     return error(401, 'Not logged in');
@@ -68,6 +86,32 @@ export const createSpecValue = form(specValueSchema, async ({ fieldId, value }) 
     .returning();
 
   return spec[0];
+});
+
+export const editSpecValue = form(editSpecValueSchema, async ({ fieldId, valueId, value }) => {
+  const event = getRequestEvent();
+  const userId = event.locals.user?.id;
+  if (!userId) {
+    error(401, 'Not logged in');
+  }
+
+  const specValue = await db
+    .update(specificationValue)
+    .set({ value: value })
+    .where(
+      and(
+        eq(specificationValue.userId, userId),
+        eq(specificationValue.fieldId, fieldId),
+        eq(specificationValue.id, valueId)
+      )
+    )
+    .returning();
+
+  if (specValue.length === 0) {
+    return error(404, 'Value not found');
+  }
+
+  return { success: true };
 });
 
 export const deleteSpecValue = command(z.uuid(), async (id) => {

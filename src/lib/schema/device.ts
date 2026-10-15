@@ -18,8 +18,12 @@ const fileCheck = z.file().superRefine((file, ctx) => {
 });
 
 export const newDeviceSchema = z.object({
-  name: z.string().trim().min(1, 'Please enter a title.'),
-  description: z.string(),
+  name: z
+    .string()
+    .trim()
+    .min(1, 'Please enter a title.')
+    .max(100, 'Must be 100 characters or less.'),
+  description: z.string().max(1000, 'Must be 1000 characters or less.'),
   specs: z.array(specValueSchema).max(10, 'Please select up to 10 specifications.').default([]),
   images: z.array(fileCheck).max(5, 'Please select up to 5 images.').default([])
 });
@@ -27,8 +31,12 @@ export const newDeviceSchema = z.object({
 export const editDeviceSchema = z
   .object({
     id: z.uuid(),
-    name: z.string().trim().min(1, 'Please enter a title.'),
-    description: z.string(),
+    name: z
+      .string()
+      .trim()
+      .min(1, 'Please enter a title.')
+      .max(100, 'Must be 100 characters or less.'),
+    description: z.string().max(1000, 'Must be 1000 characters or less.'),
     specs: z.array(specValueSchema).max(10, 'Please select up to 10 specifications.').default([]),
     images: z.array(fileCheck).default([]),
     existingImages: z.array(z.uuid()).default([])
