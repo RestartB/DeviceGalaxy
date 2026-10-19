@@ -3,6 +3,7 @@
   "extends": ["config:best-practices", "schedule:daily"],
   "rangeStrategy": "pin",
   "minimumReleaseAge": "3 days",
+  "prConcurrentLimit": 10,
   "ignoreDeps": ["restartb/devicegalaxy"],
   "baseBranchPatterns": ["master", "v2"],
   "packageRules": [
