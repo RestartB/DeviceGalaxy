@@ -29,7 +29,7 @@
     "@types/node": "24.19.2",
     "better-auth": "1.7.11",
     "drizzle-kit": "0.31.10",
-    "drizzle-orm": "0.45.2",
+    "drizzle-orm": "0.45.4",
     "eslint": "10.10.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-svelte": "3.23.1",
