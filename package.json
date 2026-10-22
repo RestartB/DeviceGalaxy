@@ -30,7 +30,7 @@
     "better-auth": "1.7.11",
     "drizzle-kit": "0.31.10",
     "drizzle-orm": "0.45.4",
-    "eslint": "10.10.0",
+    "eslint": "10.13.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-svelte": "3.23.1",
     "globals": "17.13.0",
