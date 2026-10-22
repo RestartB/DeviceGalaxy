@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@lucide/svelte": "1.26.0",
-    "sharp": "^0.35.4",
+    "sharp": "0.35.5",
     "zod": "4.4.3"
   },
   "imports": {
