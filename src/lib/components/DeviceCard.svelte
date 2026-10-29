@@ -68,10 +68,10 @@
 <a
   class="relative flex max-w-100 min-w-85 flex-1 flex-col overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 shadow-md sm:min-w-80 dark:bg-zinc-700"
   href={shareID && subdomain
-    ? resolve('/[deviceid]', { deviceid: device.id })
+    ? resolve('/[deviceid]', { deviceid: String(device.id) })
     : shareID
-      ? resolve('/share/[shareid]/[deviceid]', { shareid: shareID, deviceid: device.id })
-      : resolve('/dash/device/[device_id]', { device_id: device.id })}
+      ? resolve('/share/[shareid]/[deviceid]', { shareid: shareID, deviceid: String(device.id) })
+      : resolve('/dash/device/[device_id]', { device_id: String(device.id) })}
 >
   {#if device.internalImages && device.internalImages.length > 0}
     <img
