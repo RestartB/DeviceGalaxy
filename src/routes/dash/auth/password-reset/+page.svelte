@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { Turnstile } from 'svelte-turnstile';
 
   import { superForm } from 'sveltekit-superforms';
@@ -87,7 +88,7 @@
         >{$errors['cf-turnstile-response']}</span
       >{/if}
 
-    <a href="/dash/auth/login" class="text-blue-600 hover:underline dark:text-blue-400">
+    <a href={resolve('/dash/auth/login')} class="text-blue-600 hover:underline dark:text-blue-400">
       Remembered your password? Log in
     </a>
 

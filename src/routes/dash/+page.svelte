@@ -3,6 +3,7 @@
   const { data } = $props();
 
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
 
   import AddDeviceForm from '$lib/components/forms/add_device/Form.svelte';
   import CreateTagForm from '$lib/components/forms/add_tag/Form.svelte';
@@ -64,7 +65,7 @@
         {#if !data.user.twoFactorEnabled}
           <a
             class="flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-zinc-400 bg-zinc-100 px-4 py-2 font-bold text-nowrap transition-colors hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-600"
-            href="/dash/auth/setup-2fa"
+            href={resolve('/dash/auth/setup-2fa')}
             title="Enable 2FA"
           >
             <Shield size="20" />
@@ -106,7 +107,7 @@
         {:else if data.totalCount > 5}
           <a
             class="relative flex max-w-sm min-w-50 flex-1 flex-col items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md sm:min-w-80 dark:bg-zinc-700"
-            href="/dash/devices"
+            href={resolve('/dash/devices')}
           >
             <div
               class="mt-auto flex max-w-full flex-col items-center justify-center gap-2 overflow-hidden"
@@ -145,7 +146,7 @@
         {:else if data.totalCount > 5}
           <a
             class="relative flex max-w-sm min-w-50 flex-1 flex-col items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-4 shadow-md sm:min-w-80 dark:bg-zinc-700"
-            href="/dash/devices"
+            href={resolve('/dash/devices')}
           >
             <div
               class="mt-auto flex max-w-full flex-col items-center justify-center gap-2 overflow-hidden"

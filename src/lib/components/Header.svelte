@@ -3,6 +3,7 @@
   import { page } from '$app/state';
   import { fade, fly } from 'svelte/transition';
   import { prefersReducedMotion } from 'svelte/motion';
+  import { resolve } from '$app/paths';
 
   import { authClient } from '$lib/client';
 
@@ -37,7 +38,7 @@
   style="view-transition-name: header"
 >
   <div class="mx-auto flex h-full w-full max-w-480 items-center justify-center gap-4">
-    <a class="flex h-full items-center gap-2" href="/" title="DeviceGalaxy">
+    <a class="flex h-full items-center gap-2" href={resolve('/')} title="DeviceGalaxy">
       <enhanced:img
         src="$lib/images/logo/logo_square.svg"
         alt="DeviceGalaxy Logo"
@@ -49,21 +50,21 @@
       <nav class="hidden h-full items-center justify-center sm:flex">
         <a
           class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-          href="/dash"
+          href={resolve('/dash')}
           title="Home"
         >
           Home
         </a>
         <a
           class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-          href="/dash/devices"
+          href={resolve('/dash/devices')}
           title="Devices"
         >
           Devices
         </a>
         <a
           class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-          href="/dash/tags"
+          href={resolve('/dash/tags')}
           title="Tags"
         >
           Tags
@@ -71,7 +72,7 @@
         {#if user && !user.suspended}
           <a
             class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-            href="/dash/shares"
+            href={resolve('/dash/shares')}
             title="Shared"
           >
             Shared
@@ -80,7 +81,7 @@
         {#if user.role === 'admin'}
           <a
             class="flex h-full items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-            href="/dash/admin"
+            href={resolve('/dash/admin')}
             title="Admin"
           >
             Admin
@@ -103,7 +104,7 @@
           <div class="hidden h-full sm:flex">
             <a
               class="flex h-full cursor-pointer items-center justify-center rounded-lg px-2 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-              href="/dash/settings/account"
+              href={resolve('/dash/settings/account')}
               title="Settings"
             >
               <Cog size="20" />
@@ -141,7 +142,7 @@
     {:else}
       <a
         class="ml-auto flex w-fit items-center justify-center gap-2 rounded-lg p-2 font-semibold"
-        href="/dash/auth/login"
+        href={resolve('/dash/auth/login')}
       >
         <LogIn size="20" />
         Log in
@@ -166,21 +167,21 @@
           <nav class="flex h-full w-full flex-col items-center justify-start gap-2">
             <a
               class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-              href="/dash"
+              href={resolve('/dash')}
             >
               <House size="30" />
               Home
             </a>
             <a
               class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-              href="/dash/devices"
+              href={resolve('/dash/devices')}
             >
               <Monitor size="30" />
               Devices
             </a>
             <a
               class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-              href="/dash/tags"
+              href={resolve('/dash/tags')}
             >
               <Tag size="30" />
               Tags
@@ -188,7 +189,7 @@
             {#if user && !user.suspended}
               <a
                 class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-                href="/dash/shares"
+                href={resolve('/dash/shares')}
               >
                 <Share size="30" />
                 Shared
@@ -197,7 +198,7 @@
             {#if user.role === 'admin'}
               <a
                 class="flex h-full w-full items-center justify-start gap-2 rounded-lg text-xl font-semibold"
-                href="/dash/admin"
+                href={resolve('/dash/admin')}
               >
                 <Shield size="30" />
                 Admin
@@ -219,7 +220,7 @@
             <div class="flex w-full items-center justify-center gap-2">
               <a
                 class="flex h-full flex-1 items-center justify-center gap-2 rounded-lg border-2 border-zinc-400 bg-zinc-300 p-2 font-semibold dark:bg-zinc-700"
-                href="/dash/settings/account"
+                href={resolve('/dash/settings/account')}
               >
                 <Cog size="20" />
                 Settings

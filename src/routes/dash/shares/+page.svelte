@@ -1,5 +1,6 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
+  import { resolve } from '$app/paths';
   import { toast } from 'svelte-sonner';
 
   import ClaimSubdomainForm from '$lib/components/forms/claim_subdomain/Form.svelte';
@@ -166,7 +167,7 @@
           <li class="flex w-full items-center justify-between gap-2">
             <div>
               <a
-                href={`/share/${share.id}`}
+                href={resolve(`/share/${share.id}`)}
                 class="text-xl font-semibold text-wrap text-blue-500 hover:underline"
                 target="_blank"
               >
@@ -205,7 +206,7 @@
             <div>
               <h3 class="text-xl font-semibold" translate="no">{share.deviceName}</h3>
               <a
-                href={`/share/${share.shareId}`}
+                href={resolve(`/share/${share.shareId}`)}
                 class="text-wrap text-blue-500 hover:underline"
                 target="_blank"
               >

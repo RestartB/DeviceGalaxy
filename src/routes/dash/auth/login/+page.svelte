@@ -2,6 +2,7 @@
   import { Turnstile } from 'svelte-turnstile';
 
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
 
   import { superForm } from 'sveltekit-superforms';
   import { zod4Client } from 'sveltekit-superforms/adapters';
@@ -80,7 +81,7 @@
       <div class="flex flex-col justify-between gap-2 xxxs:flex-row xxxs:items-center">
         <label for="password" class="w-fit text-start font-semibold">Password</label>
         <a
-          href="/dash/auth/password-reset"
+          href={resolve('/dash/auth/password-reset')}
           class="w-fit shrink-0 text-nowrap text-blue-600 hover:underline dark:text-blue-400"
           >Forgot password?</a
         >
@@ -110,17 +111,17 @@
         >{$errors['cf-turnstile-response']}</span
       >{/if}
 
-    <a href="/dash/auth/signup" class="text-blue-600 hover:underline dark:text-blue-400">
+    <a href={resolve('/dash/auth/signup')} class="text-blue-600 hover:underline dark:text-blue-400">
       Don't have an account? Sign up
     </a>
 
     <p>
       By continuing, you agree to our <a
-        href="/policy/tos"
+        href={resolve('/policy/tos')}
         class="text-blue-600 hover:underline dark:text-blue-400">Terms of Service</a
       >
       and
-      <a href="/policy/privacy" class="text-blue-600 hover:underline dark:text-blue-400"
+      <a href={resolve('/policy/privacy')} class="text-blue-600 hover:underline dark:text-blue-400"
         >Privacy Policy</a
       >.
     </p>

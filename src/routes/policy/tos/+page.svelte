@@ -1,3 +1,7 @@
+<script lang="ts">
+  import { resolve } from '$app/paths';
+</script>
+
 <svelte:head>
   <title>DeviceGalaxy - Terms of Use</title>
 </svelte:head>
@@ -119,7 +123,7 @@
     <div class="flex flex-col gap-2.5" id="contact">
       <h2 class="text-xl font-semibold">Contact Us</h2>
       <p>
-        If you wish to contact me, please join the <a href="/server" target="_blank"
+        If you wish to contact me, please join the <a href={resolve('/server')} target="_blank"
           >support Discord server</a
         >, then create a ticket. I will attempt to get back to you ASAP regarding your concern.
       </p>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
+  import { resolve } from '$app/paths';
   import Fuse from 'fuse.js';
 
   import type { InferSelectModel } from 'drizzle-orm';
@@ -208,7 +209,7 @@
             style="background-color: {tag.tagColour}; color: {tag.tagTextColour};"
           >
             <p>{tag.tagName}</p>
-            <a href="/dash/devices?tags={tag.id}" class="cursor-pointer">
+            <a href={resolve(`/dash/devices?tags=${tag.id}`)} class="cursor-pointer">
               <Eye size="20" />
             </a>
             <button

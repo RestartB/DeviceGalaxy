@@ -2,6 +2,7 @@
   import { Turnstile } from 'svelte-turnstile';
 
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
 
   import { superForm } from 'sveltekit-superforms';
   import { zod4Client } from 'sveltekit-superforms/adapters';
@@ -126,17 +127,17 @@
         >{/if}
     {/if}
 
-    <a href="/dash/auth/login" class="text-blue-600 hover:underline dark:text-blue-400">
+    <a href={resolve('/dash/auth/login')} class="text-blue-600 hover:underline dark:text-blue-400">
       Already have an account? Log in
     </a>
 
     <p>
       By signing up, you agree to our <a
-        href="/policy/tos"
+        href={resolve('/policy/tos')}
         class="text-blue-600 hover:underline dark:text-blue-400">Terms of Service</a
       >
       and
-      <a href="/policy/privacy" class="text-blue-600 hover:underline dark:text-blue-400"
+      <a href={resolve('/policy/privacy')} class="text-blue-600 hover:underline dark:text-blue-400"
         >Privacy Policy</a
       >.
     </p>

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
   import { authClient } from '$lib/client';
   import { QRCode } from '@castlenine/svelte-qrcode';
 
@@ -148,7 +149,7 @@
         </button>
         <a
           class="w-fit rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
-          href="/dash"
+          href={resolve('/dash')}
         >
           Skip
         </a>

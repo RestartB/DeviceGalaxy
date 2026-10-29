@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { resolve } from '$app/paths';
 
   import devicegalaxy from '$lib/images/88x31/devicegalaxy.png';
   import restart from '$lib/images/88x31/restart.png';
@@ -34,7 +35,7 @@
           style="image-rendering: pixelated;"
         /></a
       >
-      <a href="/" aria-labelledby="devicegalaxy-88x31" title="DeviceGalaxy"
+      <a href={resolve('/')} aria-labelledby="devicegalaxy-88x31" title="DeviceGalaxy"
         ><img
           src={devicegalaxy}
           alt="DeviceGalaxy's 88x31"
@@ -50,13 +51,16 @@
           <h1 class="font-bold">Navigation</h1>
         </li>
         <li aria-current={page.url.pathname === '/' ? 'page' : undefined}>
-          <a href="/" class="text-gray-600 transition-colors hover:text-inherit dark:text-gray-400">
+          <a
+            href={resolve('/')}
+            class="text-gray-600 transition-colors hover:text-inherit dark:text-gray-400"
+          >
             <p>Home</p></a
           >
         </li>
         <li aria-current={page.url.pathname === '/open-source' ? 'page' : undefined}>
           <a
-            href="/open-source"
+            href={resolve('/open-source')}
             class="text-gray-600 transition-colors hover:text-inherit dark:text-gray-400"
           >
             <p>Open Source</p></a
@@ -64,7 +68,7 @@
         </li>
         <li aria-current={page.url.pathname === '/dash' ? 'page' : undefined}>
           <a
-            href="/dash"
+            href={resolve('/dash')}
             class="text-gray-600 transition-colors hover:text-inherit dark:text-gray-400"
           >
             <p>Dashboard</p></a
@@ -78,21 +82,21 @@
         </li>
         <li>
           <a
-            href="/server"
+            href={resolve('/server')}
             class="text-gray-600 transition-colors hover:text-inherit dark:text-gray-400"
             ><p>Support Server</p></a
           >
         </li>
         <li aria-current={page.url.pathname === '/policy/tos' ? 'page' : undefined}>
           <a
-            href="/policy/tos"
+            href={resolve('/policy/tos')}
             class="text-gray-600 transition-colors hover:text-inherit dark:text-gray-400"
             ><p>Terms of Use</p></a
           >
         </li>
         <li aria-current={page.url.pathname === '/policy/privacy' ? 'page' : undefined}>
           <a
-            href="/policy/privacy"
+            href={resolve('/policy/privacy')}
             class="text-gray-600 transition-colors hover:text-inherit dark:text-gray-400"
             ><p>Privacy Policy</p></a
           >

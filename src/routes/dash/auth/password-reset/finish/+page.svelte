@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import { resolve } from '$app/paths';
   import { authClient } from '$lib/client';
 
   import { LogIn, TriangleAlert, CircleQuestionMark, RefreshCw } from '@lucide/svelte';
@@ -51,7 +52,7 @@
       {/if}
 
       <a
-        href="/dash/auth/login"
+        href={resolve('/dash/auth/login')}
         class="flex w-fit items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-all hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
       >
         <LogIn />
@@ -64,7 +65,7 @@
       <p>No reset token provided. Please try again with the link from your email.</p>
 
       <a
-        href="/dash/auth/login"
+        href={resolve('/dash/auth/login')}
         class="flex w-fit items-center justify-center gap-2 rounded-md border-2 border-zinc-500 bg-zinc-200 p-2 px-4 font-bold transition-all hover:bg-zinc-300 dark:bg-zinc-700 dark:hover:bg-zinc-600"
       >
         <LogIn />
@@ -91,7 +92,10 @@
         <span class="text-red-600">Password must be at least 8 characters long.</span>
       {/if}
 
-      <a href="/dash/auth/login" class="text-blue-600 hover:underline dark:text-blue-400">
+      <a
+        href={resolve('/dash/auth/login')}
+        class="text-blue-600 hover:underline dark:text-blue-400"
+      >
         Remembered your password? Log in
       </a>
 

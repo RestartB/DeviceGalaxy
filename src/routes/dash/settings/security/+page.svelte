@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { fade } from 'svelte/transition';
+  import { resolve } from '$app/paths';
   import { toast } from 'svelte-sonner';
 
   import { authClient } from '$lib/client';
@@ -383,7 +384,7 @@
       {:else}
         <a
           class="flex w-fit items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-zinc-400 bg-zinc-200 p-2 font-semibold text-zinc-700 transition-colors hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
-          href="/dash/auth/setup-2fa"
+          href={resolve('/dash/auth/setup-2fa')}
         >
           <Shield size="20" />
           Enable 2FA

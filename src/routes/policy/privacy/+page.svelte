@@ -1,3 +1,7 @@
+<script lang="ts">
+  import { resolve } from '$app/paths';
+</script>
+
 <svelte:head>
   <title>DeviceGalaxy - Privacy Policy</title>
 </svelte:head>
@@ -156,7 +160,7 @@
       <h2 class="text-xl font-semibold">Contact</h2>
       <p>
         If you wish to contact me regarding this policy, please join the <a
-          href="/server"
+          href={resolve('/server')}
           target="_blank">support Discord server</a
         >, then create a ticket. I will attempt to get back to you ASAP regarding your concern.
       </p>

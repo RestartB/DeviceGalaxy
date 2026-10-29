@@ -3,6 +3,7 @@
   const { data, children } = $props();
 
   import { page } from '$app/state';
+  import { resolve } from '$app/paths';
   import Avatar from '$lib/components/Avatar.svelte';
 
   let clientWidth = $state(0);
@@ -70,7 +71,7 @@
           <a
             class="relative rounded-full px-4 py-1 transition-colors hover:bg-zinc-300 dark:hover:bg-zinc-700"
             class:dark:bg-zinc-600={page.url.pathname === '/dash/settings/account'}
-            href="/dash/settings/account"
+            href={resolve('/dash/settings/account')}
             title="Account Settings"
             aria-current={page.url.pathname === '/dash/settings/account' ? 'page' : undefined}
           >
@@ -79,7 +80,7 @@
           <a
             class="relative rounded-full px-4 py-1 transition-colors hover:bg-zinc-300 dark:hover:bg-zinc-700"
             class:dark:bg-zinc-600={page.url.pathname === '/dash/settings/customise'}
-            href="/dash/settings/customise"
+            href={resolve('/dash/settings/customise')}
             title="Customisation"
             aria-current={page.url.pathname === '/dash/settings/customise' ? 'page' : undefined}
           >
@@ -88,7 +89,7 @@
           <a
             class="relative rounded-full px-4 py-1 transition-colors hover:bg-zinc-300 dark:hover:bg-zinc-700"
             class:dark:bg-zinc-600={page.url.pathname === '/dash/settings/security'}
-            href="/dash/settings/security"
+            href={resolve('/dash/settings/security')}
             title="Security Settings"
             aria-current={page.url.pathname === '/dash/settings/security' ? 'page' : undefined}
           >
@@ -97,7 +98,7 @@
           <a
             class="relative rounded-full px-4 py-1 transition-colors hover:bg-red-300 dark:hover:bg-red-700"
             class:dark:bg-zinc-600={page.url.pathname === '/dash/settings/delete'}
-            href="/dash/settings/delete"
+            href={resolve('/dash/settings/delete')}
             title="Delete Account"
             aria-current={page.url.pathname === '/dash/settings/delete' ? 'page' : undefined}
           >
