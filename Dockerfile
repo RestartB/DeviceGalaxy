@@ -1,5 +1,5 @@
 # builder
-FROM --platform=$BUILDPLATFORM node:24.21.0-alpine@sha256:be80f76cf40ec8e42b9bec49f60a55e0660f30af58d3e5a25530785b30ea67e2 AS builder
+FROM --platform=$BUILDPLATFORM node:24.22.1-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS builder
 
 WORKDIR /app
 COPY package*.json pnpm-lock.yaml pnpm-workspace.yaml vite.config.ts tsconfig.json ./
@@ -22,7 +22,7 @@ RUN rm -r /db
 
 
 # runner
-FROM --platform=$TARGETPLATFORM node:24.21.0-alpine@sha256:be80f76cf40ec8e42b9bec49f60a55e0660f30af58d3e5a25530785b30ea67e2
+FROM --platform=$TARGETPLATFORM node:24.22.1-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
 
 WORKDIR /app
 
