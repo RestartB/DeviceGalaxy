@@ -39,6 +39,7 @@ export const actions = {
 
     // Log in
     const response = await auth.api.signInEmail({
+      headers: request.headers,
       body: {
         email: form.data.email,
         password: form.data.password

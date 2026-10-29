@@ -39,6 +39,7 @@ export const actions = {
 
     // Create the new user
     const response = await auth.api.signUpEmail({
+      headers: request.headers,
       body: {
         email: form.data.email,
         name: form.data.name,

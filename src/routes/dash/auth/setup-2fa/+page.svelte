@@ -11,7 +11,6 @@
   let error = $state('');
 
   let totpURI = $state('');
-  let backupCodes = $state<string[]>([]);
 
   async function generateTOTP(event: Event) {
     event.preventDefault();
@@ -20,7 +19,8 @@
 
     try {
       const { data, error: signUpError } = await authClient.twoFactor.enable({
-        password
+        password,
+        method: 'totp'
       });
 
       if (signUpError) {
@@ -28,10 +28,14 @@
         return;
       }
 
+      if (data.method !== 'totp') {
+        error = 'Failed to generate a TOTP setup code.';
+        return;
+      }
+
       totpURI = data.totpURI;
-      backupCodes = data.backupCodes;
       generatedTOTP = true;
-    } catch (err) {
+    } catch {
       error = 'An unexpected error occurred. Please try again.';
     } finally {
       submitting = false;
@@ -44,7 +48,7 @@
     error = '';
 
     try {
-      const { data, error: signUpError } = await authClient.twoFactor.verifyTotp({
+      const { error: signUpError } = await authClient.twoFactor.verifyTotp({
         code: totpInput
       });
 
@@ -54,7 +58,7 @@
       }
 
       goto('/dash', { invalidateAll: true, replaceState: true, state: {} });
-    } catch (err) {
+    } catch {
       error = 'An unexpected error occurred. Please try again.';
     } finally {
       submitting = false;

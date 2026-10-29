@@ -20,7 +20,14 @@ import { env } from '$env/dynamic/private';
 export const auth = betterAuth({
   appName: 'DeviceGalaxy',
   secret: env.BETTER_AUTH_SECRET,
-  trustedOrigins: [env.BETTER_AUTH_URL],
+  baseURL: env.BETTER_AUTH_URL,
+
+  advanced: {
+    ipAddress: {
+      ipAddressHeaders: env.ADDRESS_HEADER ? [env.ADDRESS_HEADER] : []
+    }
+  },
+
   database: drizzleAdapter(db, {
     provider: 'sqlite'
   }),
@@ -48,42 +55,33 @@ export const auth = betterAuth({
     additionalFields: {
       backgroundImage: {
         type: 'string',
-        label: 'Background Image',
-        description: 'URL of the background image for the user profile',
         defaultValue: '',
         required: true,
         input: false
       },
       backgroundImageBlurPx: {
         type: 'number',
-        label: 'Background Image Blur',
-        description: 'Blur level for the background image in pixels',
         defaultValue: 0,
         required: false,
         input: false
       },
       description: {
         type: 'string',
-        label: 'Description',
-        description: 'Description to show on share links',
         defaultValue: '',
         required: false
       },
       subdomain: {
         type: 'string',
-        label: 'Subdomain',
         required: false,
         input: false
       },
       subdomainShareId: {
         type: 'string',
-        label: 'Subdomain Share ID',
         required: false,
         input: false
       },
       discordDomainVerifyToken: {
         type: 'string',
-        label: 'Discord Domain Verify Token',
         required: false,
         input: false
       },

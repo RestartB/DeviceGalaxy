@@ -46,6 +46,7 @@ export const actions = {
     }
 
     await auth.api.requestPasswordReset({
+      headers: event.request.headers,
       body: {
         email: form.data.email,
         redirectTo: env.BETTER_AUTH_URL + '/dash/auth/password-reset/finish'
