@@ -87,7 +87,7 @@
       });
 
       if (data?.status) {
-        await goto('/dash/auth/setup-2fa');
+        await goto(resolve('/dash/auth/setup-2fa'));
       } else {
         toast.error('Failed to disable 2FA. Check your password is correct, then try again.');
       }

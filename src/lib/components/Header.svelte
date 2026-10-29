@@ -114,7 +114,7 @@
               title="Sign Out"
               onclick={() => {
                 authClient.signOut();
-                goto('/dash/auth/login', { invalidateAll: true });
+                goto(resolve('/dash/auth/login'), { invalidateAll: true });
               }}
             >
               <LogOut size="20" />
@@ -229,7 +229,7 @@
                 class="flex h-full flex-1 items-center justify-center gap-2 rounded-lg border-2 border-zinc-400 bg-zinc-300 p-2 font-semibold dark:bg-zinc-700"
                 onclick={() => {
                   authClient.signOut();
-                  goto('/dash/auth/login', { invalidateAll: true });
+                  goto(resolve('/dash/auth/login'), { invalidateAll: true });
                 }}
               >
                 <LogOut size="20" />

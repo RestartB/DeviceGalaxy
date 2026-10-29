@@ -58,7 +58,7 @@
         return;
       }
 
-      goto('/dash', { invalidateAll: true, replaceState: true, state: {} });
+      goto(resolve('/dash'), { invalidateAll: true, replaceState: true, state: {} });
     } catch {
       error = 'An unexpected error occurred. Please try again.';
     } finally {

@@ -36,7 +36,7 @@
     if ($message === 'User created successfully') {
       toast.success('Account created successfully! Redirecting to setup...');
       setTimeout(() => {
-        goto('/dash/auth/setup-2fa');
+        goto(resolve('/dash/auth/setup-2fa'));
       }, 2000);
     } else if ($message) {
       toast.error($message);

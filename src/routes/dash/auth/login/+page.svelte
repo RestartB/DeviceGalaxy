@@ -40,7 +40,7 @@
     if ($message === 'User logged in successfully') {
       toast.success('Logged in! Redirecting...');
       setTimeout(() => {
-        goto('/dash');
+        goto(resolve('/dash'));
       }, 2000);
     } else if ($message) {
       toast.error($message);

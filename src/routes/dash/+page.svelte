@@ -13,10 +13,9 @@
 
   let createDevicePopupOpen = $state(false);
   let createTagPopupOpen = $state(false);
-  let search = $state('');
 
   function refreshAll() {
-    goto('/dash');
+    goto(resolve('/dash'));
   }
 </script>
 

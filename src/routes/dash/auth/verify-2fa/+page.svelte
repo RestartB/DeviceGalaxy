@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
   import { authClient } from '$lib/client';
 
   let totpInput = $state('');
@@ -22,7 +23,7 @@
         return;
       }
 
-      await goto('/dash');
+      await goto(resolve('/dash'));
     } catch (err) {
       error = 'An unexpected error occurred. Please try again.';
     } finally {
