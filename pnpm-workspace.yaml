@@ -6,3 +6,6 @@ allowBuilds:
   sharp: true
 minimumReleaseAge: 4320
 engineStrict: true
+minimumReleaseAgeExclude:
+  # Renovate security update: @sveltejs/kit@3.0.0
+  - "@sveltejs/kit@3.0.0"
