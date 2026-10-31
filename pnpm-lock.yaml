@@ -36,8 +36,8 @@ importers:
         specifier: 0.35.5
         version: 0.35.5(@types/node@26.6.5)
       svelte-sonner:
-        specifier: 1.2.1
-        version: 1.2.1(svelte@5.57.3(@typescript-eslint/types@8.72.1))
+        specifier: 1.2.2
+        version: 1.2.2(svelte@5.57.3(@typescript-eslint/types@8.72.1))
       svelte-turnstile:
         specifier: 0.11.0
         version: 0.11.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))
@@ -2619,8 +2619,8 @@ packages:
       svelte:
         optional: true
 
-  svelte-sonner@1.2.1:
-    resolution: {integrity: sha512-N00LOWb60fjKXULbpngku+7E9Krb16KpNq4/Eax5Vu7o1Dpbca55QpaLPsB+yp82JIEdFhfJuv5cVXLoe0ZtVA==}
+  svelte-sonner@1.2.2:
+    resolution: {integrity: sha512-sHAvdhf9PNC7LMBmUSWRGPdxZn17HrW5ITsUKmF4SP9C3IZBE7B3rBw8BEztIiSDcTpEdZcKgmnN+BAhH4M8qQ==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -4802,7 +4802,7 @@ snapshots:
     optionalDependencies:
       svelte: 5.57.3(@typescript-eslint/types@8.72.1)
 
-  svelte-sonner@1.2.1(svelte@5.57.3(@typescript-eslint/types@8.72.1)):
+  svelte-sonner@1.2.2(svelte@5.57.3(@typescript-eslint/types@8.72.1)):
     dependencies:
       runed: 0.28.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))
       svelte: 5.57.3(@typescript-eslint/types@8.72.1)
