@@ -3,3 +3,14 @@ allowBuilds:
   '@tailwindcss/oxide': true
   better-sqlite3: false
   esbuild: true
+minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  - 'better-auth@1.7.16'
+  - '@better-auth/drizzle-adapter@1.7.16'
+  - '@better-auth/core@1.7.16'
+  - '@better-auth/kysely-adapter@1.7.16'
+  - '@better-auth/memory-adapter@1.7.16'
+  - '@better-auth/mongo-adapter@1.7.16'
+  - '@better-auth/prisma-adapter@1.7.16'
+  - '@better-auth/telemetry@1.7.16'
+  - better-call@1.4.5
