@@ -17,6 +17,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   if (
     hostname !== baseDomain &&
+    event.route.id &&
     event.route.id !== '/' &&
     !event.route.id.startsWith('/api/') &&
     !event.route.id.startsWith('/.well-known/') &&
@@ -28,7 +29,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     return redirect(307, newUrl.toString());
   }
 
-  if (event.route.id === '/api/auth/request-password-reset') {
+  if (event.url.pathname === '/api/auth/request-password-reset') {
     if (await passwordResetLimiter.isLimited(event)) {
       console.log('Rate limit exceeded');
       return error(429, 'Too Many Requests');
