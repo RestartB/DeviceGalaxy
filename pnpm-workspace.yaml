@@ -16,3 +16,5 @@ minimumReleaseAgeExclude:
   - '@better-auth/telemetry@1.7.16'
   - better-auth@1.7.16
   - better-call@1.4.5
+  # Renovate security update: @sveltejs/kit@3.0.0
+  - "@sveltejs/kit@3.0.0"
