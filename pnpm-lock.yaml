@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@lucide/svelte':
-        specifier: 1.67.0
-        version: 1.67.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))
+        specifier: 1.73.0
+        version: 1.73.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))
       sharp:
         specifier: 0.35.5
         version: 0.35.5(@types/node@26.6.6)
@@ -1085,8 +1085,8 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
-  '@lucide/svelte@1.67.0':
-    resolution: {integrity: sha512-DeqoOkMm3QihcNsrQB5drR/8azWDGuozfagDpm/anIqaJdflLUMhwLFPEANl/W3FLhXx6HmQwEWz7zBtZ6KXcQ==}
+  '@lucide/svelte@1.73.0':
+    resolution: {integrity: sha512-Rz1uA9aTJ7HA/j2Hf9Dm2OVM8NtkzHnNeIQvVWoUkpf1ZD/7dR9cB4ftjbOiWAeJrKkEAVvTDrcVtITFdx6KAA==}
     peerDependencies:
       svelte: ^5
 
@@ -3737,7 +3737,7 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@lucide/svelte@1.67.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))':
+  '@lucide/svelte@1.73.0(svelte@5.57.3(@typescript-eslint/types@8.72.1))':
     dependencies:
       svelte: 5.57.3(@typescript-eslint/types@8.72.1)
 
