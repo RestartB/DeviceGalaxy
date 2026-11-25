@@ -21,7 +21,7 @@
     "@castlenine/svelte-qrcode": "2.3.0",
     "@eslint/compat": "2.1.1",
     "@eslint/js": "10.0.1",
-    "@svelte-put/cloudflare-turnstile": "1.2.0",
+    "@svelte-put/cloudflare-turnstile": "1.3.0",
     "@sveltejs/adapter-node": "5.5.8",
     "@sveltejs/enhanced-img": "1.0.1",
     "@sveltejs/kit": "2.70.3",

@@ -55,8 +55,8 @@ importers:
         specifier: 10.0.1
         version: 10.0.1(eslint@10.15.0(jiti@2.7.0))
       '@svelte-put/cloudflare-turnstile':
-        specifier: 1.2.0
-        version: 1.2.0(svelte@5.57.3(@typescript-eslint/types@8.72.2))
+        specifier: 1.3.0
+        version: 1.3.0(svelte@5.57.3(@typescript-eslint/types@8.72.2))
       '@sveltejs/adapter-node':
         specifier: 5.5.8
         version: 5.5.8(@sveltejs/kit@2.70.3(@sveltejs/vite-plugin-svelte@7.3.1(svelte@5.57.3(@typescript-eslint/types@8.72.2))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)))(svelte@5.57.3(@typescript-eslint/types@8.72.2))(typescript@6.0.3)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)))
@@ -1349,10 +1349,10 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@svelte-put/cloudflare-turnstile@1.2.0':
-    resolution: {integrity: sha512-bm5zgKCBMbTrQCxX3u3rLiWaNFa6/B6juelE8Y8MriyaztxPg+ph5yS8WADMugEn3KmjN43QgcgsyHzPd2eCYg==}
+  '@svelte-put/cloudflare-turnstile@1.3.0':
+    resolution: {integrity: sha512-91t4yuEn7ks71U8hK4ECJPCtqP6WvW+0J+tykijuPsWcAVStJf+ghuzxV8bALoWkhJxEWaICbOBUufnKiXFAng==}
     peerDependencies:
-      svelte: ^5.1.0
+      svelte: '>=5.0.0'
 
   '@sveltejs/acorn-typescript@1.0.13':
     resolution: {integrity: sha512-wgKggnhZVL9Bfx1OaKKTrYY9BFRk6C8UAkQNUcIv1+llzYrIqy+RZm5HPKzn0NpEBvTVhTqB4kQyllZywsRBRQ==}
@@ -3567,7 +3567,7 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@svelte-put/cloudflare-turnstile@1.2.0(svelte@5.57.3(@typescript-eslint/types@8.72.2))':
+  '@svelte-put/cloudflare-turnstile@1.3.0(svelte@5.57.3(@typescript-eslint/types@8.72.2))':
     dependencies:
       svelte: 5.57.3(@typescript-eslint/types@8.72.2)
 
