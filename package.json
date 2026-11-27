@@ -25,7 +25,7 @@
     "@sveltejs/adapter-node": "5.5.8",
     "@sveltejs/enhanced-img": "1.0.1",
     "@sveltejs/kit": "2.70.3",
-    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "@sveltejs/vite-plugin-svelte": "7.3.2",
     "@tailwindcss/vite": "4.3.5",
     "@types/node": "26.6.6",
     "drizzle-kit": "0.31.11",
