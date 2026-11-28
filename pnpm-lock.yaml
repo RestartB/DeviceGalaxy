@@ -15,8 +15,8 @@ importers:
         specifier: 0.18.0
         version: 0.18.0
       '@lucide/svelte':
-        specifier: 1.71.0
-        version: 1.71.0(svelte@5.59.1(@typescript-eslint/types@8.74.0))
+        specifier: 1.79.0
+        version: 1.79.0(svelte@5.59.1(@typescript-eslint/types@8.74.0))
       '@types/cloudflare-turnstile':
         specifier: 0.2.2
         version: 0.2.2
@@ -1015,8 +1015,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@lucide/svelte@1.71.0':
-    resolution: {integrity: sha512-m1a8SzMcEqjrG/uIEWCzbWqxK7yVn9q4ukaU4adVIFM7MW6rBg1+UbpeRQSBsXyuqIzIqCr1Ty0g2rrMTdQWYA==}
+  '@lucide/svelte@1.79.0':
+    resolution: {integrity: sha512-GT1yl6pbDLFYq/FBsVJX27HE3T+T/J35+OqZL+jimaj1oJfm9s63wCzVwPRbgWuhkS0vPMg76eEF4dMymZgbgA==}
     peerDependencies:
       svelte: ^5
 
@@ -3363,7 +3363,7 @@ snapshots:
   '@libsql/win32-x64-msvc@0.5.29':
     optional: true
 
-  '@lucide/svelte@1.71.0(svelte@5.59.1(@typescript-eslint/types@8.74.0))':
+  '@lucide/svelte@1.79.0(svelte@5.59.1(@typescript-eslint/types@8.74.0))':
     dependencies:
       svelte: 5.59.1(@typescript-eslint/types@8.74.0)
 
